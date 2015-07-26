@@ -1,0 +1,128 @@
+[
+    {
+        "name": "Stu1",
+        "strengths": {
+            "defense": 1,
+            "economy": 3,
+            "society": 0
+        },
+        "fundraising": 2
+    },
+    {
+        "name": "Stu2",
+        "strengths": {
+            "defense": 2,
+            "economy": 0,
+            "society": 3
+        },
+        "fundraising": 3
+    },
+    {
+        "name": "Stu3",
+        "strengths": {
+            "defense": 2,
+            "economy": 1,
+            "society": 2
+        },
+        "fundraising": 4
+    },
+    {
+        "name": "Stu4",
+        "strengths": {
+            "defense": 1,
+            "economy": 1,
+            "society": 2
+        },
+        "fundraising": 0
+    },
+    {
+        "name": "Stu5",
+        "strengths": {
+            "defense": 0,
+            "economy": 2,
+            "society": 2
+        },
+        "fundraising": 1
+    },
+    {
+        "name": "Stu6",
+        "strengths": {
+            "defense": 1,
+            "economy": 0,
+            "society": 3
+        },
+        "fundraising": 2
+    },
+    {
+        "name": "Stu7",
+        "strengths": {
+            "defense": 1,
+            "economy": 1,
+            "society": 1
+        },
+        "fundraising": 3
+    },
+    {
+        "name": "Stu8",
+        "strengths": {
+            "defense": 1,
+            "economy": 2,
+            "society": 2
+        },
+        "fundraising": 4
+    },
+    {
+        "name": "Stu9",
+        "strengths": {
+            "defense": 2,
+            "economy": 2,
+            "society": 2
+        },
+        "fundraising": 0
+    },
+    {
+        "name": "Stu10",
+        "strengths": {
+            "defense": 0,
+            "economy": 2,
+            "society": 3
+        },
+        "fundraising": 1
+    },
+    {
+        "name": "Stu11",
+        "strengths": {
+            "defense": 2,
+            "economy": 2,
+            "society": 0
+        },
+        "fundraising": 2
+    },
+    {
+        "name": "Stu12",
+        "strengths": {
+            "defense": 2,
+            "economy": 0,
+            "society": 1
+        },
+        "fundraising": 3
+    },
+    {
+        "name": "Stu13",
+        "strengths": {
+            "defense": 0,
+            "economy": 1,
+            "society": 3
+        },
+        "fundraising": 4
+    },
+    {
+        "name": "Flint Hasset",
+        "strengths": {
+            "defense": 1,
+            "economy": 0,
+            "society": 1
+        },
+        "fundraising": 2
+    }
+]

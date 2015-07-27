@@ -1,15 +1,14 @@
-require_relative 'lib/class_record'
-require_relative 'lib/serializable'
-require_relative 'lib/deserializable'
+require_relative '../lib/class_record'
+require_relative '../lib/serializable'
+require_relative '../lib/deserializable'
 
 require_relative 'politician'
 
-class OfficeHolder
+class Hand
 
   # define the data that goes in this object
   Members = [
-    { name: :team,       type: String     },
-    { name: :politician, type: Politician },
+    { name: :politicians, type: Politician, is_array: true },
   ]
 
   # to get the constructor and member accessors

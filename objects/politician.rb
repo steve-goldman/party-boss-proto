@@ -1,6 +1,6 @@
-require_relative 'lib/class_record'
-require_relative 'lib/serializable'
-require_relative 'lib/deserializable'
+require_relative '../lib/class_record'
+require_relative '../lib/serializable'
+require_relative '../lib/deserializable'
 
 require_relative 'strengths'
 

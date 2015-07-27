@@ -6,13 +6,18 @@ class ManualPlayer
     @team = team
   end
 
-  def get_candidates(office_holders, hand)
+  def team
+    @team
+  end
+
+  def get_candidates(game_snapshot)
     while true
       # don't spoil the data until the user confirms
+      hand = game_snapshot.my_hand self
       temp_hand = Hand.new hand.politicians.clone
       # get the candidates from the user
       i = 0
-      candidates = office_holders.map do |office_holder|
+      candidates = game_snapshot.board.office_holders.map do |office_holder|
         i += 1
         puts "selecting candidate for race ##{i}"
         if @team == office_holder.team
@@ -24,7 +29,7 @@ class ManualPlayer
         end
       end
       # ask user to confirm
-      if confirm_candidates office_holders, candidates
+      if confirm_candidates game_snapshot.board.office_holders, candidates
         # remove candidates from the player's hand
         candidates.each { |candidate| hand.politicians.delete candidate }
         return candidates
@@ -73,4 +78,4 @@ end
 
 gs = GameSnapshot.new_game
 p1 = ManualPlayer.new "A"
-p1.get_candidates gs.board.office_holders, gs.hand_A
+p1.get_candidates gs

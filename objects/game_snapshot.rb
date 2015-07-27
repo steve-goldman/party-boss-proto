@@ -24,10 +24,6 @@ class GameSnapshot
   # to get Class.deserialize
   extend Deserializable
 
-  def my_hand(player)
-    self.send("hand_#{player.team}")
-  end
-
   # utility method for creating a new game
   def GameSnapshot.new_game
     # create a deck of politicians

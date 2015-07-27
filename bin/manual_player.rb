@@ -2,19 +2,15 @@ require_relative '../objects/game_snapshot'
 
 class ManualPlayer
 
-  def initialize(team)
+  def initialize(team, hand)
     @team = team
-  end
-
-  def team
-    @team
+    @hand = hand
   end
 
   def get_candidates(game_snapshot)
     while true
       # don't spoil the data until the user confirms
-      hand = game_snapshot.my_hand self
-      temp_hand = Hand.new hand.politicians.clone
+      temp_hand = Hand.new @hand.politicians.clone
       # get the candidates from the user
       i = 0
       candidates = game_snapshot.board.office_holders.map do |office_holder|
@@ -31,7 +27,7 @@ class ManualPlayer
       # ask user to confirm
       if confirm_candidates game_snapshot.board.office_holders, candidates
         # remove candidates from the player's hand
-        candidates.each { |candidate| hand.politicians.delete candidate }
+        candidates.each { |candidate| @hand.politicians.delete candidate }
         return candidates
       end
     end
@@ -77,5 +73,5 @@ class ManualPlayer
 end
 
 gs = GameSnapshot.new_game
-p1 = ManualPlayer.new "A"
+p1 = ManualPlayer.new "A", gs.hand_A
 p1.get_candidates gs

@@ -19,5 +19,9 @@ class Strengths
 
   # to get Class.deserialize
   extend Deserializable
+
+  def to_s
+    "[#{defense},#{economy},#{society}]"
+  end
   
 end

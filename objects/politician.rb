@@ -21,5 +21,9 @@ class Politician
 
   # to get Class.deserialize
   extend Deserializable
+
+  def to_s
+    "(#{name}:#{fundraising},#{strengths})"
+  end
   
 end

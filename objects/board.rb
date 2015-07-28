@@ -21,5 +21,19 @@ class Board
 
   # to get Class.deserialize
   extend Deserializable
+
+  def num_campaign_dice(candidates)
+    candidates.reduce(0) do |sum, candidate|
+      sum + candidate.fundraising + (office_holder?(candidate) ? 1 : 0)
+    end
+  end
+
+  private
+
+  def office_holder?(candidate)
+    office_holders.reduce(false) do |result, office_holder|
+      result || candidate == office_holder.politician
+    end 
+  end
   
 end

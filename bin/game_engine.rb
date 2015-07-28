@@ -35,15 +35,22 @@ class GameEngine
     Logger.header("Player 'B' choosing candidates").indent
     candidates_B = @player_B.get_candidates(@game_snapshot)
     Logger.unindent
-    puts "player 'A' choosing dice allocation"
-    allocation_A = @player_A.get_allocation(@game_snapshot, candidates_A)
-    puts "player 'B' choosing dice allocation"
-    allocation_B = @player_B.get_allocation(@game_snapshot, candidates_B)
-    puts "rolling dice"
+    Logger.header("Election matchups").indent
+    candidates_A.each_index do |index|
+      Logger.log "#{candidates_A[index]} versus #{candidates_B[index]}"
+    end
+    Logger.unindent
+    Logger.header("Player 'A' choosing dice allocation").indent
+    allocation_A = @player_A.get_allocation(@game_snapshot, candidates_A, candidates_B)
+    Logger.unindent
+    Logger.header("Player 'B' choosing dice allocation").indent
+    allocation_B = @player_B.get_allocation(@game_snapshot, candidates_B, candidates_A)
+    Logger.unindent
+    Logger.header("Rolling dice").indent
     outcomes_A = @dice_roller.get_outcomes(allocation_A)
-    puts "player 'A' rolled #{outcomes_A}"
+    Logger.subheader "Player 'A' rolled #{outcomes_A}"
     outcomes_B = @dice_roller.get_outcomes(allocation_B)
-    puts "player 'B' rolled #{outcomes_B}"
+    Logger.subheader "Player 'B' rolled #{outcomes_B}"
     Election.new(candidates_A, candidates_B, allocation_A, allocation_B, outcomes_A, outcomes_B)
   end
   

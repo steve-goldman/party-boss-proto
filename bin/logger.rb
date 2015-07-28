@@ -20,6 +20,10 @@ class Logger
     Logger.instance.log subheader
     Logger.instance.log ("-" * subheader.length)
   end
+
+  def Logger.error(error)
+    Logger.instance.log("ERROR: #{error}")
+  end
   
   def Logger.indent
     Logger.instance.indent

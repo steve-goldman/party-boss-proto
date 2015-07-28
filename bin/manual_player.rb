@@ -71,7 +71,3 @@ class ManualPlayer
   end
 
 end
-
-gs = GameSnapshot.new_game
-p1 = ManualPlayer.new "A", gs.hand_A
-p1.get_candidates gs

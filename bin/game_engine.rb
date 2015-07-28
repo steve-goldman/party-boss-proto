@@ -48,9 +48,7 @@ class GameEngine
     Logger.header("Player 'B' choosing dice allocation").indent
     allocation_B = @player_B.get_allocation(@game_snapshot, candidates_B, candidates_A)
     Logger.unindent
-    election = Election.new(@game_snapshot.board.state_of_the_union,
-                            @game_snapshot.board.office_holders,
-                            candidates_A,
+    election = Election.new(candidates_A,
                             candidates_B,
                             allocation_A,
                             allocation_B,
@@ -59,9 +57,9 @@ class GameEngine
     Logger.header("Election results").indent
     election.candidates_A.each_index do |index|
       Logger.subheader "#{candidates_A[index]} versus #{candidates_B[index]}"
-      Logger.log "'A' rolled #{election.outcomes_A[index]} for total of #{election.points_A index}"
-      Logger.log "'B' rolled #{election.outcomes_B[index]} for total of #{election.points_B index}"
-      Logger.log "#{election.winner index} wins!"
+      Logger.log "'A' rolled #{election.outcomes_A[index]} for total of #{election.points_A index, @game_snapshot.board.state_of_the_union}"
+      Logger.log "'B' rolled #{election.outcomes_B[index]} for total of #{election.points_B index, @game_snapshot.board.state_of_the_union}"
+      Logger.log "#{@game_snapshot.board.election_winner election, index} wins!"
     end
     Logger.unindent
     election

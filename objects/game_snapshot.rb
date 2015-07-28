@@ -47,8 +47,8 @@ class GameSnapshot
   def apply_election(election)
     # put the winners in office and losers back in the deck
     election.candidates_A.each_index do |index|
-      board.office_holders[index] = OfficeHolder.new election.winning_team(index), election.winner(index)
-      politician_deck.push election.loser(index)
+      board.office_holders[index] = OfficeHolder.new board.election_winning_team(election, index), board.election_winner(election, index)
+      politician_deck.push board.election_loser(election, index)
     end
     # top off the hands
     deal_politicians

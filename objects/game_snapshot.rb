@@ -36,7 +36,7 @@ class GameSnapshot
       OfficeHolder.new("B", politicians_deck.pop)
     ]
     # create the board
-    board = Board.new(office_holders)
+    board = Board.new(StateOfTheUnion.random, office_holders)
     # create two hands
     hand_A = Hand.new([ politicians_deck.pop, politicians_deck.pop ])
     hand_B = Hand.new([ politicians_deck.pop, politicians_deck.pop ])

@@ -1,4 +1,5 @@
 require_relative '../objects/game_snapshot'
+require_relative 'logger'
 
 class ManualPlayer
 
@@ -15,12 +16,12 @@ class ManualPlayer
       i = 0
       candidates = game_snapshot.board.office_holders.map do |office_holder|
         i += 1
-        puts "selecting candidate for race ##{i}"
+        Logger.subheader("Selecting candidate for race ##{i}").indent
         if @team == office_holder.team
-          puts "  encumbent #{office_holder.politician} is on your team"
+          Logger.log("Encumbent #{office_holder.politician} is on your team").unindent
           office_holder.politician
         else
-          puts "  candidate to run against #{office_holder.politician}"
+          Logger.log "Candidate to run against #{office_holder.politician}"
           input_candidate temp_hand
         end
       end
@@ -37,36 +38,38 @@ class ManualPlayer
 
   def input_candidate(hand)
     while true
-      print "  (enter candidate # or 'list'): "
+      Logger.prompt "(Enter candidate # or 'list'): "
       input = gets.chomp
       if input == 'list'
         hand.politicians.each_index do |i|
-          puts "  #{i + 1}: #{hand.politicians[i]}"
+          Logger.log "#{i + 1}: #{hand.politicians[i]}"
         end
       elsif input.to_i < 1 || input.to_i > hand.politicians.count
-        puts "  input #{input} is out of range"
+        Logger.log "Input #{input} is out of range"
       else
         politician = hand.politicians[input.to_i - 1]
         hand.politicians.delete_at(input.to_i - 1)
+        Logger.unindent
         return politician
       end
     end
   end
 
   def confirm_candidates(office_holders, candidates)
-    puts "you have selected:"
+    Logger.subheader("You have selected:").indent
     candidates.each_index do |index|
       if office_holders[index].politician == candidates[index]
-        puts "  #{candidates[index]} (encumbent)"
+        Logger.log "#{candidates[index]} (encumbent)"
       else
-        puts "  #{candidates[index]} versus #{office_holders[index].politician}"
+        Logger.log "#{candidates[index]} versus #{office_holders[index].politician}"
       end
     end
+    Logger.unindent
     return confirm
   end
 
   def confirm
-    print "(confirm? y/n): "
+    Logger.prompt "(Confirm? y/n): "
     return gets.chomp.downcase == 'y'
   end
 

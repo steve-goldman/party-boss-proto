@@ -23,7 +23,7 @@ class Politician
   extend Deserializable
 
   def to_s
-    "(#{name}:#{fundraising},#{strengths})"
+    sprintf "%-12s f:#{fundraising} #{strengths}", name
   end
   
 end

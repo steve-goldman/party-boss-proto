@@ -21,7 +21,7 @@ class Strengths
   extend Deserializable
 
   def to_s
-    "[#{defense},#{economy},#{society}]"
+    "[d:#{defense},e:#{economy},s:#{society}]"
   end
   
 end

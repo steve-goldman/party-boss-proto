@@ -4,13 +4,19 @@ class Logger
     Logger.instance.log message
   end
 
+  def Logger.prompt(message)
+    Logger.instance.prompt message
+  end
+
   def Logger.header(header)
+    Logger.instance.log ""
     Logger.instance.log ("#" * (header.length + 4))
     Logger.instance.log "# #{header} #"
     Logger.instance.log ("#" * (header.length + 4))
   end
 
   def Logger.subheader(subheader)
+    Logger.instance.log ""
     Logger.instance.log subheader
     Logger.instance.log ("-" * subheader.length)
   end
@@ -25,14 +31,22 @@ class Logger
 
   def log(message)
     puts (" " * @indent) + message
+    self
+  end
+
+  def prompt(message)
+    print (" " * @indent) + message
+    self
   end
 
   def indent
     @indent += 2
+    self
   end
 
   def unindent
     @indent -= 2
+    self
   end
 
   private

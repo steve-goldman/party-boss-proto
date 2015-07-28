@@ -17,6 +17,11 @@ module ClassRecord
         self.class.send(:define_method, member[:name]) do
           @_members[member[:name]]
         end
+        if !member[:is_array]
+          self.class.send(:define_method, "#{member[:name]}=") do |newValue|
+            @_members[member[:name]] = newValue
+          end
+        end
       end
       i += 1
     end

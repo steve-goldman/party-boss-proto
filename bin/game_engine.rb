@@ -47,6 +47,7 @@ class GameEngine
     allocation_B = @player_B.get_allocation(@game_snapshot, candidates_B, candidates_A)
     Logger.unindent
     election = Election.new(@game_snapshot.board.state_of_the_union,
+                            @game_snapshot.board.office_holders,
                             candidates_A,
                             candidates_B,
                             allocation_A,
@@ -58,7 +59,7 @@ class GameEngine
       Logger.subheader "#{candidates_A[index]} versus #{candidates_B[index]}"
       Logger.log "'A' rolled #{election.outcomes_A[index]} for total of #{election.points_A index}"
       Logger.log "'B' rolled #{election.outcomes_B[index]} for total of #{election.points_B index}"
-      Logger.log "#{election.winner(index)} wins!"
+      Logger.log "#{election.winner index} wins!"
     end
     Logger.unindent
   end

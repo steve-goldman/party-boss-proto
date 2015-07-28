@@ -22,6 +22,10 @@ class Politician
   # to get Class.deserialize
   extend Deserializable
 
+  def strength(priority)
+    strengths.send priority
+  end
+
   def to_s
     sprintf "%-12s f:#{fundraising} #{strengths}", name
   end

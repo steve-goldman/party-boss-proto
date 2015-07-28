@@ -22,6 +22,8 @@ class GameEngine
   end
 
   def start
+    @game_snapshot.apply_election run_election
+    @game_snapshot.board.state_of_the_union = StateOfTheUnion.random
     run_election
   end
 
@@ -62,6 +64,7 @@ class GameEngine
       Logger.log "#{election.winner index} wins!"
     end
     Logger.unindent
+    election
   end
   
 end

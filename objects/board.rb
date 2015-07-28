@@ -28,6 +28,12 @@ class Board
     end
   end
 
+  def num_encumbents(team)
+    office_holders.reduce(0) do |sum, office_holder|
+      sum + (office_holder.team == team ? 1 : 0)
+    end
+  end
+  
   private
 
   def office_holder?(candidate)

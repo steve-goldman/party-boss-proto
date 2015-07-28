@@ -40,6 +40,14 @@ class Election
     get_winner candidates_A[index], points_A(index), candidates_B[index], points_B(index), office_holders[index].politician
   end
 
+  def winning_team(index)
+    winner(index) == candidates_A[index] ? 'A' : 'B'
+  end
+
+  def loser(index)
+    winner(index) == candidates_A[index] ? candidates_B[index] : candidates_A[index]
+  end
+
   private
 
   def get_winner(candidate_A, points_A, candidate_B, points_B, encumbent)

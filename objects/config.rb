@@ -4,6 +4,7 @@ class Config < BaseObject
 
   # define the data that goes in this object
   Members = [
+    { name: :seats_num,                type: Integer },
     { name: :politicians_num_in_party, type: Integer },
     { name: :campaign_dice_max,        type: Integer },
   ]

@@ -38,7 +38,7 @@ class GameEngine
     candidates_B = @player_B.get_candidates(@game_snapshot)
     Logger.unindent
     Logger.header("Election matchups").indent
-    candidates_A.each_index do |index|
+    Config.get.seats_num.times do |index|
       Logger.log "#{candidates_A[index]} versus #{candidates_B[index]}"
     end
     Logger.unindent
@@ -55,7 +55,7 @@ class GameEngine
                             @dice_roller.get_outcomes(allocation_A),
                             @dice_roller.get_outcomes(allocation_B))
     Logger.header("Election results").indent
-    election.candidates_A.each_index do |index|
+    Config.get.seats_num.times do |index|
       Logger.subheader "#{candidates_A[index]} versus #{candidates_B[index]}"
       Logger.log "'A' rolled #{election.outcomes_A[index]} for total of #{election.points_A index, @game_snapshot.board.state_of_the_union}"
       Logger.log "'B' rolled #{election.outcomes_B[index]} for total of #{election.points_B index, @game_snapshot.board.state_of_the_union}"

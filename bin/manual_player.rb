@@ -60,8 +60,8 @@ class ManualPlayer
       Logger.prompt "(Enter candidate # or 'list'): "
       input = gets.chomp
       if input == 'list'
-        hand.politicians.each_index do |i|
-          Logger.log "#{i + 1}: #{hand.politicians[i]}"
+        hand.politicians.count.times do |index|
+          Logger.log "#{index + 1}: #{hand.politicians[index]}"
         end
       elsif !int_in_range? input, 1, hand.politicians.count
         Logger.error "Input #{input} is out of range"
@@ -76,7 +76,7 @@ class ManualPlayer
 
   def confirm_candidates(office_holders, candidates)
     Logger.subheader("You have selected:").indent
-    candidates.each_index do |index|
+    Config.get.seats_num.times do |index|
       if office_holders[index].politician == candidates[index]
         Logger.log "#{candidates[index]} (encumbent)"
       else
@@ -102,7 +102,7 @@ class ManualPlayer
 
   def confirm_allocation(allocation, total_dice, candidates, opponents)
     Logger.subheader("You have allocated:").indent
-    allocation.each_index do |index|
+    Config.get.seats_num.times do |index|
       Logger.log "#{allocation[index]} for #{candidates[index]} versus #{opponents[index]}"
     end
     Logger.log "#{total_dice - allocation.reduce(:+)} left over"

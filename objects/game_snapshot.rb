@@ -18,12 +18,10 @@ class GameSnapshot < BaseObject
     # create a deck of politicians
     politician_deck = Politician.from_array_file('data/politicians.json').shuffle
     # set the initial office holders from the politician_deck
-    office_holders = [
-      OfficeHolder.new("A", politician_deck.pop),
-      OfficeHolder.new("B", politician_deck.pop),
-      OfficeHolder.new("A", politician_deck.pop),
-      OfficeHolder.new("B", politician_deck.pop)
-    ]
+    office_holders = []
+    Config.get.seats_num.times do
+      office_holders << OfficeHolder.new(office_holders.count % 2 == 0 ? 'A' : 'B', politician_deck.pop)
+    end
     # create the board
     board = Board.new(StateOfTheUnion.random, office_holders)
     # create the snapshot
@@ -35,7 +33,7 @@ class GameSnapshot < BaseObject
 
   def apply_election(election)
     # put the winners in office and losers back in the deck
-    election.candidates_A.each_index do |index|
+    Config.get.seats_num.times do |index|
       board.office_holders[index] = OfficeHolder.new board.election_winning_team(election, index), board.election_winner(election, index)
       politician_deck.push board.election_loser(election, index)
     end

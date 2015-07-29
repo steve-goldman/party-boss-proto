@@ -17,7 +17,7 @@ class Logger
     Logger.instance.log ""
     Logger.instance.log ("#" * (length + 4))
     lines.each do |line|
-      Logger.instance.log "# #{line} #"
+      Logger.instance.log(sprintf "# %-#{length}s #", line)
     end
     Logger.instance.log ("#" * (length + 4))
   end

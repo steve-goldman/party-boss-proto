@@ -3,6 +3,14 @@ require_relative 'strengths'
 
 class Politician < BaseObject
 
+  private
+
+  NameMaxLength = 18
+
+  public
+
+  MaxLength = NameMaxLength + 5 + Strengths::Length
+  
   # define the data that goes in this object
   Members = [
     { name: :name,        type: String    },
@@ -15,7 +23,7 @@ class Politician < BaseObject
   end
 
   def to_s
-    sprintf "%-18s f:#{fundraising} #{strengths}", name
+    sprintf "%-#{NameMaxLength}s f:#{fundraising} #{strengths}", name
   end
   
 end

@@ -33,6 +33,23 @@ class Board < BaseObject
   def election_winning_team(election, index)
     election.winning_team index, state_of_the_union, office_holders
   end
+
+  def description
+    office_holders_array = []
+    Config.get.seats_num.times do |index|
+      office_holders_array << sprintf("%-#{Politician::MaxLength}s | %-#{Politician::MaxLength}s",
+                                      office_holders[index].team == 'A' ? office_holders[index].politician : "",
+                                      office_holders[index].team == 'B' ? office_holders[index].politician : "")
+    end
+    [
+      "The state of the union is #{state_of_the_union}.",
+      "",
+      "Politicians holding office",
+      "-" * (2 * Politician::MaxLength + 3),
+      sprintf("%-#{Politician::MaxLength}s | %-#{Politician::MaxLength}s", "Party 'A'", "Party 'B'"),
+      "-" * (2 * Politician::MaxLength + 3),
+    ].concat(office_holders_array).join("\n")
+  end
   
   private
 

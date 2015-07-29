@@ -22,15 +22,16 @@ class GameEngine
   end
 
   def start
+    Logger.header @game_snapshot.board.description
     @game_snapshot.apply_election run_election
     @game_snapshot.board.state_of_the_union = StateOfTheUnion.random
+    Logger.header @game_snapshot.board.description
     run_election
   end
 
   private
 
   def run_election
-    Logger.header "The state of the union is #{@game_snapshot.board.state_of_the_union}"
     Logger.header("Player 'A' choosing candidates").indent
     candidates_A = @player_A.get_candidates(@game_snapshot)
     Logger.unindent

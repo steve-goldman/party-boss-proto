@@ -2,6 +2,8 @@ require_relative 'base_object'
 
 class Strengths < BaseObject
 
+  Length = 13
+  
   # define the data that goes in this object
   Members = [
     { name: :defense, type: Integer },

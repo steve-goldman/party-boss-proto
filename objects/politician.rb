@@ -15,7 +15,7 @@ class Politician < BaseObject
   end
 
   def to_s
-    sprintf "%-12s f:#{fundraising} #{strengths}", name
+    sprintf "%-18s f:#{fundraising} #{strengths}", name
   end
   
 end

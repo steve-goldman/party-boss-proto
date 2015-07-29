@@ -1,7 +1,10 @@
 class Logger
 
   def Logger.log(message)
-    Logger.instance.log message
+    message.split("\n").each do |line|
+      Logger.instance.log line
+    end
+    Logger.instance
   end
 
   def Logger.prompt(message)
@@ -9,20 +12,32 @@ class Logger
   end
 
   def Logger.header(header)
+    lines = header.split(/\n/)
+    length = lines.reduce(0) { |max, line| [max, line.length].max }
     Logger.instance.log ""
-    Logger.instance.log ("#" * (header.length + 4))
-    Logger.instance.log "# #{header} #"
-    Logger.instance.log ("#" * (header.length + 4))
+    Logger.instance.log ("#" * (length + 4))
+    lines.each do |line|
+      Logger.instance.log "# #{line} #"
+    end
+    Logger.instance.log ("#" * (length + 4))
   end
 
   def Logger.subheader(subheader)
+    lines = subheader.split(/\n/)
+    length = lines.reduce(0) { |max, line| [max, line.length].max }
     Logger.instance.log ""
-    Logger.instance.log subheader
-    Logger.instance.log ("-" * subheader.length)
+    lines.each do |line|
+      Logger.instance.log line
+      Logger.instance.log ("-" * length)
+    end
+    Logger.instance
   end
-
+  
   def Logger.error(error)
-    Logger.instance.log("ERROR: #{error}")
+    error.split(/\n/).each do |line|
+      Logger.instance.log("ERROR: #{line}")
+    end
+    Logger.instance
   end
   
   def Logger.indent

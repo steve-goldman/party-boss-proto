@@ -1,362 +1,362 @@
 [
-    {
-        "name": "Andre Farnum",
-        "fundraising": 1,
-        "strengths": {
-            "economy": 2,
-            "defense": 2,
-            "social": 0
-        }
-    },
-    {
-        "name": "Barbara Barnes",
-        "fundraising": 0,
-        "strengths": {
-            "economy": 1,
-            "defense": 2,
-            "social": 2
-        }
-    },
-    {
-        "name": "Brian Nettler",
-        "fundraising": 0,
-        "strengths": {
-            "economy": 2,
-            "defense": 1,
-            "social": 2
-        }
-    },
-    {
-        "name": "Bristol Clenn",
-        "fundraising": 1,
-        "strengths": {
-            "economy": 0,
-            "defense": 2,
-            "social": 3
-        }
-    },
-    {
-        "name": "Charles Kaning",
-        "fundraising": 0,
-        "strengths": {
-            "economy": 3,
-            "defense": 2,
-            "social": 1
-        }
-    },
-    {
-        "name": "Charlotte Ferris",
-        "fundraising": 2,
-        "strengths": {
-            "economy": 2,
-            "defense": 1,
-            "social": 1
-        }
-    },
-    {
-        "name": "Claire Kwelner",
-        "fundraising": 1,
-        "strengths": {
-            "economy": 1,
-            "defense": 1,
-            "social": 2
-        }
-    },
-    {
-        "name": "Cora Stevens",
-        "fundraising": 0,
-        "strengths": {
-            "economy": 2,
-            "defense": 2,
-            "social": 2
-        }
-    },
-    {
-        "name": "Dennis Buckner",
-        "fundraising": 0,
-        "strengths": {
-            "economy": 2,
-            "defense": 3,
-            "social": 1
-        }
-    },
-    {
-        "name": "Dot Smith",
-        "fundraising": 1,
-        "strengths": {
-            "economy": 3,
-            "defense": 1,
-            "social": 1
-        }
-    },
-    {
-        "name": "Dwight Stumphaus",
-        "fundraising": 2,
-        "strengths": {
-            "economy": 1,
-            "defense": 1,
-            "social": 1
-        }
-    },
-    {
-        "name": "Everett Tinpenny",
-        "fundraising": 0,
-        "strengths": {
-            "economy": 1,
-            "defense": 3,
-            "social": 2
-        }
-    },
-    {
-        "name": "Flint Hasset",
-        "fundraising": 1,
-        "strengths": {
-            "economy": 3,
-            "defense": 0,
-            "social": 2
-        }
-    },
-    {
-        "name": "Gerard Plackart",
-        "fundraising": 0,
-        "strengths": {
-            "economy": 1,
-            "defense": 3,
-            "social": 2
-        }
-    },
-    {
-        "name": "Ginger Rugula",
-        "fundraising": 1,
-        "strengths": {
-            "economy": 1,
-            "defense": 2,
-            "social": 2
-        }
-    },
-    {
-        "name": "Gloria Rivers",
-        "fundraising": 1,
-        "strengths": {
-            "economy": 1,
-            "defense": 2,
-            "social": 1
-        }
-    },
-    {
-        "name": "Gordon Rucks",
-        "fundraising": 0,
-        "strengths": {
-            "economy": 2,
-            "defense": 2,
-            "social": 1
-        }
-    },
-    {
-        "name": "Gregory Frotte",
-        "fundraising": 1,
-        "strengths": {
-            "economy": 1,
-            "defense": 2,
-            "social": 2
-        }
-    },
-    {
-        "name": "Isobel Tse",
-        "fundraising": 0,
-        "strengths": {
-            "economy": 2,
-            "defense": 1,
-            "social": 3
-        }
-    },
-    {
-        "name": "Jennifer Ronnilis",
-        "fundraising": 0,
-        "strengths": {
-            "economy": 2,
-            "defense": 1,
-            "social": 3
-        }
-    },
-    {
-        "name": "Jeremy Lent",
-        "fundraising": 0,
-        "strengths": {
-            "economy": 3,
-            "defense": 1,
-            "social": 2
-        }
-    },
-    {
-        "name": "Jerry Daygin",
-        "fundraising": 2,
-        "strengths": {
-            "economy": 0,
-            "defense": 2,
-            "social": 1
-        }
-    },
-    {
-        "name": "Julia Stringfellow",
-        "fundraising": 1,
-        "strengths": {
-            "economy": 2,
-            "defense": 1,
-            "social": 2
-        }
-    },
-    {
-        "name": "Karen Armlin",
-        "fundraising": 2,
-        "strengths": {
-            "economy": 2,
-            "defense": 0,
-            "social": 2
-        }
-    },
-    {
-        "name": "Kenny Sharpe",
-        "fundraising": 1,
-        "strengths": {
-            "economy": 0,
-            "defense": 3,
-            "social": 1
-        }
-    },
-    {
-        "name": "Killian Morris",
-        "fundraising": 3,
-        "strengths": {
-            "economy": 1,
-            "defense": 1,
-            "social": 1
-        }
-    },
-    {
-        "name": "Kilmarnock Bernel",
-        "fundraising": 2,
-        "strengths": {
-            "economy": 2,
-            "defense": 1,
-            "social": 1
-        }
-    },
-    {
-        "name": "Melissa Shaw",
-        "fundraising": 2,
-        "strengths": {
-            "economy": 1,
-            "defense": 1,
-            "social": 2
-        }
-    },
-    {
-        "name": "Michael Crumbel",
-        "fundraising": 1,
-        "strengths": {
-            "economy": 1,
-            "defense": 0,
-            "social": 3
-        }
-    },
-    {
-        "name": "Norbert Schepps",
-        "fundraising": 1,
-        "strengths": {
-            "economy": 2,
-            "defense": 1,
-            "social": 2
-        }
-    },
-    {
-        "name": "Pancho Curran",
-        "fundraising": 1,
-        "strengths": {
-            "economy": 2,
-            "defense": 2,
-            "social": 0
-        }
-    },
-    {
-        "name": "Patrick Trubridge",
-        "fundraising": 2,
-        "strengths": {
-            "economy": 1,
-            "defense": 2,
-            "social": 1
-        }
-    },
-    {
-        "name": "Sam Clonures",
-        "fundraising": 0,
-        "strengths": {
-            "economy": 1,
-            "defense": 2,
-            "social": 2
-        }
-    },
-    {
-        "name": "Scott Kellum",
-        "fundraising": 0,
-        "strengths": {
-            "economy": 1,
-            "defense": 1,
-            "social": 3
-        }
-    },
-    {
-        "name": "Teddy Mason",
-        "fundraising": 0,
-        "strengths": {
-            "economy": 2,
-            "defense": 2,
-            "social": 2
-        }
-    },
-    {
-        "name": "Thurman Stone",
-        "fundraising": 0,
-        "strengths": {
-            "economy": 1,
-            "defense": 3,
-            "social": 1
-        }
-    },
-    {
-        "name": "Timothy Longdown",
-        "fundraising": 1,
-        "strengths": {
-            "economy": 2,
-            "defense": 1,
-            "social": 1
-        }
-    },
-    {
-        "name": "Virginia Rust",
-        "fundraising": 1,
-        "strengths": {
-            "economy": 3,
-            "defense": 2,
-            "social": 0
-        }
-    },
-    {
-        "name": "Walter Turnkey",
-        "fundraising": 2,
-        "strengths": {
-            "economy": 1,
-            "defense": 1,
-            "social": 1
-        }
-    },
-    {
-        "name": "Xavier Carp",
-        "fundraising": 1,
-        "strengths": {
-            "economy": 2,
-            "defense": 2,
-            "social": 1
-        }
+  {
+    "name": "Andre Farnum",
+    "fundraising": 1,
+    "strengths": {
+      "economy": 2,
+      "defense": 2,
+      "social": 0
     }
+  },
+  {
+    "name": "Barbara Barnes",
+    "fundraising": 0,
+    "strengths": {
+      "economy": 1,
+      "defense": 2,
+      "social": 2
+    }
+  },
+  {
+    "name": "Brian Nettler",
+    "fundraising": 0,
+    "strengths": {
+      "economy": 2,
+      "defense": 1,
+      "social": 2
+    }
+  },
+  {
+    "name": "Bristol Clenn",
+    "fundraising": 1,
+    "strengths": {
+      "economy": 0,
+      "defense": 2,
+      "social": 3
+    }
+  },
+  {
+    "name": "Charles Kaning",
+    "fundraising": 0,
+    "strengths": {
+      "economy": 3,
+      "defense": 2,
+      "social": 1
+    }
+  },
+  {
+    "name": "Charlotte Ferris",
+    "fundraising": 2,
+    "strengths": {
+      "economy": 2,
+      "defense": 1,
+      "social": 1
+    }
+  },
+  {
+    "name": "Claire Kwelner",
+    "fundraising": 1,
+    "strengths": {
+      "economy": 1,
+      "defense": 1,
+      "social": 2
+    }
+  },
+  {
+    "name": "Cora Stevens",
+    "fundraising": 0,
+    "strengths": {
+      "economy": 2,
+      "defense": 2,
+      "social": 2
+    }
+  },
+  {
+    "name": "Dennis Buckner",
+    "fundraising": 0,
+    "strengths": {
+      "economy": 2,
+      "defense": 3,
+      "social": 1
+    }
+  },
+  {
+    "name": "Dot Smith",
+    "fundraising": 1,
+    "strengths": {
+      "economy": 3,
+      "defense": 1,
+      "social": 1
+    }
+  },
+  {
+    "name": "Dwight Stumphaus",
+    "fundraising": 2,
+    "strengths": {
+      "economy": 1,
+      "defense": 1,
+      "social": 1
+    }
+  },
+  {
+    "name": "Everett Tinpenny",
+    "fundraising": 0,
+    "strengths": {
+      "economy": 1,
+      "defense": 3,
+      "social": 2
+    }
+  },
+  {
+    "name": "Flint Hasset",
+    "fundraising": 1,
+    "strengths": {
+      "economy": 3,
+      "defense": 0,
+      "social": 2
+    }
+  },
+  {
+    "name": "Gerard Plackart",
+    "fundraising": 0,
+    "strengths": {
+      "economy": 1,
+      "defense": 3,
+      "social": 2
+    }
+  },
+  {
+    "name": "Ginger Rugula",
+    "fundraising": 1,
+    "strengths": {
+      "economy": 1,
+      "defense": 2,
+      "social": 2
+    }
+  },
+  {
+    "name": "Gloria Rivers",
+    "fundraising": 1,
+    "strengths": {
+      "economy": 1,
+      "defense": 2,
+      "social": 1
+    }
+  },
+  {
+    "name": "Gordon Rucks",
+    "fundraising": 0,
+    "strengths": {
+      "economy": 2,
+      "defense": 2,
+      "social": 1
+    }
+  },
+  {
+    "name": "Gregory Frotte",
+    "fundraising": 1,
+    "strengths": {
+      "economy": 1,
+      "defense": 2,
+      "social": 2
+    }
+  },
+  {
+    "name": "Isobel Tse",
+    "fundraising": 0,
+    "strengths": {
+      "economy": 2,
+      "defense": 1,
+      "social": 3
+    }
+  },
+  {
+    "name": "Jennifer Ronnilis",
+    "fundraising": 0,
+    "strengths": {
+      "economy": 2,
+      "defense": 1,
+      "social": 3
+    }
+  },
+  {
+    "name": "Jeremy Lent",
+    "fundraising": 0,
+    "strengths": {
+      "economy": 3,
+      "defense": 1,
+      "social": 2
+    }
+  },
+  {
+    "name": "Jerry Daygin",
+    "fundraising": 2,
+    "strengths": {
+      "economy": 0,
+      "defense": 2,
+      "social": 1
+    }
+  },
+  {
+    "name": "Julia Stringfellow",
+    "fundraising": 1,
+    "strengths": {
+      "economy": 2,
+      "defense": 1,
+      "social": 2
+    }
+  },
+  {
+    "name": "Karen Armlin",
+    "fundraising": 2,
+    "strengths": {
+      "economy": 2,
+      "defense": 0,
+      "social": 2
+    }
+  },
+  {
+    "name": "Kenny Sharpe",
+    "fundraising": 1,
+    "strengths": {
+      "economy": 0,
+      "defense": 3,
+      "social": 1
+    }
+  },
+  {
+    "name": "Killian Morris",
+    "fundraising": 3,
+    "strengths": {
+      "economy": 1,
+      "defense": 1,
+      "social": 1
+    }
+  },
+  {
+    "name": "Kilmarnock Bernel",
+    "fundraising": 2,
+    "strengths": {
+      "economy": 2,
+      "defense": 1,
+      "social": 1
+    }
+  },
+  {
+    "name": "Melissa Shaw",
+    "fundraising": 2,
+    "strengths": {
+      "economy": 1,
+      "defense": 1,
+      "social": 2
+    }
+  },
+  {
+    "name": "Michael Crumbel",
+    "fundraising": 1,
+    "strengths": {
+      "economy": 1,
+      "defense": 0,
+      "social": 3
+    }
+  },
+  {
+    "name": "Norbert Schepps",
+    "fundraising": 1,
+    "strengths": {
+      "economy": 2,
+      "defense": 1,
+      "social": 2
+    }
+  },
+  {
+    "name": "Pancho Curran",
+    "fundraising": 1,
+    "strengths": {
+      "economy": 2,
+      "defense": 2,
+      "social": 0
+    }
+  },
+  {
+    "name": "Patrick Trubridge",
+    "fundraising": 2,
+    "strengths": {
+      "economy": 1,
+      "defense": 2,
+      "social": 1
+    }
+  },
+  {
+    "name": "Sam Clonures",
+    "fundraising": 0,
+    "strengths": {
+      "economy": 1,
+      "defense": 2,
+      "social": 2
+    }
+  },
+  {
+    "name": "Scott Kellum",
+    "fundraising": 0,
+    "strengths": {
+      "economy": 1,
+      "defense": 1,
+      "social": 3
+    }
+  },
+  {
+    "name": "Teddy Mason",
+    "fundraising": 0,
+    "strengths": {
+      "economy": 2,
+      "defense": 2,
+      "social": 2
+    }
+  },
+  {
+    "name": "Thurman Stone",
+    "fundraising": 0,
+    "strengths": {
+      "economy": 1,
+      "defense": 3,
+      "social": 1
+    }
+  },
+  {
+    "name": "Timothy Longdown",
+    "fundraising": 1,
+    "strengths": {
+      "economy": 2,
+      "defense": 1,
+      "social": 1
+    }
+  },
+  {
+    "name": "Virginia Rust",
+    "fundraising": 1,
+    "strengths": {
+      "economy": 3,
+      "defense": 2,
+      "social": 0
+    }
+  },
+  {
+    "name": "Walter Turnkey",
+    "fundraising": 2,
+    "strengths": {
+      "economy": 1,
+      "defense": 1,
+      "social": 1
+    }
+  },
+  {
+    "name": "Xavier Carp",
+    "fundraising": 1,
+    "strengths": {
+      "economy": 2,
+      "defense": 2,
+      "social": 1
+    }
+  }
 ]

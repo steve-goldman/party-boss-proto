@@ -63,7 +63,7 @@ class ManualPlayer
           Logger.log "#{i + 1}: #{hand.politicians[i]}"
         end
       elsif !int_in_range? input, 1, hand.politicians.count
-        Logger.log "Input #{input} is out of range"
+        Logger.error "Input #{input} is out of range"
       else
         politician = hand.politicians[input.to_i - 1]
         hand.politicians.delete_at(input.to_i - 1)
@@ -92,7 +92,7 @@ class ManualPlayer
       Logger.prompt "(Enter number of campaign dice): "
       num_dice = gets.chomp.downcase
       if !int_in_range? num_dice, 0, 999999
-        Logger.log "#{num_dice} is out of range"
+        Logger.error "#{num_dice} is out of range"
       else
         return num_dice.to_i
       end

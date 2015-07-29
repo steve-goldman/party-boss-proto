@@ -1,4 +1,5 @@
 require_relative 'base_object'
+require_relative 'config'
 require_relative 'board'
 require_relative 'hand'
 
@@ -44,8 +45,8 @@ class GameSnapshot < BaseObject
   
   def deal_politicians
     politician_deck.shuffle
-    (7 - hand_A.politicians.count - board.num_encumbents('A')).times { hand_A.politicians << politician_deck.pop }
-    (7 - hand_B.politicians.count - board.num_encumbents('B')).times { hand_B.politicians << politician_deck.pop }
+    (Config.get.politicians_num_in_party - hand_A.politicians.count - board.num_encumbents('A')).times { hand_A.politicians << politician_deck.pop }
+    (Config.get.politicians_num_in_party - hand_B.politicians.count - board.num_encumbents('B')).times { hand_B.politicians << politician_deck.pop }
   end
 
 end

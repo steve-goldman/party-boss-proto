@@ -1,8 +1,6 @@
-require_relative '../lib/class_record'
-require_relative '../lib/serializable'
-require_relative '../lib/deserializable'
+require_relative 'base_object'
 
-class Strengths
+class Strengths < BaseObject
 
   # define the data that goes in this object
   Members = [
@@ -10,15 +8,6 @@ class Strengths
     { name: :economy, type: Integer },
     { name: :society, type: Integer }
   ]
-
-  # to get the constructor and member accessors
-  include ClassRecord
-
-  # to get instance.serialize
-  include Serializable
-
-  # to get Class.deserialize
-  extend Deserializable
 
   def to_s
     "[d:#{defense},e:#{economy},s:#{society}]"

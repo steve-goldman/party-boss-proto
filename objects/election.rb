@@ -1,11 +1,7 @@
-require_relative '../lib/class_record'
-require_relative '../lib/serializable'
-require_relative '../lib/deserializable'
-
 require_relative 'dice_allocation'
 require_relative 'dice_outcome'
 
-class Election
+class Election < BaseObject
 
   # define the data that goes in this object
   Members = [
@@ -16,15 +12,6 @@ class Election
     { name: :outcomes_A,         type: DiceOutcome,  is_array: true },
     { name: :outcomes_B,         type: DiceOutcome,  is_array: true },
   ]
-
-  # to get the constructor and member accessors
-  include ClassRecord
-
-  # to get instance.serialize
-  include Serializable
-
-  # to get Class.deserialize
-  extend Deserializable
 
   def points_A(index, state_of_the_union)
     outcomes_A[index].sum + candidates_A[index].strength(state_of_the_union.priorities[0])

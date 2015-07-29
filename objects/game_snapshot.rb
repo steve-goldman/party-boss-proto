@@ -10,13 +10,15 @@ class GameSnapshot < BaseObject
     { name: :board,  type: Board },
     { name: :hand_A, type: Hand  },
     { name: :hand_B, type: Hand  },
-    { name: :politician_deck, type: Politician, is_array: true }
+    { name: :politician_deck, type: Politician, is_array: true },
+    { name: :bill_deck,       type: Bill,       is_array: true },
   ]
 
   # utility method for creating a new game
   def GameSnapshot.new_game
-    # create a deck of politicians
-    politician_deck = Politician.from_array_file('data/politicians.json').shuffle
+    # create the decks of politicians
+    politician_deck = Politician.from_array_file('data/politicians.json')
+    bill_deck = Bill.from_array_file('data/bills.json')
     # set the initial office holders from the politician_deck
     office_holders = []
     Config.get.seats_num.times do
@@ -25,9 +27,10 @@ class GameSnapshot < BaseObject
     # create the board
     board = Board.new(StateOfTheUnion.random, office_holders)
     # create the snapshot
-    game_snapshot = GameSnapshot.new(board, Hand.new([]), Hand.new([]), politician_deck)
+    game_snapshot = GameSnapshot.new(board, Hand.new([], []), Hand.new([], []), politician_deck, bill_deck)
     # deal the cards
     game_snapshot.deal_politicians
+    game_snapshot.deal_bills
     game_snapshot
   end
 
@@ -43,8 +46,21 @@ class GameSnapshot < BaseObject
   
   def deal_politicians
     politician_deck.shuffle
-    (Config.get.politicians_num_in_party - hand_A.politicians.count - board.num_encumbents('A')).times { hand_A.politicians << politician_deck.pop }
-    (Config.get.politicians_num_in_party - hand_B.politicians.count - board.num_encumbents('B')).times { hand_B.politicians << politician_deck.pop }
+    (Config.get.politicians_num_in_party - hand_A.politicians.count - board.num_encumbents('A')).times do
+      hand_A.politicians << politician_deck.pop
+    end
+    (Config.get.politicians_num_in_party - hand_B.politicians.count - board.num_encumbents('B')).times do
+      hand_B.politicians << politician_deck.pop
+    end
+  end
+
+  def deal_bills
+    bill_deck.shuffle
+    for hand in [ hand_A, hand_B ] do
+      (Config.get.bills_num_in_committee - hand.bills.count).times do
+        hand.bills << bill_deck.pop
+      end
+    end
   end
 
 end

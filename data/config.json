@@ -1,5 +1,6 @@
 {
     "seats_num": 5,
     "politicians_num_in_party": 7,
+    "bills_num_in_committee": 8,
     "campaign_dice_max": 10
 }

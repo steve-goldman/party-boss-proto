@@ -18,12 +18,12 @@ class StateOfTheUnion < BaseObject
   private
 
   States = [
-    StateOfTheUnion.new([ "society", "economy", "defense" ]),
-    StateOfTheUnion.new([ "society", "defense", "economy" ]),
-    StateOfTheUnion.new([ "economy", "society", "defense" ]),
-    StateOfTheUnion.new([ "economy", "defense", "society" ]),
-    StateOfTheUnion.new([ "defense", "economy", "society" ]),
-    StateOfTheUnion.new([ "defense", "society", "economy" ])
+    StateOfTheUnion.new([ "social", "economy", "defense" ]),
+    StateOfTheUnion.new([ "social", "defense", "economy" ]),
+    StateOfTheUnion.new([ "economy", "social", "defense" ]),
+    StateOfTheUnion.new([ "economy", "defense", "social" ]),
+    StateOfTheUnion.new([ "defense", "economy", "social" ]),
+    StateOfTheUnion.new([ "defense", "social", "economy" ])
   ]
 
 end

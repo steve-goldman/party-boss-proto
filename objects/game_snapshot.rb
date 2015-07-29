@@ -1,11 +1,8 @@
-require_relative '../lib/class_record'
-require_relative '../lib/serializable'
-require_relative '../lib/deserializable'
-
+require_relative 'base_object'
 require_relative 'board'
 require_relative 'hand'
 
-class GameSnapshot
+class GameSnapshot < BaseObject
 
   # define the data that goes in this object
   Members = [
@@ -14,15 +11,6 @@ class GameSnapshot
     { name: :hand_B, type: Hand  },
     { name: :politician_deck, type: Politician, is_array: true }
   ]
-
-  # to get the constructor and member accessors
-  include ClassRecord
-
-  # to get instance.serialize
-  include Serializable
-
-  # to get Class.deserialize
-  extend Deserializable
 
   # utility method for creating a new game
   def GameSnapshot.new_game

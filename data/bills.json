@@ -1,0 +1,356 @@
+[
+    {
+        "title": "Cut Government Spending",
+        "agenda": "conservative",
+        "sector": "economy",
+        "vps": 3
+    },
+    {
+        "title": "Patriot Act",
+        "agenda": "conservative",
+        "sector": "defense",
+        "vps": 2
+    },
+    {
+        "title": "Balance Federal Budget",
+        "agenda": "conservative",
+        "sector": "economy",
+        "vps": 4
+    },
+    {
+        "title": "Repeal Gun Restrictions",
+        "agenda": "conservative",
+        "sector": "social",
+        "vps": 2
+    },
+    {
+        "title": "Border Security",
+        "agenda": "conservative",
+        "sector": "defense",
+        "vps": 3
+    },
+    {
+        "title": "Defense of Marriage Act",
+        "agenda": "conservative",
+        "sector": "social",
+        "vps": 4
+    },
+    {
+        "title": "Cap and Trade",
+        "agenda": "leftist",
+        "sector": "economy",
+        "vps": 4
+    },
+    {
+        "title": "Adopt Kyoto Protocol",
+        "agenda": "leftist",
+        "sector": "defense",
+        "vps": 4
+    },
+    {
+        "title": "Nuclear Disarmament",
+        "agenda": "leftist",
+        "sector": "defense",
+        "vps": 3
+    },
+    {
+        "title": "Legalize Marijuana",
+        "agenda": "leftist",
+        "sector": "social",
+        "vps": 2
+    },
+    {
+        "title": "Ban Fracking",
+        "agenda": "leftist",
+        "sector": "economy",
+        "vps": 2
+    },
+    {
+        "title": "Wealth Redistribution",
+        "agenda": "leftist",
+        "sector": "social",
+        "vps": 3
+    },
+    {
+        "title": "Privatize Gov't Agencies",
+        "agenda": "libertarian",
+        "sector": "economy",
+        "vps": 4
+    },
+    {
+        "title": "Troop Withdrawal",
+        "agenda": "libertarian",
+        "sector": "defense",
+        "vps": 2
+    },
+    {
+        "title": "Neutrality Protections",
+        "agenda": "libertarian",
+        "sector": "defense",
+        "vps": 3
+    },
+    {
+        "title": "NAFTA",
+        "agenda": "libertarian",
+        "sector": "economy",
+        "vps": 2
+    },
+    {
+        "title": "Electronic Privacy",
+        "agenda": "libertarian",
+        "sector": "social",
+        "vps": 3
+    },
+    {
+        "title": "Fair Tax",
+        "agenda": "libertarian",
+        "sector": "social",
+        "vps": 4
+    },
+    {
+        "title": "Military Appropriations",
+        "agenda": "moderate",
+        "sector": "defense",
+        "vps": 2
+    },
+    {
+        "title": "Economic Stimulus Act",
+        "agenda": "moderate",
+        "sector": "economy",
+        "vps": 2
+    },
+    {
+        "title": "Social Security Reform",
+        "agenda": "moderate",
+        "sector": "social",
+        "vps": 3
+    },
+    {
+        "title": "Economic Recovery Act",
+        "agenda": "moderate",
+        "sector": "economy",
+        "vps": 4
+    },
+    {
+        "title": "Consumer Protection",
+        "agenda": "moderate",
+        "sector": "social",
+        "vps": 4
+    },
+    {
+        "title": "FBI Appropriations",
+        "agenda": "moderate",
+        "sector": "defense",
+        "vps": 3
+    },
+    {
+        "title": "International Disaster Relief",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+    },
+    {
+        "title": "Wall Street Reform",
+        "agenda": "progressive",
+        "sector": "economy",
+        "vps": 3
+    },
+    {
+        "title": "Affordable Care Act",
+        "agenda": "progressive",
+        "sector": "social",
+        "vps": 2
+    },
+    {
+        "title": "Affirmative Action",
+        "agenda": "progressive",
+        "sector": "social",
+        "vps": 2
+    },
+    {
+        "title": "Anti-Trust Act",
+        "agenda": "progressive",
+        "sector": "economy",
+        "vps": 3
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+        
+    },
+    {
+        "title": "Foreign Aid: Syria",
+        "agenda": "progressive",
+        "sector": "defense",
+        "vps": 4
+    }
+]

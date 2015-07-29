@@ -12,7 +12,7 @@ class ManualPlayer
   def get_candidates(game_snapshot)
     while true
       # don't spoil the data until the user confirms
-      temp_hand = Hand.new @hand.politicians.clone
+      temp_politicians = @hand.politicians.clone
       # get the candidates from the user
       i = 0
       candidates = game_snapshot.board.office_holders.map do |office_holder|
@@ -23,7 +23,7 @@ class ManualPlayer
           office_holder.politician
         else
           Logger.log "Candidate to run against #{office_holder.politician}"
-          input_candidate temp_hand
+          input_candidate temp_politicians
         end
       end
       # ask user to confirm
@@ -55,19 +55,19 @@ class ManualPlayer
 
   private
 
-  def input_candidate(hand)
+  def input_candidate(politicians)
     while true
       Logger.prompt "(Enter candidate # or 'list'): "
       input = gets.chomp
       if input == 'list'
-        hand.politicians.count.times do |index|
-          Logger.log "#{index + 1}: #{hand.politicians[index]}"
+        politicians.count.times do |index|
+          Logger.log "#{index + 1}: #{politicians[index]}"
         end
-      elsif !int_in_range? input, 1, hand.politicians.count
+      elsif !int_in_range? input, 1, politicians.count
         Logger.error "Input #{input} is out of range"
       else
-        politician = hand.politicians[input.to_i - 1]
-        hand.politicians.delete_at(input.to_i - 1)
+        politician = politicians[input.to_i - 1]
+        politicians.delete_at(input.to_i - 1)
         Logger.unindent
         return politician
       end

@@ -1,3 +1,4 @@
 {
-    "politicians_num_in_party": 7
+    "politicians_num_in_party": 7,
+    "campaign_dice_max": 10
 }

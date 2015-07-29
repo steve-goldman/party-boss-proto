@@ -1,3 +1,4 @@
+require_relative '../objects/config'
 require_relative '../objects/game_snapshot'
 require_relative 'logger'
 
@@ -36,7 +37,7 @@ class ManualPlayer
 
   def get_allocation(game_snapshot, candidates, opponents)
     while true
-      total_dice = game_snapshot.board.num_campaign_dice candidates
+      total_dice = [game_snapshot.board.num_campaign_dice(candidates), Config.get.campaign_dice_max].min
       Logger.subheader("Distribute #{total_dice} campaign dice").indent
       i = -1
       allocation = candidates.map do |candidate|

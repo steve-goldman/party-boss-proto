@@ -30,7 +30,7 @@ class GameEngine
       @game_snapshot.apply_election election
       Logger.header "Legislative phase"
       @game.cycles << Cycle.new(election)
-      @game_snapshot.board.state_of_the_union = StateOfTheUnion.next
+      @game_snapshot.end_cycle
     end
     @game
   end

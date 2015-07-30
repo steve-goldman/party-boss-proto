@@ -10,25 +10,31 @@ class GameSnapshot < BaseObject
     { name: "board",  type: Board },
     { name: "hand_A", type: Hand  },
     { name: "hand_B", type: Hand  },
-    { name: "politician_deck", type: Politician, is_array: true },
-    { name: "bill_deck",       type: Bill,       is_array: true },
+    { name: "politician_deck",         type: Politician,      is_array: true },
+    { name: "bill_deck",               type: Bill,            is_array: true },
+    { name: "state_of_the_union_deck", type: StateOfTheUnion, is_array: true },
   ]
 
   # utility method for creating a new game
   def GameSnapshot.new_game
     # create the decks of politicians
-    politician_deck = Politician.from_array_file('data/politicians.json')
-    bill_deck = Bill.from_array_file('data/bills.json')
+    politician_deck = Politician.from_array_file('data/politicians.json').shuffle
+    bill_deck = Bill.from_array_file('data/bills.json').shuffle
+    state_of_the_union_deck = StateOfTheUnion.from_array_file('data/state_of_the_unions.json').shuffle
     # set the initial office holders from the politician_deck
-    politician_deck.shuffle!
     office_holders = []
     Config.get.seats_num.times do
       office_holders << OfficeHolder.new(office_holders.count % 2 == 0 ? 'A' : 'B', politician_deck.pop)
     end
     # create the board
-    board = Board.new(StateOfTheUnion.next, office_holders)
+    board = Board.new(state_of_the_union_deck.pop, office_holders)
     # create the snapshot
-    game_snapshot = GameSnapshot.new(board, Hand.new([], []), Hand.new([], []), politician_deck, bill_deck)
+    game_snapshot = GameSnapshot.new(board,
+                                     Hand.new([], []),
+                                     Hand.new([], []),
+                                     politician_deck,
+                                     bill_deck,
+                                     state_of_the_union_deck)
     # deal the cards
     game_snapshot.deal_politicians
     game_snapshot.deal_bills
@@ -63,6 +69,12 @@ class GameSnapshot < BaseObject
         hand.bills << bill_deck.pop
       end
     end
+  end
+
+  def end_cycle
+    old_state_of_the_union = board.state_of_the_union
+    board.state_of_the_union = state_of_the_union_deck.shuffle!.pop
+    state_of_the_union_deck.push old_state_of_the_union
   end
 
 end

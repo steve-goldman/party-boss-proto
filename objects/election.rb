@@ -27,8 +27,8 @@ class Election < BaseObject
     {
       winner: winner,
       loser: winner == candidates_A[index] ? candidates_B[index] : candidates_A[index],
-      winning_team: winner == candidates_A[index] ? 'A' : 'B',
-      losing_team: winner == candidates_A[index] ? 'B' : 'A'
+      winning_party: winner == candidates_A[index] ? 'A' : 'B',
+      losing_party: winner == candidates_A[index] ? 'B' : 'A'
     }
   end
 
@@ -38,9 +38,9 @@ class Election < BaseObject
       result = get_result index, board
       results_array << sprintf("%-#{Politician::MaxLength}s (party '%s')  DEFEATS  %-#{Politician::MaxLength}s (party '%s')",
                                result[:winner],
-                               result[:winning_team],
+                               result[:winning_party],
                                result[:loser],
-                               result[:losing_team])
+                               result[:losing_party])
     end
 
     [

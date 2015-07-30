@@ -16,9 +16,9 @@ class Board < BaseObject
     end
   end
 
-  def num_encumbents(team)
+  def num_encumbents(party)
     office_holders.reduce(0) do |sum, office_holder|
-      sum + (office_holder.team == team ? 1 : 0)
+      sum + (office_holder.party == party ? 1 : 0)
     end
   end
 
@@ -26,8 +26,8 @@ class Board < BaseObject
     office_holders_array = []
     Config.get.seats_num.times do |index|
       office_holders_array << sprintf("%-#{Politician::MaxLength}s | %-#{Politician::MaxLength}s",
-                                      office_holders[index].team == 'A' ? office_holders[index].politician : "",
-                                      office_holders[index].team == 'B' ? office_holders[index].politician : "")
+                                      office_holders[index].party == 'A' ? office_holders[index].politician : "",
+                                      office_holders[index].party == 'B' ? office_holders[index].politician : "")
     end
     [
       "The state of the union is #{state_of_the_union}.",

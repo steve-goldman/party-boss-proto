@@ -38,7 +38,7 @@ class GameSnapshot < BaseObject
     # put the winners in office and losers back in the deck
     Config.get.seats_num.times do |index|
       result = election.get_result index, board
-      board.office_holders[index] = OfficeHolder.new result[:winning_team], result[:winner]
+      board.office_holders[index] = OfficeHolder.new result[:winning_party], result[:winner]
       politician_deck.push result[:loser]
     end
     # top off the hands

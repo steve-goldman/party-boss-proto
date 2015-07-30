@@ -4,8 +4,8 @@ require_relative 'logger'
 
 class ManualPlayer
 
-  def initialize(team, hand)
-    @team = team
+  def initialize(party, hand)
+    @party = party
     @hand = hand
   end
 
@@ -18,8 +18,8 @@ class ManualPlayer
       candidates = game_snapshot.board.office_holders.map do |office_holder|
         i += 1
         Logger.subheader("Selecting candidate for race ##{i}").indent
-        if @team == office_holder.team
-          Logger.log("Encumbent #{office_holder.politician} is on your team").unindent
+        if @party == office_holder.party
+          Logger.log("Encumbent #{office_holder.politician} is in your party").unindent
           office_holder.politician
         else
           Logger.log "Candidate to run against #{office_holder.politician}"

@@ -43,12 +43,10 @@ class GameSnapshot < BaseObject
 
   def deal_politicians(party)
     politician_deck.shuffle!
-    hand = send("hand_#{party}")
     dealt_politicians = []
-    (Config.get.politicians_num_in_party - hand.politicians.count - board.num_encumbents(party)).times do
+    (Config.get.politicians_num_in_party - send("hand_#{party}").politicians.count - board.num_encumbents(party)).times do
       dealt_politicians << politician_deck.pop
     end
-    hand.politicians.concat dealt_politicians
     dealt_politicians
   end
 
@@ -61,9 +59,9 @@ class GameSnapshot < BaseObject
     end
   end
 
-  def end_cycle
+  def end_cycle(next_state_of_the_union)
     old_state_of_the_union = board.state_of_the_union
-    board.state_of_the_union = state_of_the_union_deck.shuffle!.pop
+    board.state_of_the_union = next_state_of_the_union
     state_of_the_union_deck.push old_state_of_the_union
   end
 

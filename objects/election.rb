@@ -37,11 +37,7 @@ class Election < BaseObject
     Logger.header("Boss 'B' choosing candidates").indent
     candidates_B = boss_B.get_candidates(game_snapshot)
     Logger.unindent
-    Logger.header("Election matchups").indent
-    Config.get.seats_num.times do |index|
-      Logger.log "#{candidates_A[index]} versus #{candidates_B[index]}"
-    end
-    Logger.unindent
+    Election.log_matchups candidates_A, candidates_B
     Logger.header("Boss 'A' choosing dice allocation").indent
     allocation_A = boss_A.get_allocation(game_snapshot, candidates_A, candidates_B)
     Logger.unindent
@@ -56,19 +52,15 @@ class Election < BaseObject
                             dice_roller.get_outcomes(allocation_B),
                             [], # fill this in below
                             []) # fill this in below
-    # put the winners in office
-    Config.get.seats_num.times do |index|
-      result = election.get_result index, game_snapshot.board
-      game_snapshot.board.office_holders[index] = OfficeHolder.new result[:winning_party], result[:winner]
-    end
-    # deal politicians
-    election.politicians_dealt_A.concat(game_snapshot.deal_politicians 'A')
-    election.politicians_dealt_B.concat(game_snapshot.deal_politicians 'B')
-    # put the losers back in the deck
-    Config.get.seats_num.times do |index|
-      result = election.get_result index, game_snapshot.board
-      game_snapshot.politician_deck.push result[:loser]
-    end
+
+    election.remove_candidates_from_hands game_snapshot
+    election.put_winners_in_office game_snapshot
+
+    election.politicians_dealt_A.concat game_snapshot.deal_politicians('A')
+    election.politicians_dealt_B.concat game_snapshot.deal_politicians('B')
+    election.deal_politicians game_snapshot
+
+    election.put_losers_in_deck game_snapshot
 
     Logger.header(election.description game_snapshot.board).indent
     Logger.unindent
@@ -76,6 +68,44 @@ class Election < BaseObject
     election
   end
 
+  def Election.log_matchups(candidates_A, candidates_B)
+    Logger.subheader("Election matchups").indent
+    Config.get.seats_num.times do |index|
+      Logger.log "#{candidates_A[index]} versus #{candidates_B[index]}"
+    end
+    Logger.unindent
+  end
+
+  def remove_candidates_from_hands(game_snapshot)
+    remove_candidates_from_hand game_snapshot, 'A'
+    remove_candidates_from_hand game_snapshot, 'B'
+  end
+  
+  def remove_candidates_from_hand(game_snapshot, party)
+    send("candidates_#{party}").each do |candidate|
+      game_snapshot.send("hand_#{party}").politicians.delete_if { |politician| politician.equals? candidate }
+    end
+  end
+  
+  def put_winners_in_office(game_snapshot)
+    Config.get.seats_num.times do |index|
+      result = get_result index, game_snapshot.board
+      game_snapshot.board.office_holders[index] = OfficeHolder.new result[:winning_party], result[:winner]
+    end
+  end
+
+  def deal_politicians(game_snapshot)
+    game_snapshot.hand_A.politicians.concat(politicians_dealt_A)
+    game_snapshot.hand_B.politicians.concat(politicians_dealt_B)
+  end
+
+  def put_losers_in_deck(game_snapshot)
+    Config.get.seats_num.times do |index|
+      result = get_result index, game_snapshot.board
+      game_snapshot.politician_deck.push result[:loser]
+    end
+  end
+  
   def description(board)
     defeats = " DEFEATS "
     results_array = []

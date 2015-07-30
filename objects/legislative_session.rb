@@ -81,7 +81,26 @@ class LegislativeSession < BaseObject
   end
 
   def sign_winners_into_law(game_snapshot)
-    # TODO
+    board = game_snapshot.board
+    ['A', 'B'].each do |party|
+      Config.get.bills_num_on_floor.times do |index|
+        bill = passes?(index, party)
+        if bill
+          board.send("passed_bills_#{party}") << bill
+          board.increment_vps(party, vps(index, party, board))
+        end
+      end
+    end
+  end
+
+  def put_losers_in_deck(game_snapshot)
+    ['A', 'B'].each do |party|
+      Config.get.bills_num_on_floor.times do |index|
+        if !passes?(index, party)
+          game_snapshot.bill_deck.push send("bills_#{party}")[index]
+        end
+      end
+    end
   end
 
   def deal_bills(game_snapshot, remove_from_deck = false)
@@ -95,10 +114,6 @@ class LegislativeSession < BaseObject
         end
       end
     end
-  end
-
-  def put_losers_in_deck(game_snapshot)
-    # TODO
   end
 
   def description(board)
@@ -132,7 +147,8 @@ class LegislativeSession < BaseObject
   private
 
   def passes?(index, party)
-    send("outcomes_#{party}")[index].sum >= send("bills_#{party}")[index].vps
+    bill = send("bills_#{party}")[index]
+    send("outcomes_#{party}")[index].sum >= bill.vps ? bill : nil
   end
 
   def vps(index, party, board)

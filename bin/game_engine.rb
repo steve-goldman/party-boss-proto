@@ -77,6 +77,10 @@ class GameEngine
                                 legislative_session,
                                 @game_snapshot.board.state_of_the_union)
     end
+    # display the board once more for good measure
+    Logger.header @game_snapshot.board.description
+    Logger.subheader "Game over"
+    
     @game.final_game_snapshot = @game_snapshot
     @game
   end

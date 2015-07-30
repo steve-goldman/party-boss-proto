@@ -6,8 +6,8 @@ class Board < BaseObject
 
   # define the data that goes in this object
   Members = [
-    { name: :state_of_the_union, type: StateOfTheUnion },
-    { name: :office_holders,     type: OfficeHolder, is_array: true },
+    { name: "state_of_the_union", type: StateOfTheUnion },
+    { name: "office_holders",     type: OfficeHolder, is_array: true },
   ]
 
   def num_campaign_dice(candidates)

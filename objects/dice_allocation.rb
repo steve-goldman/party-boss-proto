@@ -4,7 +4,7 @@ class DiceAllocation < BaseObject
 
   # define the data that goes in this object
   Members = [
-    { name: :counts, type: Integer, is_array: true },
+    { name: "counts", type: Integer, is_array: true },
   ]
 
   def to_s

@@ -4,8 +4,8 @@ class StateOfTheUnion < BaseObject
 
   # define the data that goes in this object
   Members = [
-    { name: :issue,      type: String },
-    { name: :priorities, type: String, is_array: true },
+    { name: "issue",      type: String },
+    { name: "priorities", type: String, is_array: true },
   ]
 
   @@state_of_the_unions = nil

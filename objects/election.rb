@@ -5,12 +5,12 @@ class Election < BaseObject
 
   # define the data that goes in this object
   Members = [
-    { name: :candidates_A,       type: Politician,   is_array: true },
-    { name: :candidates_B,       type: Politician,   is_array: true },
-    { name: :allocation_A,       type: DiceAllocation },
-    { name: :allocation_B,       type: DiceAllocation },
-    { name: :outcomes_A,         type: DiceOutcome,  is_array: true },
-    { name: :outcomes_B,         type: DiceOutcome,  is_array: true },
+    { name: "candidates_A",       type: Politician,   is_array: true },
+    { name: "candidates_B",       type: Politician,   is_array: true },
+    { name: "allocation_A",       type: DiceAllocation },
+    { name: "allocation_B",       type: DiceAllocation },
+    { name: "outcomes_A",         type: DiceOutcome,  is_array: true },
+    { name: "outcomes_B",         type: DiceOutcome,  is_array: true },
   ]
 
   def get_result(index, board)

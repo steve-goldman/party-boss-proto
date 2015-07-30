@@ -6,9 +6,9 @@ class Strengths < BaseObject
   
   # define the data that goes in this object
   Members = [
-    { name: :defense, type: Integer },
-    { name: :economy, type: Integer },
-    { name: :social, type: Integer }
+    { name: "defense", type: Integer },
+    { name: "economy", type: Integer },
+    { name: "social", type: Integer }
   ]
 
   def to_s

@@ -5,8 +5,8 @@ class OfficeHolder < BaseObject
 
   # define the data that goes in this object
   Members = [
-    { name: :party,      type: String     },
-    { name: :politician, type: Politician },
+    { name: "party",      type: String     },
+    { name: "politician", type: Politician },
   ]
   
 end

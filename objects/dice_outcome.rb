@@ -4,7 +4,7 @@ class DiceOutcome < BaseObject
 
   # define the data that goes in this object
   Members = [
-    { name: :rolls, type: Integer, is_array: true },
+    { name: "rolls", type: Integer, is_array: true },
   ]
 
   def sum

@@ -7,11 +7,11 @@ class GameSnapshot < BaseObject
 
   # define the data that goes in this object
   Members = [
-    { name: :board,  type: Board },
-    { name: :hand_A, type: Hand  },
-    { name: :hand_B, type: Hand  },
-    { name: :politician_deck, type: Politician, is_array: true },
-    { name: :bill_deck,       type: Bill,       is_array: true },
+    { name: "board",  type: Board },
+    { name: "hand_A", type: Hand  },
+    { name: "hand_B", type: Hand  },
+    { name: "politician_deck", type: Politician, is_array: true },
+    { name: "bill_deck",       type: Bill,       is_array: true },
   ]
 
   # utility method for creating a new game

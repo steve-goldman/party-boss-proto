@@ -45,11 +45,11 @@ module ClassRecord
           return false if send(member[:name]).count != other.send(member[:name]).count
           if member[:unordered]
             send(member[:name]).count.times do |index|
-              return false if !other.send(member[:name]).reduce(false) { |found, elem| found || elem_equal?(member[:type], send(member[:name])[index], elem) }
+              return false if !other.send(member[:name]).reduce(false) { |found, elem| found || elem_equals?(member[:type], send(member[:name])[index], elem) }
             end
           else
             send(member[:name]).count.times do |index|
-              return false if !elem_equals(member[:type], send(member[:name])[index], other.send(member[:name])[index])
+              return false if !elem_equals?(member[:type], send(member[:name])[index], other.send(member[:name])[index])
             end
           end
         else

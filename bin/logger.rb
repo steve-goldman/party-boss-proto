@@ -76,9 +76,11 @@ class Logger
     @indent = 0
   end
 
+  @@instance = nil
+
   def Logger.instance
-    @instance = Logger.new if @instance.nil?
-    @instance
+    @@instance = Logger.new if @@instance.nil?
+    @@instance
   end
   
 end

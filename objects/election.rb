@@ -1,3 +1,5 @@
+require_relative 'base_object'
+require_relative 'config'
 require_relative 'dice_allocation'
 require_relative 'dice_outcome'
 

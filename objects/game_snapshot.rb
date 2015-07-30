@@ -47,7 +47,7 @@ class GameSnapshot < BaseObject
     politician_deck.shuffle!
     dealt_politicians = []
     (Config.get.politicians_num_in_party - send("hand_#{party}").politicians.count - board.num_encumbents(party)).times do
-      dealt_politicians << politician_deck.pop
+      dealt_politicians << politician_deck.pop if !politician_deck.empty?
     end
     dealt_politicians
   end
@@ -56,7 +56,7 @@ class GameSnapshot < BaseObject
     bill_deck.shuffle!
     dealt_bills = []
     (Config.get.bills_num_in_committee - send("hand_#{party}").bills.count).times do
-      dealt_bills << bill_deck.pop
+      dealt_bills << bill_deck.pop if !bill_deck.empty?
     end
     dealt_bills
   end

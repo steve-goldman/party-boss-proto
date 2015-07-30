@@ -60,6 +60,10 @@ class Board < BaseObject
   def vps_B
     hard_vps_B
   end
+
+  def increment_vps(party, vps)
+    hard_vps_A = hard_vps_A.to_i + vps
+  end
   
   private
 

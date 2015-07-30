@@ -7,7 +7,9 @@ class Config < BaseObject
     { name: "seats_num",                type: Integer },
     { name: "politicians_num_in_party", type: Integer },
     { name: "bills_num_in_committee",   type: Integer },
-    { name: "campaign_dice_max",        type: Integer },
+    { name: "bills_num_on_floor",       type: Integer },
+    { name: "fundraising_dice_max",     type: Integer },
+    { name: "legislative_dice_max",     type: Integer },
   ]
 
   @@instance = nil

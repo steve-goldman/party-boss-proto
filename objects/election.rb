@@ -39,10 +39,12 @@ class Election < BaseObject
     Logger.unindent
     Election.log_matchups candidates_A, candidates_B
     Logger.header("Boss 'A' choosing dice allocation").indent
-    allocation_A = boss_A.get_allocation(game_snapshot, candidates_A, candidates_B)
+    allocation_A = boss_A.get_allocation(game_snapshot.board.num_fundraising_dice(candidates_A),
+                                         Politician.matchup_descriptions(candidates_A, candidates_B))
     Logger.unindent
     Logger.header("Boss 'B' choosing dice allocation").indent
-    allocation_B = boss_B.get_allocation(game_snapshot, candidates_B, candidates_A)
+    allocation_B = boss_B.get_allocation(game_snapshot.board.num_fundraising_dice(candidates_B),
+                                         Politician.matchup_descriptions(candidates_B, candidates_A))
     Logger.unindent
     election = Election.new(candidates_A,
                             candidates_B,
@@ -53,14 +55,14 @@ class Election < BaseObject
                             [], # fill this in below
                             []) # fill this in below
 
-    election.remove_candidates_from_hands game_snapshot
-    election.put_winners_in_office game_snapshot
+    election.remove_candidates_from_hands(game_snapshot)
+    election.put_winners_in_office(game_snapshot)
 
-    election.politicians_dealt_A.concat game_snapshot.deal_politicians('A')
-    election.politicians_dealt_B.concat game_snapshot.deal_politicians('B')
-    election.deal_politicians game_snapshot
+    election.politicians_dealt_A.concat(game_snapshot.deal_politicians 'A')
+    election.politicians_dealt_B.concat(game_snapshot.deal_politicians 'B')
+    election.deal_politicians(game_snapshot)
 
-    election.put_losers_in_deck game_snapshot
+    election.put_losers_in_deck(game_snapshot)
 
     Logger.header(election.description game_snapshot.board).indent
     Logger.unindent
@@ -70,9 +72,7 @@ class Election < BaseObject
 
   def Election.log_matchups(candidates_A, candidates_B)
     Logger.subheader("Election matchups").indent
-    Config.get.seats_num.times do |index|
-      Logger.log "#{candidates_A[index]} versus #{candidates_B[index]}"
-    end
+    Logger.log Politician.matchup_descriptions(candidates_A, candidates_B).join("\n")
     Logger.unindent
   end
 
@@ -109,25 +109,18 @@ class Election < BaseObject
   def description(board)
     defeats = " DEFEATS "
     results_array = []
-    Config.get.seats_num.times do |index|
+    results_array = Config.get.seats_num.times.map do |index|
       result = get_result index, board
-      results_array << sprintf("%-#{Politician::MaxLength}s (party '%s') #{defeats} %-#{Politician::MaxLength}s (party '%s')",
-                               result[:winner],
-                               result[:winning_party],
-                               result[:loser],
-                               result[:losing_party])
-      results_array << sprintf("%-#{Politician::MaxLength}s %s %-#{Politician::MaxLength}s",
-                               breakdown_str(index, board, result[:winning_party]),
-                               " " * ("(party 'x') #{defeats}".length),
-                               breakdown_str(index, board, result[:losing_party]))
-                               
+        "#{result[:winner]} (party '#{result[:winning_party]}') #{defeats} #{result[:loser]} (party '#{result[:losing_party]}')\n" +
+        sprintf("%-#{Politician::MaxLength}s %s %-#{Politician::MaxLength}s",
+                breakdown_str(index, board, result[:winning_party]),
+                " " * ("(party 'x') #{defeats}".length),
+                breakdown_str(index, board, result[:losing_party]))
     end
 
-    politicians_dealt_array = []
-    for party in ['A', 'B'] do
-      politicians_dealt_array << ""
-      politicians_dealt_array << "Party '#{party}' was dealt:"
-      politicians_dealt_array.concat(send("politicians_dealt_#{party}").map { |politician| "  #{politician}" })
+    politicians_dealt_array = ['A', 'B'].map do |party|
+      "\nParty '#{party}' was dealt:\n" +
+        send("politicians_dealt_#{party}").map { |politician| "  #{politician}" }.join("\n")
     end
 
     [

@@ -22,6 +22,12 @@ class Politician < BaseObject
     strengths.send priority
   end
 
+  def Politician.matchup_descriptions(politicians_A, politicians_B)
+    politicians_A.each_index.map do |index|
+      "#{politicians_A[index]} versus #{politicians_B[index]}"
+    end
+  end
+
   def to_s
     sprintf "%-#{NameMaxLength}s f:#{fundraising} #{strengths}", name
   end

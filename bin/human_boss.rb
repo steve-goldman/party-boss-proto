@@ -23,7 +23,7 @@ class HumanBoss
           office_holder.politician
         else
           Logger.log "Candidate to run against #{office_holder.politician}"
-          input_candidate temp_politicians
+          input_from_and_remove_from_array temp_politicians
         end
       end
       # ask user to confirm
@@ -33,19 +33,33 @@ class HumanBoss
     end
   end
 
-  def get_allocation(game_snapshot, candidates, opponents)
+  def get_bills
     while true
-      total_dice = [game_snapshot.board.num_campaign_dice(candidates), Config.get.campaign_dice_max].min
-      Logger.subheader("Distribute #{total_dice} campaign dice").indent
-      i = -1
-      allocation = candidates.map do |candidate|
-        i += 1
-        input_allocation candidate, opponents[i]
+      # don't spoil the data until the user confirms
+      temp_bills = @hand.bills.clone
+      # get the bills from the user
+      bills = []
+      Config.get.bills_num_on_floor.times do |index|
+        Logger.subheader("Selecting bill for floor matchup ##{index + 1}").indent
+        bills << input_from_and_remove_from_array(temp_bills)
+      end
+      # ask user to confirm
+      if confirm_bills bills
+        return bills
+      end
+    end
+  end
+
+  def get_allocation(total_dice, matchup_descriptions)
+    while true
+      Logger.subheader("Distribute #{total_dice} dice").indent
+      allocation = matchup_descriptions.map do |matchup_description|
+        input_allocation matchup_description
       end
       Logger.unindent
       if allocation.reduce(:+) > total_dice
         Logger.error("Total dice must not exceed #{total_dice}")
-      elsif confirm_allocation allocation, total_dice, candidates, opponents
+      elsif confirm_allocation allocation, total_dice, matchup_descriptions
         return DiceAllocation.new allocation
       end
     end
@@ -53,20 +67,20 @@ class HumanBoss
 
   private
 
-  def input_candidate(politicians)
+  def input_from_and_remove_from_array(options)
     # show the list
-    politicians.count.times do |index|
-      Logger.log "#{index + 1}: #{politicians[index]}"
+    options.count.times do |index|
+      Logger.log "#{index + 1}: #{options[index]}"
     end
     # get the input
     while true
-      Logger.prompt "(Enter candidate #): "
+      Logger.prompt "(Enter #): "
       input = gets.chomp
-      if !int_in_range? input, 1, politicians.count
+      if !int_in_range? input, 1, options.count
         Logger.error "Input #{input} is out of range"
       else
-        politician = politicians[input.to_i - 1]
-        politicians.delete_at(input.to_i - 1)
+        politician = options[input.to_i - 1]
+        options.delete_at(input.to_i - 1)
         Logger.unindent
         return politician
       end
@@ -83,13 +97,22 @@ class HumanBoss
       end
     end
     Logger.unindent
-    return confirm
+    confirm
   end
 
-  def input_allocation(candidate, opponent)
+  def confirm_bills(bills)
+    Logger.subheader("You have selected:").indent
+    Config.get.bills_num_on_floor.times do |index|
+      Logger.log "#{bills[index]}"
+    end
+    Logger.unindent
+    confirm
+  end
+
+  def input_allocation(matchup_description)
     while true
-      Logger.log "#{candidate} versus #{opponent}"
-      Logger.prompt "(Enter number of campaign dice): "
+      Logger.log "#{matchup_description}"
+      Logger.prompt "(Enter number of dice): "
       num_dice = gets.chomp.downcase
       if !int_in_range? num_dice, 0, 999999
         Logger.error "#{num_dice} is out of range"
@@ -99,10 +122,10 @@ class HumanBoss
     end
   end
 
-  def confirm_allocation(allocation, total_dice, candidates, opponents)
+  def confirm_allocation(allocation, total_dice, matchup_descriptions)
     Logger.subheader("You have allocated:").indent
-    Config.get.seats_num.times do |index|
-      Logger.log "#{allocation[index]} for #{candidates[index]} versus #{opponents[index]}"
+    matchup_descriptions.each_index do |index|
+      Logger.log "#{allocation[index]} for #{matchup_descriptions[index]}"
     end
     Logger.log "#{total_dice - allocation.reduce(:+)} left over"
     Logger.unindent

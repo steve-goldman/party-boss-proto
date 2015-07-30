@@ -28,7 +28,9 @@ class Logger
     Logger.instance.log ""
     lines.each do |line|
       Logger.instance.log line
-      Logger.instance.log ("-" * length)
+      if !line.empty?
+        Logger.instance.log ("-" * length)
+      end
     end
     Logger.instance
   end

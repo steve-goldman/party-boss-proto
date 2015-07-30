@@ -5,7 +5,8 @@ class Cycle < BaseObject
 
   # define the data that goes in this object
   Members = [
-    { name: "election", type: Election },
+    { name: "election",                type: Election        },
+    { name: "next_state_of_the_union", type: StateOfTheUnion },
   ]
   
 end

@@ -28,8 +28,6 @@ class HumanBoss
       end
       # ask user to confirm
       if confirm_candidates game_snapshot.board.office_holders, candidates
-        # remove candidates from the boss's hand
-        candidates.each { |candidate| @hand.politicians.delete candidate }
         return candidates
       end
     end

@@ -111,8 +111,16 @@ class ManualPlayer
   end
 
   def confirm
-    Logger.prompt "(Confirm? y/n): "
-    return gets.chomp.downcase == 'y'
+    while true
+      Logger.prompt "(Confirm? y/n): "
+      choice = gets.chomp
+      if choice.downcase == 'y'
+        return true
+      elsif choice.downcase == 'n'
+        return false
+      end
+      Logger.error "#{choice} is not valid"
+    end
   end
 
   def int_in_range?(input, min, max)

@@ -36,8 +36,8 @@ class GameSnapshot < BaseObject
                                      bill_deck,
                                      state_of_the_union_deck)
     # deal the cards
-    game_snapshot.deal_politicians 'A'
-    game_snapshot.deal_politicians 'B'
+    game_snapshot.hand_A.politicians.concat(game_snapshot.deal_politicians 'A')
+    game_snapshot.hand_B.politicians.concat(game_snapshot.deal_politicians 'B')
     game_snapshot
   end
 

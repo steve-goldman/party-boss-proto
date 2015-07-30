@@ -42,18 +42,26 @@ module ClassRecord
       return false if !other.is_a? self.class
       self.class::Members.each do |member|
         if member[:is_array]
-          return false if send(member[:name]).count != other.send(member[:name]).count
+          if send(member[:name]).count != other.send(member[:name]).count
+            return false
+          end
           if member[:unordered]
             send(member[:name]).count.times do |index|
-              return false if !other.send(member[:name]).reduce(false) { |found, elem| found || elem_equals?(member[:type], send(member[:name])[index], elem) }
+              if !other.send(member[:name]).reduce(false) { |found, elem| found || elem_equals?(member[:type], send(member[:name])[index], elem) }
+                return false
+              end
             end
           else
             send(member[:name]).count.times do |index|
-              return false if !elem_equals?(member[:type], send(member[:name])[index], other.send(member[:name])[index])
+              if !elem_equals?(member[:type], send(member[:name])[index], other.send(member[:name])[index])
+                return false
+              end
             end
           end
         else
-          return false if !elem_equals?(member[:type], send(member[:name]), other.send(member[:name]))
+          if !elem_equals?(member[:type], send(member[:name]), other.send(member[:name]))
+            return false
+          end
         end
       end
       true

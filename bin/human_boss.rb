@@ -41,7 +41,7 @@ class HumanBoss
       bills = []
       Config.get.bills_num_on_floor.times do |index|
         Logger.subheader("Selecting bill for floor matchup ##{index + 1}").indent
-        bills << input_from_and_remove_from_array(temp_bills)
+        bills.push input_from_and_remove_from_array(temp_bills)
       end
       # ask user to confirm
       if confirm_bills bills

@@ -86,7 +86,7 @@ class LegislativeSession < BaseObject
       Config.get.bills_num_on_floor.times do |index|
         bill = passes?(index, party)
         if bill
-          board.send("passed_bills_#{party}") << bill
+          board.send("passed_bills_#{party}").push bill
           board.increment_vps(party, vps(index, party, board))
         end
       end

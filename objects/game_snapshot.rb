@@ -24,7 +24,7 @@ class GameSnapshot < BaseObject
     # set the initial office holders from the politician_deck
     office_holders = []
     Config.get.seats_num.times do
-      office_holders << OfficeHolder.new(office_holders.count % 2 == 0 ? 'A' : 'B', politician_deck.pop)
+      office_holders.push OfficeHolder.new(office_holders.count % 2 == 0 ? 'A' : 'B', politician_deck.pop)
     end
     # create the board
     board = Board.new(state_of_the_union_deck.pop, office_holders, [], [], 0, 0)
@@ -47,7 +47,7 @@ class GameSnapshot < BaseObject
     politician_deck.shuffle!
     dealt_politicians = []
     (Config.get.politicians_num_in_party - send("hand_#{party}").politicians.count - board.num_encumbents(party)).times do
-      dealt_politicians << politician_deck.pop if !politician_deck.empty?
+      dealt_politicians.push politician_deck.pop if !politician_deck.empty?
     end
     dealt_politicians
   end
@@ -56,7 +56,7 @@ class GameSnapshot < BaseObject
     bill_deck.shuffle!
     dealt_bills = []
     (Config.get.bills_num_in_committee - send("hand_#{party}").bills.count).times do
-      dealt_bills << bill_deck.pop if !bill_deck.empty?
+      dealt_bills.push bill_deck.pop if !bill_deck.empty?
     end
     dealt_bills
   end

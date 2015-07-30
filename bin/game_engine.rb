@@ -73,9 +73,9 @@ class GameEngine
                                                            dice_roller)
       
       @game_snapshot.end_cycle @game_snapshot.state_of_the_union_deck.shuffle!.pop
-      @game.cycles << Cycle.new(election,
-                                legislative_session,
-                                @game_snapshot.board.state_of_the_union)
+      @game.cycles.push Cycle.new(election,
+                                  legislative_session,
+                                  @game_snapshot.board.state_of_the_union)
     end
     # display the board once more for good measure
     Logger.header @game_snapshot.board.description

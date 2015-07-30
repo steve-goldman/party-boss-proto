@@ -1,3 +1,4 @@
+require_relative '../objects/game'
 require_relative '../objects/game_snapshot'
 require_relative '../objects/election'
 require_relative 'human_boss'
@@ -11,6 +12,7 @@ class GameEngine
     @boss_A = boss_A
     @boss_B = boss_B
     @dice_roller = dice_roller
+    @game = Game.new(GameSnapshot.deserialize(@game_snapshot.serialize), [])
   end
 
   def GameEngine.new_game
@@ -21,13 +23,16 @@ class GameEngine
                    DiceRoller.new)
   end
 
-  def start(num_cycles)
+  def run(num_cycles)
     num_cycles.times do
       Logger.header "Election phase"
-      @game_snapshot.apply_election run_election
+      election = run_election
+      @game_snapshot.apply_election election
       Logger.header "Legislative phase"
+      @game.cycles << Cycle.new(election)
       @game_snapshot.board.state_of_the_union = StateOfTheUnion.next
     end
+    @game
   end
 
   private
@@ -64,4 +69,4 @@ class GameEngine
   
 end
 
-GameEngine.new_game.start 1
+GameEngine.new_game.run 1

@@ -38,36 +38,6 @@ class GameEngine
 
   private
 
-  def run_election
-    Logger.header @game_snapshot.board.description
-    Logger.header("Boss 'A' choosing candidates").indent
-    candidates_A = @boss_A.get_candidates(@game_snapshot)
-    Logger.unindent
-    Logger.header("Boss 'B' choosing candidates").indent
-    candidates_B = @boss_B.get_candidates(@game_snapshot)
-    Logger.unindent
-    Logger.header("Election matchups").indent
-    Config.get.seats_num.times do |index|
-      Logger.log "#{candidates_A[index]} versus #{candidates_B[index]}"
-    end
-    Logger.unindent
-    Logger.header("Boss 'A' choosing dice allocation").indent
-    allocation_A = @boss_A.get_allocation(@game_snapshot, candidates_A, candidates_B)
-    Logger.unindent
-    Logger.header("Boss 'B' choosing dice allocation").indent
-    allocation_B = @boss_B.get_allocation(@game_snapshot, candidates_B, candidates_A)
-    Logger.unindent
-    election = Election.new(candidates_A,
-                            candidates_B,
-                            allocation_A,
-                            allocation_B,
-                            @dice_roller.get_outcomes(allocation_A),
-                            @dice_roller.get_outcomes(allocation_B))
-    Logger.header(election.description @game_snapshot.board).indent
-    Logger.unindent
-    election
-  end
-  
 end
 
 GameEngine.new_game.run (ARGV.shift || 1).to_i

@@ -63,7 +63,7 @@ class Board < BaseObject
   
   private
 
-  DescSideLength = Politician::MaxLength
+  DescSideLength = [Politician::MaxLength, Bill::MaxLength].max
   DescLength = 2 * DescSideLength + 3
 
   def office_holder?(candidate)

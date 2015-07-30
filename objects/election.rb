@@ -172,7 +172,7 @@ class Election < BaseObject
     elsif candidates_A[index].strength(board.state_of_the_union.priorities[2]) <
           candidates_B[index].strength(board.state_of_the_union.priorities[2])
       candidates_B[index]
-    elsif candidates_A[index] == board.office_holders[index].politician
+    elsif candidates_A[index].equals?(board.office_holders[index].politician)
       candidates_A[index]
     else
       candidates_B[index]

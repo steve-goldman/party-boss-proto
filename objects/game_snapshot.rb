@@ -26,7 +26,7 @@ class GameSnapshot < BaseObject
       office_holders << OfficeHolder.new(office_holders.count % 2 == 0 ? 'A' : 'B', politician_deck.pop)
     end
     # create the board
-    board = Board.new(StateOfTheUnion.random, office_holders)
+    board = Board.new(StateOfTheUnion.next, office_holders)
     # create the snapshot
     game_snapshot = GameSnapshot.new(board, Hand.new([], []), Hand.new([], []), politician_deck, bill_deck)
     # deal the cards

@@ -24,7 +24,7 @@ class GameEngine
   def start
     Logger.header @game_snapshot.board.description
     @game_snapshot.apply_election run_election
-    @game_snapshot.board.state_of_the_union = StateOfTheUnion.random
+    @game_snapshot.board.state_of_the_union = StateOfTheUnion.next
     Logger.header @game_snapshot.board.description
     run_election
   end

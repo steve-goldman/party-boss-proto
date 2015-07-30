@@ -30,7 +30,7 @@ class Board < BaseObject
                                       office_holders[index].party == 'B' ? office_holders[index].politician : "")
     end
     [
-      "The state of the union is #{state_of_the_union}.",
+      "The state of the union: #{state_of_the_union}",
       "",
       "Politicians holding office",
       "-" * (2 * Politician::MaxLength + 3),

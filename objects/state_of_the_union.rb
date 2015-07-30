@@ -4,26 +4,19 @@ class StateOfTheUnion < BaseObject
 
   # define the data that goes in this object
   Members = [
+    { name: :issue,      type: String },
     { name: :priorities, type: String, is_array: true },
   ]
 
-  def StateOfTheUnion.random
-    States[Random.new.rand States.count]
+  @@state_of_the_unions = nil
+
+  def StateOfTheUnion.next
+    @@state_of_the_unions = StateOfTheUnion.from_array_file('data/state_of_the_unions.json') if @@state_of_the_unions.nil?
+    @@state_of_the_unions.shuffle[0]
   end
 
   def to_s
-    "#{priorities[0]} => #{priorities[1]} => #{priorities[2]}"
+    "#{issue} (#{priorities[0]} => #{priorities[1]} => #{priorities[2]})"
   end
-
-  private
-
-  States = [
-    StateOfTheUnion.new([ "social", "economy", "defense" ]),
-    StateOfTheUnion.new([ "social", "defense", "economy" ]),
-    StateOfTheUnion.new([ "economy", "social", "defense" ]),
-    StateOfTheUnion.new([ "economy", "defense", "social" ]),
-    StateOfTheUnion.new([ "defense", "economy", "social" ]),
-    StateOfTheUnion.new([ "defense", "social", "economy" ])
-  ]
 
 end

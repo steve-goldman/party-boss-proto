@@ -1,0 +1,98 @@
+[
+  {
+    "issue": "Terrorist Threat",
+    "priorities": [
+      "defense",
+      "social",
+      "economy"
+    ]
+  },
+  {
+    "issue": "Climate Crisis",
+    "priorities": [
+      "defense",
+      "economy",
+      "social"
+    ]
+  },
+  {
+    "issue": "Pandemic",
+    "priorities": [
+      "defense",
+      "social",
+      "economy"
+    ]
+  },
+  {
+    "issue": "Stock Market Crash",
+    "priorities": [
+      "economy",
+      "defense",
+      "social"
+    ]
+  },
+  {
+    "issue": "Cyber Attacks",
+    "priorities": [
+      "defense",
+      "economy",
+      "social"
+    ]
+  },
+  {
+    "issue": "Currency Instability",
+    "priorities": [
+      "economy",
+      "defense",
+      "social"
+    ]
+  },
+  {
+    "issue": "Mass Murder",
+    "priorities": [
+      "social",
+      "defense",
+      "economy"
+    ]
+  },
+  {
+    "issue": "Federal Loan Default",
+    "priorities": [
+      "economy",
+      "social",
+      "defense"
+    ]
+  },
+  {
+    "issue": "Unemployment",
+    "priorities": [
+      "economy",
+      "social",
+      "defense"
+    ]
+  },
+  {
+    "issue": "Bureacratic Failure",
+    "priorities": [
+      "social",
+      "economy",
+      "defense"
+    ]
+  },
+  {
+    "issue": "RIOTS!",
+    "priorities": [
+      "social",
+      "defense",
+      "economy"
+    ]
+  },
+  {
+    "issue": "Wealth Disparity",
+    "priorities": [
+      "social",
+      "economy",
+      "defense"
+    ]
+  }
+]

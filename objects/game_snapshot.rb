@@ -27,7 +27,7 @@ class GameSnapshot < BaseObject
       office_holders << OfficeHolder.new(office_holders.count % 2 == 0 ? 'A' : 'B', politician_deck.pop)
     end
     # create the board
-    board = Board.new(state_of_the_union_deck.pop, office_holders)
+    board = Board.new(state_of_the_union_deck.pop, office_holders, [], [], 0, 0)
     # create the snapshot
     game_snapshot = GameSnapshot.new(board,
                                      Hand.new([], []),

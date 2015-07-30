@@ -21,17 +21,19 @@ class GameEngine
                    DiceRoller.new)
   end
 
-  def start
-    Logger.header @game_snapshot.board.description
-    @game_snapshot.apply_election run_election
-    @game_snapshot.board.state_of_the_union = StateOfTheUnion.next
-    Logger.header @game_snapshot.board.description
-    run_election
+  def start(num_cycles)
+    num_cycles.times do
+      Logger.header "Election phase"
+      @game_snapshot.apply_election run_election
+      Logger.header "Legislative phase"
+      @game_snapshot.board.state_of_the_union = StateOfTheUnion.next
+    end
   end
 
   private
 
   def run_election
+    Logger.header @game_snapshot.board.description
     Logger.header("Boss 'A' choosing candidates").indent
     candidates_A = @boss_A.get_candidates(@game_snapshot)
     Logger.unindent
@@ -62,4 +64,4 @@ class GameEngine
   
 end
 
-GameEngine.new_game.start
+GameEngine.new_game.start 1

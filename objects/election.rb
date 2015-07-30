@@ -13,54 +13,65 @@ class Election < BaseObject
     { name: :outcomes_B,         type: DiceOutcome,  is_array: true },
   ]
 
-  def points_A(index, state_of_the_union)
-    outcomes_A[index].sum + candidates_A[index].strength(state_of_the_union.priorities[0])
+  def points_A(index, board)
+    outcomes_A[index].sum + candidates_A[index].strength(board.state_of_the_union.priorities[0])
   end
 
-  def points_B(index, state_of_the_union)
-    outcomes_B[index].sum + candidates_B[index].strength(state_of_the_union.priorities[0])
+  def points_B(index, board)
+    outcomes_B[index].sum + candidates_B[index].strength(board.state_of_the_union.priorities[0])
   end
 
-  def winner(index, state_of_the_union, office_holders)
-    get_winner state_of_the_union,
-               candidates_A[index],
-               points_A(index, state_of_the_union),
-               candidates_B[index],
-               points_B(index, state_of_the_union),
-               office_holders[index].politician
+  def get_result(index, board)
+    winner = get_winner index, board
+
+    {
+      winner: winner,
+      loser: winner == candidates_A[index] ? candidates_B[index] : candidates_A[index],
+      winning_team: winner == candidates_A[index] ? 'A' : 'B',
+      losing_team: winner == candidates_A[index] ? 'B' : 'A'
+    }
   end
 
-  def winning_team(index, state_of_the_union, office_holders)
-    winner(index, state_of_the_union, office_holders) == candidates_A[index] ? 'A' : 'B'
-  end
+  def description(board)
+    results_array = []
+    Config.get.seats_num.times do |index|
+      result = get_result index, board
+      results_array << sprintf("%-#{Politician::MaxLength}s (party '%s')  DEFEATS  %-#{Politician::MaxLength}s (party '%s')",
+                               result[:winner],
+                               result[:winning_team],
+                               result[:loser],
+                               result[:losing_team])
+    end
 
-  def loser(index, state_of_the_union, office_holders)
-    winner(index, state_of_the_union, office_holders) == candidates_A[index] ? candidates_B[index] : candidates_A[index]
+    [
+      "Election results",
+      ""
+    ].concat(results_array).join("\n")
   end
 
   private
 
-  def get_winner(state_of_the_union, candidate_A, points_A, candidate_B, points_B, encumbent)
-    if points_A > points_B
-      candidate_A
-    elsif points_A < points_B
-      candidate_B
-    elsif candidate_A.strength(state_of_the_union.priorities[1]) >
-          candidate_B.strength(state_of_the_union.priorities[1])
-      candidate_A
-    elsif candidate_A.strength(state_of_the_union.priorities[1]) <
-          candidate_B.strength(state_of_the_union.priorities[1])
-      candidate_B
-    elsif candidate_A.strength(state_of_the_union.priorities[2]) >
-          candidate_B.strength(state_of_the_union.priorities[2])
-      candidate_A
-    elsif candidate_A.strength(state_of_the_union.priorities[2]) <
-          candidate_B.strength(state_of_the_union.priorities[2])
-      candidate_B
-    elsif candidate_A == encumbent
-      candidate_A
+  def get_winner(index, board)
+    if points_A(index, board) > points_B(index, board)
+      candidates_A[index]
+    elsif points_A(index, board) < points_B(index, board)
+      candidates_B[index]
+    elsif candidates_A[index].strength(board.state_of_the_union.priorities[1]) >
+          candidates_B[index].strength(board.state_of_the_union.priorities[1])
+      candidates_A[index]
+    elsif candidates_A[index].strength(board.state_of_the_union.priorities[1]) <
+          candidates_B[index].strength(board.state_of_the_union.priorities[1])
+      candidates_B[index]
+    elsif candidates_A[index].strength(board.state_of_the_union.priorities[2]) >
+          candidates_B[index].strength(board.state_of_the_union.priorities[2])
+      candidates_A[index]
+    elsif candidates_A[index].strength(board.state_of_the_union.priorities[2]) <
+          candidates_B[index].strength(board.state_of_the_union.priorities[2])
+      candidates_B[index]
+    elsif candidates_A[index] == board.office_holders[index].politician
+      candidates_A[index]
     else
-      candidate_B
+      candidates_B[index]
     end
   end
                                        

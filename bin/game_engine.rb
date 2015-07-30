@@ -55,13 +55,7 @@ class GameEngine
                             allocation_B,
                             @dice_roller.get_outcomes(allocation_A),
                             @dice_roller.get_outcomes(allocation_B))
-    Logger.header("Election results").indent
-    Config.get.seats_num.times do |index|
-      Logger.subheader "#{candidates_A[index]} versus #{candidates_B[index]}"
-      Logger.log "'A' rolled #{election.outcomes_A[index]} for total of #{election.points_A index, @game_snapshot.board.state_of_the_union}"
-      Logger.log "'B' rolled #{election.outcomes_B[index]} for total of #{election.points_B index, @game_snapshot.board.state_of_the_union}"
-      Logger.log "#{@game_snapshot.board.election_winner election, index} wins!"
-    end
+    Logger.header(election.description @game_snapshot.board).indent
     Logger.unindent
     election
   end

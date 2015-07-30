@@ -22,18 +22,6 @@ class Board < BaseObject
     end
   end
 
-  def election_winner(election, index)
-    election.winner index, state_of_the_union, office_holders
-  end
-
-  def election_loser(election, index)
-    election.loser index, state_of_the_union, office_holders
-  end
-
-  def election_winning_team(election, index)
-    election.winning_team index, state_of_the_union, office_holders
-  end
-
   def description
     office_holders_array = []
     Config.get.seats_num.times do |index|

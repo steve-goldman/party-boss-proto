@@ -24,7 +24,8 @@ class GameEngine
   end
 
   def run(num_cycles)
-    num_cycles.times do
+    num_cycles.times do |index|
+      Logger.subheader "Cycle #{index + 1} / #{num_cycles}"
       Logger.header "Election phase"
       election = run_election
       @game_snapshot.apply_election election
@@ -69,4 +70,4 @@ class GameEngine
   
 end
 
-GameEngine.new_game.run 1
+GameEngine.new_game.run (ARGV.shift || 1).to_i

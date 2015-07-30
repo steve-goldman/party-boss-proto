@@ -94,8 +94,19 @@ class LegislativeSession < BaseObject
   end
 
   def description(board)
+    passes = "PASSES"
+    does_not_pass = "DOES NOT PASS"
+    length = [passes.length, does_not_pass.length].max
+    
     results_array = Config.get.bills_num_on_floor.times.map { |index|
-      "TODO"
+      sprintf("#{bills_A[index]} %-#{length}s | #{bills_B[index]} %-#{length}s\n",
+              passes?(index, 'A') ? passes : does_not_pass,
+              passes?(index, 'B') ? passes : does_not_pass) +
+        sprintf("  %-#{Bill::MaxLength + length - 1}s |   %s\n",
+                outcomes_A[index], outcomes_B[index]) +
+        sprintf("  %-#{Bill::MaxLength + length - 1}s |   %s\n",
+                passes?(index, 'A') ? "#{vps(index, 'A', board)} vps" : "",
+                passes?(index, 'B') ? "#{vps(index, 'B', board)} vps" : "")
     }
 
     bills_dealt_array = ['A', 'B'].map do |party|
@@ -103,7 +114,25 @@ class LegislativeSession < BaseObject
         send("bills_dealt_#{party}").map { |bill| "  #{bill}" }.join("\n")
     end
 
-    bills_dealt_array.join("\n")
+    [
+      "Legislation results",
+      ""
+    ].concat(results_array)
+      .concat(bills_dealt_array).join("\n")
   end
 
+  private
+
+  def passes?(index, party)
+    send("outcomes_#{party}")[index].sum >= send("bills_#{party}")[index].vps
+  end
+
+  def vps(index, party, board)
+    bill = send("bills_#{party}")[index]
+    if passes?(index, party)
+      bill.vps + (bill.sector == board.state_of_the_union.priorities[0] ? 1 : 0)
+    else
+      0
+    end
+  end
 end

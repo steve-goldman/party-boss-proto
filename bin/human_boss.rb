@@ -2,7 +2,7 @@ require_relative '../objects/config'
 require_relative '../objects/game_snapshot'
 require_relative 'logger'
 
-class ManualPlayer
+class HumanBoss
 
   def initialize(party, hand)
     @party = party
@@ -28,7 +28,7 @@ class ManualPlayer
       end
       # ask user to confirm
       if confirm_candidates game_snapshot.board.office_holders, candidates
-        # remove candidates from the player's hand
+        # remove candidates from the boss's hand
         candidates.each { |candidate| @hand.politicians.delete candidate }
         return candidates
       end

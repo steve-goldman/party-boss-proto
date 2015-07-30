@@ -12,7 +12,7 @@ module Deserializable
   # class from a JSON file.
 
   def deserialize(hash)
-    self.send(:new, *self::Members.map do |member|
+    self.send(:new, *self::Members.map { |member|
                 if member[:is_array]
                   hash[member[:name].to_s].map do |value|
                     deserialize_member(member[:type], value)
@@ -20,7 +20,7 @@ module Deserializable
                 else
                   deserialize_member(member[:type], hash[member[:name].to_s])
                 end
-              end)
+              })
   end
 
   def from_file(filename)

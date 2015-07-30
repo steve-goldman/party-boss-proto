@@ -11,6 +11,10 @@ class Strengths < BaseObject
     { name: "social", type: Integer }
   ]
 
+  def total
+    defense + economy + social
+  end
+
   def to_s
     "[d:#{defense},e:#{economy},s:#{social}]"
   end

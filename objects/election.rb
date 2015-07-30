@@ -13,14 +13,6 @@ class Election < BaseObject
     { name: :outcomes_B,         type: DiceOutcome,  is_array: true },
   ]
 
-  def points_A(index, board)
-    outcomes_A[index].sum + candidates_A[index].strength(board.state_of_the_union.priorities[0])
-  end
-
-  def points_B(index, board)
-    outcomes_B[index].sum + candidates_B[index].strength(board.state_of_the_union.priorities[0])
-  end
-
   def get_result(index, board)
     winner = get_winner index, board
 
@@ -33,14 +25,20 @@ class Election < BaseObject
   end
 
   def description(board)
+    defeats = " DEFEATS "
     results_array = []
     Config.get.seats_num.times do |index|
       result = get_result index, board
-      results_array << sprintf("%-#{Politician::MaxLength}s (party '%s')  DEFEATS  %-#{Politician::MaxLength}s (party '%s')",
+      results_array << sprintf("%-#{Politician::MaxLength}s (party '%s') #{defeats} %-#{Politician::MaxLength}s (party '%s')",
                                result[:winner],
                                result[:winning_party],
                                result[:loser],
                                result[:losing_party])
+      results_array << sprintf("%-#{Politician::MaxLength}s %s %-#{Politician::MaxLength}s",
+                               breakdown_str(index, board, result[:winning_party]),
+                               " " * ("(party 'x') #{defeats}".length),
+                               breakdown_str(index, board, result[:losing_party]))
+                               
     end
 
     [
@@ -50,11 +48,33 @@ class Election < BaseObject
   end
 
   private
+  
+  def breakdown_str(index, board, party)
+    "#{points(index, board, party)} = #{strength_points(index, board, party)} + #{outcomes(index, party)}"
+  end
+
+  def strength_points(index, board, party)
+    party == 'A' ?
+      candidates_A[index].strength(board.state_of_the_union.priorities[0]) :
+      candidates_B[index].strength(board.state_of_the_union.priorities[0])
+  end
+
+  def outcomes(index, party)
+    (send "outcomes_#{party}")[index]
+  end
+
+  def outcomes_points(index, party)
+    outcomes(index, party).sum
+  end
+
+  def points(index, board, party)
+    strength_points(index, board, party) + outcomes_points(index, party)
+  end
 
   def get_winner(index, board)
-    if points_A(index, board) > points_B(index, board)
+    if points(index, board, 'A') > points(index, board, 'B')
       candidates_A[index]
-    elsif points_A(index, board) < points_B(index, board)
+    elsif points(index, board, 'A') < points(index, board, 'B')
       candidates_B[index]
     elsif candidates_A[index].strength(board.state_of_the_union.priorities[1]) >
           candidates_B[index].strength(board.state_of_the_union.priorities[1])
@@ -74,5 +94,5 @@ class Election < BaseObject
       candidates_B[index]
     end
   end
-                                       
+
 end

@@ -10,6 +10,12 @@ class Bill < BaseObject
     { name: "vps",    type: Integer }
   ]
 
+  def Bill.matchup_descriptions(bills_A, bills_B)
+    bills_A.each_index.map do |index|
+      "#{bills_A[index]}   opposite   #{bills_B[index]}"
+    end
+  end
+
   def to_s
     sprintf "%-29s %-12s %-7s #{vps}", title, agenda, sector
   end

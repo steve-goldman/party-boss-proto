@@ -54,14 +54,15 @@ class HumanBoss
   private
 
   def input_candidate(politicians)
+    # show the list
+    politicians.count.times do |index|
+      Logger.log "#{index + 1}: #{politicians[index]}"
+    end
+    # get the input
     while true
-      Logger.prompt "(Enter candidate # or 'list'): "
+      Logger.prompt "(Enter candidate #): "
       input = gets.chomp
-      if input == 'list'
-        politicians.count.times do |index|
-          Logger.log "#{index + 1}: #{politicians[index]}"
-        end
-      elsif !int_in_range? input, 1, politicians.count
+      if !int_in_range? input, 1, politicians.count
         Logger.error "Input #{input} is out of range"
       else
         politician = politicians[input.to_i - 1]

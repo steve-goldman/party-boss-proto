@@ -10,16 +10,19 @@ class Config < BaseObject
     { name: :campaign_dice_max,        type: Integer },
   ]
 
+  @@instance = nil
+  @@filename = nil
+  
   def Config.get(filename = 'data/config.json')
-    throw "asking for #{filename} but already loaded #{@filename}" if
-      @filename && @filename != filename
+    throw "asking for #{filename} but already loaded #{@@filename}" if
+      @@filename && @@filename != filename
 
-    if @instance.nil?
-      @instance = Config.from_file filename
-      @filename = filename
+    if @@instance.nil?
+      @@instance = Config.from_file filename
+      @@filename = filename
     end
 
-    @instance
+    @@instance
   end
 
 end

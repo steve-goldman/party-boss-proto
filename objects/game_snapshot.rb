@@ -38,6 +38,8 @@ class GameSnapshot < BaseObject
     # deal the cards
     game_snapshot.hand_A.politicians.concat(game_snapshot.deal_politicians 'A')
     game_snapshot.hand_B.politicians.concat(game_snapshot.deal_politicians 'B')
+    game_snapshot.hand_A.bills.concat(game_snapshot.deal_bills 'A')
+    game_snapshot.hand_B.bills.concat(game_snapshot.deal_bills 'B')
     game_snapshot
   end
 
@@ -50,13 +52,13 @@ class GameSnapshot < BaseObject
     dealt_politicians
   end
 
-  def deal_bills
+  def deal_bills(party)
     bill_deck.shuffle!
-    for hand in [ hand_A, hand_B ] do
-      (Config.get.bills_num_in_committee - hand.bills.count).times do
-        hand.bills << bill_deck.pop
-      end
+    dealt_bills = []
+    (Config.get.bills_num_in_committee - send("hand_#{party}").bills.count).times do
+      dealt_bills << bill_deck.pop
     end
+    dealt_bills
   end
 
   def end_cycle(next_state_of_the_union)

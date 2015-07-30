@@ -13,6 +13,7 @@ class GameEngine
       @game = Game.new(GameSnapshot.deserialize(@game_snapshot.serialize), [], nil)
     else
       @game_snapshot = game.initial_game_snapshot
+      game.initial_game_snapshot = GameSnapshot.deserialize(@game_snapshot.serialize)
       @game = game
     end
     @boss_A = HumanBoss.new("A", @game_snapshot.hand_A)

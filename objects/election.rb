@@ -112,7 +112,7 @@ class Election < BaseObject
     results_array = Config.get.seats_num.times.map do |index|
       result = get_result index, board
         "#{result[:winner]} (party '#{result[:winning_party]}') #{defeats} #{result[:loser]} (party '#{result[:losing_party]}')\n" +
-        sprintf("%-#{Politician::MaxLength}s %s %-#{Politician::MaxLength}s",
+        sprintf("  %-#{Politician::MaxLength}s %s %-#{Politician::MaxLength}s\n",
                 breakdown_str(index, board, result[:winning_party]),
                 " " * ("(party 'x') #{defeats}".length),
                 breakdown_str(index, board, result[:losing_party]))

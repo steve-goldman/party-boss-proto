@@ -7,12 +7,14 @@ class Election < BaseObject
 
   # define the data that goes in this object
   Members = [
-    { name: "candidates_A",       type: Politician,   is_array: true },
-    { name: "candidates_B",       type: Politician,   is_array: true },
-    { name: "allocation_A",       type: DiceAllocation },
-    { name: "allocation_B",       type: DiceAllocation },
-    { name: "outcomes_A",         type: DiceOutcome,  is_array: true },
-    { name: "outcomes_B",         type: DiceOutcome,  is_array: true },
+    { name: "candidates_A",        type: Politician,   is_array: true },
+    { name: "candidates_B",        type: Politician,   is_array: true },
+    { name: "allocation_A",        type: DiceAllocation },
+    { name: "allocation_B",        type: DiceAllocation },
+    { name: "outcomes_A",          type: DiceOutcome,  is_array: true },
+    { name: "outcomes_B",          type: DiceOutcome,  is_array: true },
+    { name: "politicians_dealt_A", type: Politician,   is_array: true },
+    { name: "politicians_dealt_B", type: Politician,   is_array: true },
   ]
 
   def get_result(index, board)
@@ -27,6 +29,7 @@ class Election < BaseObject
   end
 
   def Election.run_election(game_snapshot, boss_A, boss_B, dice_roller)
+    # create the election
     Logger.header game_snapshot.board.description
     Logger.header("Boss 'A' choosing candidates").indent
     candidates_A = boss_A.get_candidates(game_snapshot)
@@ -50,9 +53,26 @@ class Election < BaseObject
                             allocation_A,
                             allocation_B,
                             dice_roller.get_outcomes(allocation_A),
-                            dice_roller.get_outcomes(allocation_B))
+                            dice_roller.get_outcomes(allocation_B),
+                            [], # fill this in below
+                            []) # fill this in below
+    # put the winners in office
+    Config.get.seats_num.times do |index|
+      result = election.get_result index, game_snapshot.board
+      game_snapshot.board.office_holders[index] = OfficeHolder.new result[:winning_party], result[:winner]
+    end
+    # deal politicians
+    election.politicians_dealt_A.concat(game_snapshot.deal_politicians 'A')
+    election.politicians_dealt_B.concat(game_snapshot.deal_politicians 'B')
+    # put the losers back in the deck
+    Config.get.seats_num.times do |index|
+      result = election.get_result index, game_snapshot.board
+      game_snapshot.politician_deck.push result[:loser]
+    end
+
     Logger.header(election.description game_snapshot.board).indent
     Logger.unindent
+
     election
   end
 
@@ -73,10 +93,19 @@ class Election < BaseObject
                                
     end
 
+    politicians_dealt_array = []
+    for party in ['A', 'B'] do
+      politicians_dealt_array << ""
+      politicians_dealt_array << "Party '#{party}' was dealt:"
+      politicians_dealt_array.concat(send("politicians_dealt_#{party}").map { |politician| "  #{politician}" })
+    end
+
     [
       "Election results",
       ""
-    ].concat(results_array).join("\n")
+    ].concat(results_array)
+      .concat(politicians_dealt_array)
+      .join("\n")
   end
 
   private

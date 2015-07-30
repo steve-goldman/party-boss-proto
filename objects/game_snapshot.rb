@@ -36,30 +36,20 @@ class GameSnapshot < BaseObject
                                      bill_deck,
                                      state_of_the_union_deck)
     # deal the cards
-    game_snapshot.deal_politicians
-    game_snapshot.deal_bills
+    game_snapshot.deal_politicians 'A'
+    game_snapshot.deal_politicians 'B'
     game_snapshot
   end
 
-  def apply_election(election)
-    # put the winners in office and losers back in the deck
-    Config.get.seats_num.times do |index|
-      result = election.get_result index, board
-      board.office_holders[index] = OfficeHolder.new result[:winning_party], result[:winner]
-      politician_deck.push result[:loser]
-    end
-    # top off the hands
-    deal_politicians
-  end
-  
-  def deal_politicians
+  def deal_politicians(party)
     politician_deck.shuffle!
-    (Config.get.politicians_num_in_party - hand_A.politicians.count - board.num_encumbents('A')).times do
-      hand_A.politicians << politician_deck.pop
+    hand = send("hand_#{party}")
+    dealt_politicians = []
+    (Config.get.politicians_num_in_party - hand.politicians.count - board.num_encumbents(party)).times do
+      dealt_politicians << politician_deck.pop
     end
-    (Config.get.politicians_num_in_party - hand_B.politicians.count - board.num_encumbents('B')).times do
-      hand_B.politicians << politician_deck.pop
-    end
+    hand.politicians.concat dealt_politicians
+    dealt_politicians
   end
 
   def deal_bills

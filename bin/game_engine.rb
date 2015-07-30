@@ -18,7 +18,6 @@ class GameEngine
       Logger.subheader "Cycle #{index + 1} / #{num_cycles}"
       Logger.header "Election phase"
       election = Election.run_election game_snapshot, boss_A, boss_B, dice_roller
-      game_snapshot.apply_election election
       Logger.header "Legislative phase"
       game.cycles << Cycle.new(election)
       game_snapshot.end_cycle

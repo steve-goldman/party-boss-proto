@@ -94,9 +94,17 @@ class Election < BaseObject
     end
   end
 
-  def deal_politicians(game_snapshot)
+  def deal_politicians(game_snapshot, remove_from_deck = false)
     game_snapshot.hand_A.politicians.concat(politicians_dealt_A)
     game_snapshot.hand_B.politicians.concat(politicians_dealt_B)
+
+    if remove_from_deck
+      ['A', 'B'].each do |party|
+        send("politicians_dealt_#{party}").each do |politician|
+          game_snapshot.politician_deck.delete_if { |deck_politician| deck_politician.equals?(politician) }
+        end
+      end
+    end
   end
 
   def put_losers_in_deck(game_snapshot)

@@ -10,7 +10,7 @@ class GameEngine
   def initialize(game = nil)
     if game.nil?
       @game_snapshot = GameSnapshot.new_game
-      @game = Game.new(GameSnapshot.deserialize(@game_snapshot.serialize), [])
+      @game = Game.new(GameSnapshot.deserialize(@game_snapshot.serialize), [], nil)
     else
       @game_snapshot = game.initial_game_snapshot
       @game = game
@@ -30,7 +30,7 @@ class GameEngine
       Election.log_matchups election.candidates_A, election.candidates_B
       election.remove_candidates_from_hands @game_snapshot
       election.put_winners_in_office @game_snapshot
-      election.deal_politicians @game_snapshot
+      election.deal_politicians @game_snapshot, true
       election.put_losers_in_deck @game_snapshot
       Logger.header(election.description @game_snapshot.board)
       
@@ -42,12 +42,18 @@ class GameEngine
       legislative_session.remove_bills_from_hands @game_snapshot
       legislative_session.sign_winners_into_law @game_snapshot
 
-      legislative_session.deal_bills @game_snapshot
+      legislative_session.deal_bills @game_snapshot, true
       legislative_session.put_losers_in_deck @game_snapshot
       Logger.header(legislative_session.description @game_snapshot.board)
       
       @game_snapshot.end_cycle @game.cycles[index].next_state_of_the_union
+      @game_snapshot.state_of_the_union_deck.delete_if do |deck_state_of_the_union|
+        deck_state_of_the_union.equals?(@game.cycles[index].next_state_of_the_union)
+      end
     end
+    # error checking
+    raise "caught up snapshot disagrees with game state" if
+      !@game.final_game_snapshot.equals?(@game_snapshot)
   end
   
   def run(num_cycles)
@@ -70,6 +76,7 @@ class GameEngine
                                 legislative_session,
                                 @game_snapshot.board.state_of_the_union)
     end
+    @game.final_game_snapshot = @game_snapshot
     @game
   end
 
@@ -77,6 +84,6 @@ class GameEngine
 
 end
 
-#engine = GameEngine.new(Game.from_file('input.json'))
-engine = GameEngine.new(nil)
-engine.run((ARGV.shift || 1).to_i).to_file('output.json')
+engine = GameEngine.new(Game.from_file('input.json'))
+#engine = GameEngine.new(nil)
+engine.run((ARGV.shift || 1).to_i).to_file('output2.json')

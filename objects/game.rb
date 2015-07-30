@@ -8,6 +8,7 @@ class Game < BaseObject
   Members = [
     { name: "initial_game_snapshot", type: GameSnapshot },
     { name: "cycles",                type: Cycle, is_array: true },
+    { name: "final_game_snapshot",   type: GameSnapshot },
   ]
   
 end

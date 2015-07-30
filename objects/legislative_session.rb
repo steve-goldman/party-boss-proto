@@ -84,9 +84,17 @@ class LegislativeSession < BaseObject
     # TODO
   end
 
-  def deal_bills(game_snapshot)
+  def deal_bills(game_snapshot, remove_from_deck = false)
     game_snapshot.hand_A.bills.concat(bills_dealt_A)
     game_snapshot.hand_B.bills.concat(bills_dealt_B)
+
+    if remove_from_deck
+      ['A', 'B'].each do |party|
+        send("bills_dealt_#{party}").each do |bill|
+          game_snapshot.bill_deck.delete_if { |deck_bill| deck_bill.equals?(bill) }
+        end
+      end
+    end
   end
 
   def put_losers_in_deck(game_snapshot)

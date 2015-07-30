@@ -2,6 +2,8 @@ require_relative 'base_object'
 
 class Bill < BaseObject
 
+  MaxLength = 52
+  
   # define the data that goes in this object
   Members = [
     { name: "title",  type: String  },

@@ -6,7 +6,7 @@ require 'json'
 array = STDIN.read.split("\n").map do |line|
   tokens = line.split(/\s+/)
   {
-    title: tokens[0..(tokens.length - 4)].join(' '),
+    issue: tokens[0..(tokens.length - 4)].join(' '),
     priorities: [
       tokens[tokens.length - 3].downcase,
       tokens[tokens.length - 2].downcase,

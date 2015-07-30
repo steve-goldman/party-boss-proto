@@ -27,6 +27,38 @@ module ClassRecord
       end
       i += 1
     end
+
+    # define equals methods
+    self.class.send(:define_method, :elem_equals?) do |type, elem, other_elem|
+      if type.superclass == BaseObject
+        return false if !elem.equals?(other_elem)
+      else
+        return false if elem != other_elem
+      end
+      true
+    end
+    
+    self.class.send(:define_method, :equals?) do |other|
+      return false if !other.is_a? self.class
+      self.class::Members.each do |member|
+        if member[:is_array]
+          return false if send(member[:name]).count != other.send(member[:name]).count
+          if member[:unordered]
+            send(member[:name]).count.times do |index|
+              return false if !other.send(member[:name]).reduce(false) { |found, elem| found || elem_equal?(member[:type], send(member[:name])[index], elem) }
+            end
+          else
+            send(member[:name]).count.times do |index|
+              return false if !elem_equals(member[:type], send(member[:name])[index], other.send(member[:name])[index])
+            end
+          end
+        else
+          return false if !elem_equals?(member[:type], send(member[:name]), other.send(member[:name]))
+        end
+      end
+      true
+    end
+
   end
 
 end

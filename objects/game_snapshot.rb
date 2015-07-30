@@ -20,6 +20,7 @@ class GameSnapshot < BaseObject
     politician_deck = Politician.from_array_file('data/politicians.json')
     bill_deck = Bill.from_array_file('data/bills.json')
     # set the initial office holders from the politician_deck
+    politician_deck.shuffle!
     office_holders = []
     Config.get.seats_num.times do
       office_holders << OfficeHolder.new(office_holders.count % 2 == 0 ? 'A' : 'B', politician_deck.pop)
@@ -46,7 +47,7 @@ class GameSnapshot < BaseObject
   end
   
   def deal_politicians
-    politician_deck.shuffle
+    politician_deck.shuffle!
     (Config.get.politicians_num_in_party - hand_A.politicians.count - board.num_encumbents('A')).times do
       hand_A.politicians << politician_deck.pop
     end
@@ -56,7 +57,7 @@ class GameSnapshot < BaseObject
   end
 
   def deal_bills
-    bill_deck.shuffle
+    bill_deck.shuffle!
     for hand in [ hand_A, hand_B ] do
       (Config.get.bills_num_in_committee - hand.bills.count).times do
         hand.bills << bill_deck.pop

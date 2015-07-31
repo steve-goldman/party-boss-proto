@@ -22,14 +22,14 @@ class LegislativeSession < BaseObject
     bills_A = boss_A.get_bills
     Logger.unindent
     Logger.header("Boss 'A' choosing dice allocation").indent
-    allocation_A = boss_A.get_allocation(game_snapshot.board.num_legislative_dice('A'),
+    allocation_A = boss_A.get_allocation(game_snapshot.board.num_leadership_dice('A'),
                                          bills_A)
     Logger.unindent
     Logger.header("Boss 'B' choosing bills").indent
     bills_B = boss_B.get_bills
     Logger.unindent
     Logger.header("Boss 'B' choosing dice allocation").indent
-    allocation_B = boss_B.get_allocation(game_snapshot.board.num_legislative_dice('B'),
+    allocation_B = boss_B.get_allocation(game_snapshot.board.num_leadership_dice('B'),
                                          bills_B)
     Logger.unindent
     Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor bills_A, bills_B)

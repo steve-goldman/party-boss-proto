@@ -30,9 +30,9 @@ class Board < BaseObject
     ].min
   end
 
-  def num_legislative_dice(party)
+  def num_leadership_dice(party)
     [
-      Config.get.legislative_dice_max,
+      Config.get.leadership_dice_max,
       office_holders.reduce(0) { |sum, office_holder|
         if office_holder.party == party
           sum + office_holder.politician.strengths.total

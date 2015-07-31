@@ -25,6 +25,17 @@ class LegislativeSessionRenderer < Renderer
     ].join("\n")
   end
 
+  def render_bills_on_floor(bills_A, bills_B)
+    [
+      "Bills on the floor", underline,
+      party_header,         underline,
+    ].concat(
+      Config.get.bills_num_on_floor.times.map { |index|
+        two_sides(bills_A[index], bills_B[index])
+      }
+    ).join("\n")
+  end
+
   private
 
   def results(legislative_session, board)

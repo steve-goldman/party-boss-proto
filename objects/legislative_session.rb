@@ -32,7 +32,7 @@ class LegislativeSession < BaseObject
     allocation_B = boss_B.get_allocation(game_snapshot.board.num_legislative_dice('B'),
                                          bills_B)
     Logger.unindent
-    LegislativeSession.log_matchups bills_A, bills_B
+    Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor bills_A, bills_B)
 
     #
     # TODO: tactics
@@ -57,12 +57,6 @@ class LegislativeSession < BaseObject
     legislative_session.put_losers_in_deck(game_snapshot)
 
     legislative_session
-  end
-
-  def LegislativeSession.log_matchups(bills_A, bills_B)
-    Logger.subheader("Bills on the floor").indent
-    Logger.log Bill.matchup_descriptions(bills_A, bills_B).join("\n")
-    Logger.unindent
   end
 
   def remove_bills_from_hands(game_snapshot)

@@ -44,7 +44,9 @@ class GameEngine
       Logger.header(BoardRenderer.get.render @game_snapshot.board)
 
       legislative_session = @game.cycles[index].legislative_session
-      LegislativeSession.log_matchups legislative_session.bills_A, legislative_session.bills_B
+      Logger.header(
+        LegislativeSessionRenderer.get.render_bills_on_floor legislative_session.bills_A,
+                                                             legislative_session.bills_B)
       legislative_session.remove_bills_from_hands @game_snapshot
       legislative_session.sign_winners_into_law @game_snapshot
 

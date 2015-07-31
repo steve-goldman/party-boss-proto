@@ -27,7 +27,7 @@ class GameEngine
       Logger.subheader "Catch-up cycle #{index + 1} / #{@game.cycles.count}"
 
       Logger.header "Election phase"
-      Logger.header(BoardRenderer.render @game_snapshot.board)
+      Logger.header(BoardRenderer.get.render @game_snapshot.board)
 
       election = @game.cycles[index].election
       Election.log_matchups election.candidates_A, election.candidates_B
@@ -38,7 +38,7 @@ class GameEngine
       Logger.header(election.description @game_snapshot.board)
       
       Logger.header "Legislative phase"
-      Logger.header(BoardRenderer.render @game_snapshot.board)
+      Logger.header(BoardRenderer.get.render @game_snapshot.board)
 
       legislative_session = @game.cycles[index].legislative_session
       LegislativeSession.log_matchups legislative_session.bills_A, legislative_session.bills_B
@@ -65,14 +65,14 @@ class GameEngine
       Logger.subheader "Cycle #{index + 1} / #{num_cycles}"
 
       Logger.header "Election phase"
-      Logger.header(BoardRenderer.render @game_snapshot.board)
+      Logger.header(BoardRenderer.get.render @game_snapshot.board)
 
       election = Election.run_election(@game_snapshot,
                                        @boss_A, @boss_B,
                                        dice_roller)
       
       Logger.header "Legislative phase"
-      Logger.header(BoardRenderer.render @game_snapshot.board)
+      Logger.header(BoardRenderer.get.render @game_snapshot.board)
 
       legislative_session = LegislativeSession.run_session(@game_snapshot,
                                                            @boss_A, @boss_B,
@@ -84,7 +84,7 @@ class GameEngine
                                   @game_snapshot.board.state_of_the_union)
     end
     # display the board once more for good measure
-    Logger.header(BoardRenderer.render @game_snapshot.board)
+    Logger.header(BoardRenderer.get.render @game_snapshot.board)
     Logger.subheader "Game over"
     
     @game.final_game_snapshot = @game_snapshot

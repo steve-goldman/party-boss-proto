@@ -18,7 +18,6 @@ class LegislativeSession < BaseObject
   ]
 
   def LegislativeSession.run_session(game_snapshot, boss_A, boss_B, dice_roller)
-    Logger.header game_snapshot.board.description
     Logger.header("Boss 'A' choosing bills").indent
     bills_A = boss_A.get_bills
     Logger.unindent

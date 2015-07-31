@@ -30,7 +30,6 @@ class Election < BaseObject
 
   def Election.run_election(game_snapshot, boss_A, boss_B, dice_roller)
     # create the election
-    Logger.header game_snapshot.board.description
     Logger.header("Boss 'A' choosing candidates").indent
     candidates_A = boss_A.get_candidates(game_snapshot)
     Logger.unindent

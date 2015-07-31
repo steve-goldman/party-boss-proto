@@ -18,14 +18,18 @@ class Election < BaseObject
   ]
 
   def get_result(index, board)
-    winner = get_winner index, board
+    @result = @result || []
+    if @result[index].nil?
+      puts "not cached"
+      winner = get_winner(index, board)
+      a_wins = (winner == candidates_A[index])
+      @result[index] = { winner:        winner,
+                         loser:         a_wins ? candidates_B[index] : candidates_A[index],
+                         winning_party: a_wins ? 'A' : 'B',
+                         losing_party:  a_wins ? 'B' : 'A' }
+    end
 
-    {
-      winner: winner,
-      loser: winner == candidates_A[index] ? candidates_B[index] : candidates_A[index],
-      winning_party: winner == candidates_A[index] ? 'A' : 'B',
-      losing_party: winner == candidates_A[index] ? 'B' : 'A'
-    }
+    @result[index]
   end
 
   def Election.run_election(game_snapshot, boss_A, boss_B, dice_roller)

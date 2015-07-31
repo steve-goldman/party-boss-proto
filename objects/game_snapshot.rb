@@ -43,6 +43,49 @@ class GameSnapshot < BaseObject
     game_snapshot
   end
 
+  def apply_election(election, is_replay)
+    # remove candidates from hands
+    ['A', 'B'].each do |party|
+      election.send("candidates_#{party}").each do |candidate|
+        send("hand_#{party}").politicians.delete_if do |politician|
+          politician.equals?(candidate)
+        end
+      end
+    end
+
+    # put the winners in office
+    Config.get.seats_num.times do |index|
+      result = election.get_result(index, board)
+      board.office_holders[index] =
+        OfficeHolder.new(result[:winning_party], result[:winner])
+    end
+
+    # handle with the dealt politician cards
+    ['A', 'B'].each do |party|
+      if !is_replay
+        # deal the cards
+        election.send("politicians_dealt_#{party}").concat(deal_politicians party)
+      else
+        # this is a replay, so take the dealt cards out of the deck
+        election.send("politicians_dealt_#{party}").each do |politician|
+          politician_deck.delete_if do |deck_politician|
+            deck_politician.equals?(politician)
+          end
+        end
+      end
+      # put the cards in the hand
+      send("hand_#{party}").politicians.concat(election.send("politicians_dealt_#{party}"))
+    end
+
+    # put the losers back in the deck
+    Config.get.seats_num.times do |index|
+      result = election.get_result(index, board)
+      politician_deck.push(result[:loser])
+    end
+
+    election
+  end
+
   def deal_politicians(party)
     politician_deck.shuffle!
     dealt_politicians = []

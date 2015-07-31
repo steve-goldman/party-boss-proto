@@ -34,10 +34,8 @@ class GameEngine
       election = @game.cycles[index].election
       Logger.header(ElectionRenderer.get.render_matchups election.candidates_A,
                                                          election.candidates_B)
-      election.remove_candidates_from_hands @game_snapshot
-      election.put_winners_in_office @game_snapshot
-      election.deal_politicians @game_snapshot, true
-      election.put_losers_in_deck @game_snapshot
+
+      @game_snapshot.apply_election(election, true)
       Logger.header(ElectionRenderer.get.render election, @game_snapshot.board)
       
       Logger.header "Legislative phase"

@@ -74,7 +74,8 @@ class GameSnapshot < BaseObject
         end
       end
       # put the cards in the hand
-      send("hand_#{party}").politicians.concat(election.send("politicians_dealt_#{party}"))
+      send("hand_#{party}").politicians.concat(
+        election.send("politicians_dealt_#{party}"))
     end
 
     # put the losers back in the deck
@@ -84,6 +85,55 @@ class GameSnapshot < BaseObject
     end
 
     election
+  end
+
+  def apply_legislative_session(legislative_session, is_replay)
+    ['A', 'B'].each do |party|
+      # remove bills from hands
+      legislative_session.send("bills_#{party}").each do |bill|
+        send("hand_#{party}").bills.delete_if do |hand_bill|
+          hand_bill.equals?(bill)
+        end
+      end
+
+      # sign winners into law
+      Config.get.bills_num_on_floor.times do |index|
+        bill = legislative_session.passes?(index, party)
+        if bill
+          board.send("passed_bills_#{party}").push(bill)
+          board.increment_vps(party, legislative_session.vps(index, party, board))
+        end
+      end
+    end
+
+    # handle with the dealt bill cards
+    ['A', 'B'].each do |party|
+      if !is_replay
+        # deal the cards
+        legislative_session.send("bills_dealt_#{party}").concat(deal_bills party)
+      else
+        # this is a replay, so take the dealt cards out of the deck
+        legislative_session.send("bills_dealt_#{party}").each do |bill|
+          bill_deck.delete_if do |deck_bill|
+            deck_bill.equals?(bill)
+          end
+        end
+      end
+      # put the cards in the hand
+      send("hand_#{party}").bills.concat(
+        legislative_session.send("bills_dealt_#{party}"))      
+    end
+
+    # put the losers back in the deck
+    ['A', 'B'].each do |party|
+      Config.get.bills_num_on_floor.times do |index|
+        if !legislative_session.passes?(index, party)
+          bill_deck.push(legislative_session.send("bills_#{party}")[index])
+        end
+      end
+    end
+
+    legislative_session
   end
 
   def deal_politicians(party)

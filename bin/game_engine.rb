@@ -45,11 +45,8 @@ class GameEngine
       Logger.header(
         LegislativeSessionRenderer.get.render_bills_on_floor legislative_session.bills_A,
                                                              legislative_session.bills_B)
-      legislative_session.remove_bills_from_hands @game_snapshot
-      legislative_session.sign_winners_into_law @game_snapshot
 
-      legislative_session.deal_bills @game_snapshot, true
-      legislative_session.put_losers_in_deck @game_snapshot
+      @game_snapshot.apply_legislative_session(legislative_session, true)
       Logger.header(LegislativeSessionRenderer.get.render legislative_session,
                                                           @game_snapshot.board)
       

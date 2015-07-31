@@ -47,63 +47,7 @@ class LegislativeSession < BaseObject
                                                  [], # fill this in below
                                                  []) # fill this in below
 
-    legislative_session.remove_bills_from_hands(game_snapshot)
-    legislative_session.sign_winners_into_law(game_snapshot)
-
-    legislative_session.bills_dealt_A.concat(game_snapshot.deal_bills 'A')
-    legislative_session.bills_dealt_B.concat(game_snapshot.deal_bills 'B')
-    legislative_session.deal_bills(game_snapshot)
-
-    legislative_session.put_losers_in_deck(game_snapshot)
-
-    legislative_session
-  end
-
-  def remove_bills_from_hands(game_snapshot)
-    remove_bills_from_hand game_snapshot, 'A'
-    remove_bills_from_hand game_snapshot, 'B'
-  end
-  
-  def remove_bills_from_hand(game_snapshot, party)
-    send("bills_#{party}").each do |bill|
-      game_snapshot.send("hand_#{party}").bills.delete_if { |hand_bill| hand_bill.equals? bill }
-    end
-  end
-
-  def sign_winners_into_law(game_snapshot)
-    board = game_snapshot.board
-    ['A', 'B'].each do |party|
-      Config.get.bills_num_on_floor.times do |index|
-        bill = passes?(index, party)
-        if bill
-          board.send("passed_bills_#{party}").push bill
-          board.increment_vps(party, vps(index, party, board))
-        end
-      end
-    end
-  end
-
-  def put_losers_in_deck(game_snapshot)
-    ['A', 'B'].each do |party|
-      Config.get.bills_num_on_floor.times do |index|
-        if !passes?(index, party)
-          game_snapshot.bill_deck.push send("bills_#{party}")[index]
-        end
-      end
-    end
-  end
-
-  def deal_bills(game_snapshot, remove_from_deck = false)
-    game_snapshot.hand_A.bills.concat(bills_dealt_A)
-    game_snapshot.hand_B.bills.concat(bills_dealt_B)
-
-    if remove_from_deck
-      ['A', 'B'].each do |party|
-        send("bills_dealt_#{party}").each do |bill|
-          game_snapshot.bill_deck.delete_if { |deck_bill| deck_bill.equals?(bill) }
-        end
-      end
-    end
+    game_snapshot.apply_legislative_session(legislative_session, false)
   end
 
   def passes?(index, party)

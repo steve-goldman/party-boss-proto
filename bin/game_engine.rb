@@ -50,10 +50,7 @@ class GameEngine
       Logger.header(LegislativeSessionRenderer.get.render legislative_session,
                                                           @game_snapshot.board)
       
-      @game_snapshot.end_cycle @game.cycles[index].next_state_of_the_union
-      @game_snapshot.state_of_the_union_deck.delete_if do |deck_state_of_the_union|
-        deck_state_of_the_union.equals?(@game.cycles[index].next_state_of_the_union)
-      end
+      @game_snapshot.end_cycle(@game.cycles[index], true)
     end
     # error checking
     raise "caught up snapshot disagrees with game state" if
@@ -84,10 +81,9 @@ class GameEngine
       Logger.header(LegislativeSessionRenderer.get.render legislative_session,
                                                           @game_snapshot.board)
 
-      @game_snapshot.end_cycle @game_snapshot.state_of_the_union_deck.shuffle!.pop
-      @game.cycles.push Cycle.new(election,
-                                  legislative_session,
-                                  @game_snapshot.board.state_of_the_union)
+      cycle = Cycle.new(election, legislative_session, nil)  # gs fills in SOTU
+      @game_snapshot.end_cycle(cycle, false)
+      @game.cycles.push cycle
     end
     # display the board once more for good measure
     Logger.header(BoardRenderer.get.render @game_snapshot.board)

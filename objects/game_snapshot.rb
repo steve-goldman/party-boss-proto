@@ -154,9 +154,16 @@ class GameSnapshot < BaseObject
     dealt_bills
   end
 
-  def end_cycle(next_state_of_the_union)
+  def end_cycle(cycle, is_replay)
     old_state_of_the_union = board.state_of_the_union
-    board.state_of_the_union = next_state_of_the_union
+    if !is_replay
+      cycle.next_state_of_the_union = state_of_the_union_deck.shuffle.pop
+    else
+      state_of_the_union_deck.delete_if do |deck_state_of_the_union|
+        deck_state_of_the_union.equals?(cycle.next_state_of_the_union)
+      end
+    end
+    board.state_of_the_union = cycle.next_state_of_the_union
     state_of_the_union_deck.push old_state_of_the_union
   end
 

@@ -25,6 +25,8 @@ class LegislativeSessionRenderer < Renderer
     ].join("\n")
   end
 
+  private
+
   def results(legislative_session, board)
     Config.get.bills_num_on_floor.times.map { |index|
       [

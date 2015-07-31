@@ -2,6 +2,7 @@ require_relative '../objects/game'
 require_relative '../objects/game_snapshot'
 require_relative '../objects/election'
 require_relative '../objects/renderers/board_renderer'
+require_relative '../objects/renderers/legislative_session_renderer'
 require_relative 'human_boss'
 require_relative 'dice_roller'
 require_relative 'logger'
@@ -47,7 +48,8 @@ class GameEngine
 
       legislative_session.deal_bills @game_snapshot, true
       legislative_session.put_losers_in_deck @game_snapshot
-      Logger.header(legislative_session.description @game_snapshot.board)
+      Logger.header(LegislativeSessionRenderer.get.render legislative_session,
+                                                          @game_snapshot.board)
       
       @game_snapshot.end_cycle @game.cycles[index].next_state_of_the_union
       @game_snapshot.state_of_the_union_deck.delete_if do |deck_state_of_the_union|
@@ -77,7 +79,10 @@ class GameEngine
       legislative_session = LegislativeSession.run_session(@game_snapshot,
                                                            @boss_A, @boss_B,
                                                            dice_roller)
-      
+
+      Logger.header(LegislativeSessionRenderer.get.render legislative_session,
+                                                          @game_snapshot.board)
+
       @game_snapshot.end_cycle @game_snapshot.state_of_the_union_deck.shuffle!.pop
       @game.cycles.push Cycle.new(election,
                                   legislative_session,

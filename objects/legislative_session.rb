@@ -56,9 +56,6 @@ class LegislativeSession < BaseObject
 
     legislative_session.put_losers_in_deck(game_snapshot)
 
-    Logger.header(legislative_session.description game_snapshot.board).indent
-    Logger.unindent
-
     legislative_session
   end
 
@@ -114,36 +111,6 @@ class LegislativeSession < BaseObject
       end
     end
   end
-
-  def description(board)
-    passes = "PASSES"
-    does_not_pass = "DOES NOT PASS"
-    length = [passes.length, does_not_pass.length].max
-    
-    results_array = Config.get.bills_num_on_floor.times.map { |index|
-      sprintf("#{bills_A[index]} %-#{length}s | #{bills_B[index]} %-#{length}s\n",
-              passes?(index, 'A') ? passes : does_not_pass,
-              passes?(index, 'B') ? passes : does_not_pass) +
-        sprintf("  %-#{Bill::MaxLength + length - 1}s |   %s\n",
-                outcomes_A[index], outcomes_B[index]) +
-        sprintf("  %-#{Bill::MaxLength + length - 1}s |   %s\n",
-                passes?(index, 'A') ? "#{vps(index, 'A', board)} vps" : "",
-                passes?(index, 'B') ? "#{vps(index, 'B', board)} vps" : "")
-    }
-
-    bills_dealt_array = ['A', 'B'].map do |party|
-      "\nParty '#{party}' was dealt:\n" +
-        send("bills_dealt_#{party}").map { |bill| "  #{bill}" }.join("\n")
-    end
-
-    [
-      "Legislation results",
-      ""
-    ].concat(results_array)
-      .concat(bills_dealt_array).join("\n")
-  end
-
-  private
 
   def passes?(index, party)
     bill = send("bills_#{party}")[index]

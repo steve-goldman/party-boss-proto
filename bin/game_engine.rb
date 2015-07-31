@@ -2,6 +2,7 @@ require_relative '../objects/game'
 require_relative '../objects/game_snapshot'
 require_relative '../objects/election'
 require_relative '../objects/renderers/board_renderer'
+require_relative '../objects/renderers/election_renderer'
 require_relative '../objects/renderers/legislative_session_renderer'
 require_relative 'human_boss'
 require_relative 'dice_roller'
@@ -36,7 +37,7 @@ class GameEngine
       election.put_winners_in_office @game_snapshot
       election.deal_politicians @game_snapshot, true
       election.put_losers_in_deck @game_snapshot
-      Logger.header(election.description @game_snapshot.board)
+      Logger.header(ElectionRenderer.get.render election, @game_snapshot.board)
       
       Logger.header "Legislative phase"
       Logger.header(BoardRenderer.get.render @game_snapshot.board)
@@ -72,7 +73,9 @@ class GameEngine
       election = Election.run_election(@game_snapshot,
                                        @boss_A, @boss_B,
                                        dice_roller)
-      
+
+      Logger.header(ElectionRenderer.get.render election, @game_snapshot.board)      
+
       Logger.header "Legislative phase"
       Logger.header(BoardRenderer.get.render @game_snapshot.board)
 

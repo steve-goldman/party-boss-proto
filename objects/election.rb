@@ -63,9 +63,6 @@ class Election < BaseObject
 
     election.put_losers_in_deck(game_snapshot)
 
-    Logger.header(election.description game_snapshot.board).indent
-    Logger.unindent
-
     election
   end
 
@@ -113,55 +110,20 @@ class Election < BaseObject
     end
   end
   
-  def description(board)
-    defeats = " DEFEATS "
-    results_array = []
-    results_array = Config.get.seats_num.times.map do |index|
-      result = get_result index, board
-        "#{result[:winner]} (party '#{result[:winning_party]}') #{defeats} #{result[:loser]} (party '#{result[:losing_party]}')\n" +
-        sprintf("  %-#{Politician::MaxLength}s %s %-#{Politician::MaxLength}s\n",
-                breakdown_str(index, board, result[:winning_party]),
-                " " * ("(party 'x') #{defeats}".length),
-                breakdown_str(index, board, result[:losing_party]))
-    end
-
-    politicians_dealt_array = ['A', 'B'].map do |party|
-      "\nParty '#{party}' was dealt:\n" +
-        send("politicians_dealt_#{party}").map { |politician| "  #{politician}" }.join("\n")
-    end
-
-    [
-      "Election results",
-      ""
-    ].concat(results_array)
-      .concat(politicians_dealt_array)
-      .join("\n")
-  end
-
-  private
-  
-  def breakdown_str(index, board, party)
-    "#{points(index, board, party)} = #{strength_points(index, board, party)} + #{outcomes(index, party)}"
-  end
-
-  def strength_points(index, board, party)
-    party == 'A' ?
-      candidates_A[index].strength(board.state_of_the_union.priorities[0]) :
-      candidates_B[index].strength(board.state_of_the_union.priorities[0])
-  end
-
-  def outcomes(index, party)
-    (send "outcomes_#{party}")[index]
-  end
-
-  def outcomes_points(index, party)
-    outcomes(index, party).sum
-  end
-
   def points(index, board, party)
     strength_points(index, board, party) + outcomes_points(index, party)
   end
 
+  def strength_points(index, board, party)
+    send("candidates_#{party}")[index].strength(board.state_of_the_union.priorities[0])
+  end
+
+  def outcomes_points(index, party)
+    send("outcomes_#{party}")[index].sum
+  end
+
+  private
+  
   def get_winner(index, board)
     if points(index, board, 'A') > points(index, board, 'B')
       candidates_A[index]

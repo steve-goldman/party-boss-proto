@@ -25,6 +25,17 @@ class ElectionRenderer < Renderer
     ].join("\n")
   end
 
+  def render_matchups(candidates_A, candidates_B)
+    [
+      "Election matchups", underline,
+      party_header,        underline,
+    ].concat(
+      Config.get.seats_num.times.map { |index|
+        two_sides(candidates_A[index], candidates_B[index])
+      }
+    ).join("\n")
+  end
+
   private
 
   Wins  = "WINS "

@@ -36,7 +36,7 @@ class Election < BaseObject
     Logger.header("Boss 'B' choosing candidates").indent
     candidates_B = boss_B.get_candidates(game_snapshot)
     Logger.unindent
-    Election.log_matchups candidates_A, candidates_B
+    ElectionRenderer.get.render_matchups candidates_A, candidates_B
     Logger.header("Boss 'A' choosing dice allocation").indent
     allocation_A = boss_A.get_allocation(game_snapshot.board.num_fundraising_dice(candidates_A),
                                          Politician.matchup_descriptions(candidates_A, candidates_B))
@@ -64,12 +64,6 @@ class Election < BaseObject
     election.put_losers_in_deck(game_snapshot)
 
     election
-  end
-
-  def Election.log_matchups(candidates_A, candidates_B)
-    Logger.subheader("Election matchups").indent
-    Logger.log Politician.matchup_descriptions(candidates_A, candidates_B).join("\n")
-    Logger.unindent
   end
 
   def remove_candidates_from_hands(game_snapshot)

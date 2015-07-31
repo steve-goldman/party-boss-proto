@@ -32,7 +32,8 @@ class GameEngine
       Logger.header(BoardRenderer.get.render @game_snapshot.board)
 
       election = @game.cycles[index].election
-      Election.log_matchups election.candidates_A, election.candidates_B
+      Logger.header(ElectionRenderer.get.render_matchups election.candidates_A,
+                                                         election.candidates_B)
       election.remove_candidates_from_hands @game_snapshot
       election.put_winners_in_office @game_snapshot
       election.deal_politicians @game_snapshot, true

@@ -9,32 +9,46 @@ class Precondition < BaseObject
     { name: "params",       type: Params },
   ]
 
-  def holds(party, is_my_bill, bill_A, bill_B, board)
-    self.send("#{precondition}", party, is_my_bill, bill_A, bill_B, board)
+  def holds(party, my_bill, other_bill, board)
+    self.send("#{precondition}", party, my_bill, other_bill, board)
   end
 
   private
   
-  def num_in_office(party, is_my_bill, bill_A, bill_B, board)
-    target_party = params.who == 'self' ?
-                     party : params.who == "opponent" ?
-                               other_party(party) : nil
+  def num_in_office(party, my_bill, other_bill, board)
+    target_party = target_party(party)
     count = board.office_holders.reduce(0) do |count, office_holder|
       count + (office_holder.party == target_party ? 1 : 0)
     end
-    operate(count, params.how_many, params.operator)
+    operate(count, params.how_many)
   end
 
-  def operate(operand_A, operand_B, operator)
-    if operator == "gte"
+  def bill_agenda(party, my_bill, other_bill, board)
+    target_bill(my_bill, other_bill).agenda == params.agenda
+  end
+
+  def target_party(party)
+    params.who == 'self' ? party :
+      params.who == 'opponent' ? other_party(party) :
+        nil
+  end
+
+  def target_bill(my_bill, other_bill)
+    params.who == 'self' ? my_bill :
+      params.who == 'opponent' ? other_bill :
+        nil
+  end
+
+  def operate(operand_A, operand_B)
+    if params.operator == "gte"
       operand_A >= operand_B
-    elsif operator == "gt"
+    elsif params.operator == "gt"
       operand_A > operand_B
-    elsif operator == "lte"
+    elsif params.operator == "lte"
       operand_A <= operand_B
-    elsif operator == "lt"
+    elsif params.operator == "lt"
       operand_A < operand_B
-    elsif operator == "eq"
+    elsif params.operator == "eq"
       operand_A == operand_B
     end
   end

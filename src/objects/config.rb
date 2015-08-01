@@ -15,7 +15,7 @@ class Config < BaseObject
   @@instance = nil
   @@filename = nil
   
-  def Config.get(filename = 'data/config.json')
+  def Config.get(filename = 'src/data/config.json')
     throw "asking for #{filename} but already loaded #{@@filename}" if
       @@filename && @@filename != filename
 

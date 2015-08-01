@@ -1,5 +1,5 @@
 require_relative '../base_object'
-require_relative 'consequence_params'
+require_relative 'action_params'
 
 class Action < BaseObject
 

@@ -20,7 +20,10 @@ module Serializable
           serialize_member(member[:type], value)
         end
       else
-        hash[member[:name]] = serialize_member(member[:type], self.send(member[:name]))
+        serialized = serialize_member(member[:type], self.send(member[:name]))
+        if !serialized.nil? || !member[:can_be_nil]
+          hash[member[:name]] = serialized
+        end
       end
     end
     hash

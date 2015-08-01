@@ -1,12 +1,12 @@
 require_relative '../base_object'
-require_relative 'params'
+require_relative 'precondition_params'
 
 class Precondition < BaseObject
 
   # define the data that goes in this object
   Members = [
-    { name: "precondition", type: String },
-    { name: "params",       type: Params },
+    { name: "precondition", type: String             },
+    { name: "params",       type: PreconditionParams },
   ]
 
   def holds(party, my_bill, other_bill, board)
@@ -25,6 +25,23 @@ class Precondition < BaseObject
 
   def bill_agenda(party, my_bill, other_bill, board)
     target_bill(my_bill, other_bill).agenda == params.agenda
+  end
+
+  def or(party, my_bill, other_bill, board)
+    params.preconditions.each do |precondition|
+      return true if precondition.holds(party, my_bill, other_bill, board)
+    end
+    false
+  end
+
+  # used in unit tests
+  def always_true(party, my_bill, other_bill, board)
+    true
+  end
+
+  # used in unit tests
+  def always_false(party, my_bill, other_bill, board)
+    false
   end
 
   def target_party(party)

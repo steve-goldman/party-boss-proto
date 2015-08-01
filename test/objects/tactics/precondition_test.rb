@@ -48,25 +48,50 @@ class PreconditionTests < Minitest::Test
     assert !precondition.holds(nil, nil, get_bill('moderate'),     nil)
   end
 
-  def target_party(my_party, who)
-    party = (who == 'self') ? my_party : other_party(my_party)
+  def test_or
+    assert !get_or([get_always_false, get_always_false]).holds(nil, nil, nil, nil)
+    assert  get_or([get_always_true,  get_always_false]).holds(nil, nil, nil, nil)
+    assert  get_or([get_always_false, get_always_true ]).holds(nil, nil, nil, nil)
+    assert  get_or([get_always_true,  get_always_true ]).holds(nil, nil, nil, nil)
   end
 
   private
 
+  def target_party(my_party, who)
+    party = (who == 'self') ? my_party : other_party(my_party)
+  end
+
   def get_num_in_office(who, how_many, operator)
-    Precondition.new("num_in_office", Params.new(who,
-                                                 nil,
-                                                 how_many,
-                                                 operator))
+    Precondition.new("num_in_office", PreconditionParams.new(who,
+                                                             nil,
+                                                             how_many,
+                                                             operator,
+                                                             nil))
+  end
+
+  def get_or(preconditions)
+    Precondition.new("or", PreconditionParams.new(nil, nil, nil, nil,
+                                                  preconditions))
   end
 
   def get_bill_agenda(who, agenda)
-    Precondition.new("bill_agenda", Params.new(who,
-                                               agenda,
-                                               nil, nil))
+    Precondition.new("bill_agenda", PreconditionParams.new(who,
+                                                           agenda,
+                                                           nil, nil, nil))
   end
-  
+
+  def get_always_true
+    dummy_precondition('always_true')
+  end
+
+  def get_always_false
+    dummy_precondition('always_false')
+  end
+
+  def dummy_precondition(name)
+    Precondition.new(name, PreconditionParams.new(nil, nil, nil, nil, nil))
+  end
+
   def get_board(party, count)
     office_holders = count.times.map { OfficeHolder.new(party, nil) }
     Board.new(nil, office_holders, nil, nil, nil, nil)

@@ -32,21 +32,20 @@ class LegislativeSession < BaseObject
     allocation_B = boss_B.get_allocation(game_snapshot.board.num_leadership_dice('B'),
                                          bills_B)
     Logger.unindent
-    Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor bills_A, bills_B)
-
-    #
-    # TODO: tactics
-    #
-    
     legislative_session = LegislativeSession.new(bills_A,
                                                  bills_B,
                                                  allocation_A,
                                                  allocation_B,
-                                                 dice_roller.get_outcomes(allocation_A),
-                                                 dice_roller.get_outcomes(allocation_B),
+                                                 [],
+                                                 [],
                                                  [], # fill this in below
                                                  []) # fill this in below
 
+    Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor legislative_session)
+
+    legislative_session.outcomes_A.concat(dice_roller.get_outcomes(allocation_A))
+    legislative_session.outcomes_B.concat(dice_roller.get_outcomes(allocation_B))
+    
     game_snapshot.apply_legislative_session(legislative_session, false)
   end
 

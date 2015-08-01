@@ -43,9 +43,7 @@ class GameEngine
       Logger.header(BoardRenderer.get.render @game_snapshot.board)
 
       legislative_session = @game.cycles[index].legislative_session
-      Logger.header(
-        LegislativeSessionRenderer.get.render_bills_on_floor legislative_session.bills_A,
-                                                             legislative_session.bills_B)
+      Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor legislative_session)
 
       @game_snapshot.apply_legislative_session(legislative_session, true)
       Logger.header(LegislativeSessionRenderer.get.render legislative_session,

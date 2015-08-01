@@ -4,6 +4,7 @@ require_relative '../objects/election'
 require_relative '../objects/renderers/board_renderer'
 require_relative '../objects/renderers/election_renderer'
 require_relative '../objects/renderers/legislative_session_renderer'
+require_relative '../objects/renderers/hand_renderer'
 require_relative 'human_boss'
 require_relative 'dice_roller'
 require_relative 'logger'
@@ -58,6 +59,14 @@ class GameEngine
   end
   
   def run(num_cycles)
+    Logger.subheader "The game is beginning"
+
+    # show the initial hands
+    ['A', 'B'].each do |party|
+      Logger.header("Party '#{party}'s hand")
+      Logger.header(HandRenderer.get.render @game_snapshot.send("hand_#{party}"))
+    end
+    
     dice_roller = DiceRoller.new
     num_cycles.times do |index|
       Logger.subheader "Cycle #{index + 1} / #{num_cycles}"

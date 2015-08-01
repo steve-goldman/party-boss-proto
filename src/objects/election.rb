@@ -20,7 +20,6 @@ class Election < BaseObject
   def get_result(index, board)
     @result = @result || []
     if @result[index].nil?
-      puts "not cached"
       winner = get_winner(index, board)
       a_wins = (winner == candidates_A[index])
       @result[index] = { winner:        winner,

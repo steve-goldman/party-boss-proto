@@ -19,4 +19,10 @@ class Tactic < BaseObject
     name
   end
 
+  def can_play(party, is_my_bill, bill_A, bill_B)
+    preconditions
+      .select { |precondition| !precondition.holds(party, is_my_bill, bill_A, bill_B) }
+      .empty?
+    end
+  end
 end

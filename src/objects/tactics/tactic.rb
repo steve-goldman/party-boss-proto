@@ -23,6 +23,5 @@ class Tactic < BaseObject
     preconditions
       .select { |precondition| !precondition.holds(party, is_my_bill, bill_A, bill_B) }
       .empty?
-    end
   end
 end

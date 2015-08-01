@@ -15,14 +15,14 @@ module Serializable
   def serialize
     hash = {}
     self.class::Members.each do |member|
-      if member[:is_array]
-        hash[member[:name]] = self.send(member[:name]).map do |value|
-          serialize_member(member[:type], value)
-        end
-      else
-        serialized = serialize_member(member[:type], self.send(member[:name]))
-        if !serialized.nil? || !member[:can_be_nil]
-          hash[member[:name]] = serialized
+      value = self.send(member[:name])
+      if !value.nil? || !member[:can_be_nil]
+        if member[:is_array]
+          hash[member[:name]] = value.map do |elem|
+            serialize_member(member[:type], elem)
+          end
+        else
+          hash[member[:name]] = serialize_member(member[:type], value)
         end
       end
     end

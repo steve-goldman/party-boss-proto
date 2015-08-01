@@ -13,12 +13,14 @@ module Deserializable
 
   def deserialize(hash)
     self.send(:new, *self::Members.map { |member|
-                if member[:is_array]
-                  hash[member[:name]].map do |value|
-                    deserialize_member(member[:type], value)
+                if !hash[member[:name]].nil? || !member[:can_be_nil]
+                  if member[:is_array]
+                    hash[member[:name]].map do |value|
+                      deserialize_member(member[:type], value)
+                    end
+                  else
+                    deserialize_member(member[:type], hash[member[:name]])
                   end
-                else
-                  deserialize_member(member[:type], hash[member[:name]])
                 end
               })
   end

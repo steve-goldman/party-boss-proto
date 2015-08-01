@@ -41,25 +41,30 @@ module ClassRecord
     self.class.send(:define_method, :equals?) do |other|
       return false if !other.is_a? self.class
       self.class::Members.each do |member|
-        if member[:is_array]
-          if send(member[:name]).count != other.send(member[:name]).count
+        value = send(member[:name])
+        otherValue = other.send(member[:name])
+        if (value.nil? || otherValue.nil?) && member[:can_be_nil]
+          return value.nil? && otherValue.nil?
+        elsif member[:is_array]
+          if value.count != otherValue.count
             return false
           end
           if member[:unordered]
-            send(member[:name]).count.times do |index|
-              if !other.send(member[:name]).reduce(false) { |found, elem| found || elem_equals?(member[:type], send(member[:name])[index], elem) }
+            value.count.times do |index|
+              if !otherValue.reduce(false) { |found, elem|
+                   found || elem_equals?(member[:type], value[index], elem) }
                 return false
               end
             end
           else
-            send(member[:name]).count.times do |index|
-              if !elem_equals?(member[:type], send(member[:name])[index], other.send(member[:name])[index])
+            value.count.times do |index|
+              if !elem_equals?(member[:type], value[index], otherValue[index])
                 return false
               end
             end
           end
         else
-          if !elem_equals?(member[:type], send(member[:name]), other.send(member[:name]))
+          if !elem_equals?(member[:type], value, otherValue)
             return false
           end
         end

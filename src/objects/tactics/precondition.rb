@@ -1,4 +1,5 @@
 require_relative '../base_object'
+require_relative 'params'
 
 class Precondition < BaseObject
 

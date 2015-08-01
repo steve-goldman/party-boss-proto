@@ -1,4 +1,7 @@
 require_relative '../base_object'
+require_relative 'precondition'
+require_relative 'action'
+require_relative 'consequence'
 
 class Tactic < BaseObject
 

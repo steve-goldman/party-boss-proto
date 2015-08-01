@@ -13,14 +13,16 @@ class GameSnapshot < BaseObject
     { name: "politician_deck",         type: Politician,      is_array: true, unordered: true },
     { name: "bill_deck",               type: Bill,            is_array: true, unordered: true },
     { name: "state_of_the_union_deck", type: StateOfTheUnion, is_array: true, unordered: true },
+    { name: "tactic_deck",             type: Tactic,          is_array: true, unordered: true },
   ]
 
   # utility method for creating a new game
   def GameSnapshot.new_game
     # create the decks of politicians
-    politician_deck = Politician.from_array_file('data/politicians.json').shuffle
-    bill_deck = Bill.from_array_file('data/bills.json').shuffle
-    state_of_the_union_deck = StateOfTheUnion.from_array_file('data/state_of_the_unions.json').shuffle
+    politician_deck = Politician.from_array_file('src/data/politicians.json').shuffle
+    bill_deck = Bill.from_array_file('src/data/bills.json').shuffle
+    state_of_the_union_deck = StateOfTheUnion.from_array_file('src/data/state_of_the_unions.json').shuffle
+    tactic_deck = Tactic.from_array_file('src/data/tactics.json')
     # set the initial office holders from the politician_deck
     office_holders = []
     Config.get.seats_num.times do
@@ -30,16 +32,18 @@ class GameSnapshot < BaseObject
     board = Board.new(state_of_the_union_deck.pop, office_holders, [], [], 0, 0)
     # create the snapshot
     game_snapshot = GameSnapshot.new(board,
-                                     Hand.new([], []),
-                                     Hand.new([], []),
+                                     Hand.new([], [], []),
+                                     Hand.new([], [], []),
                                      politician_deck,
                                      bill_deck,
-                                     state_of_the_union_deck)
+                                     state_of_the_union_deck,
+                                     tactic_deck)
     # deal the cards
-    game_snapshot.hand_A.politicians.concat(game_snapshot.deal_politicians 'A')
-    game_snapshot.hand_B.politicians.concat(game_snapshot.deal_politicians 'B')
-    game_snapshot.hand_A.bills.concat(game_snapshot.deal_bills 'A')
-    game_snapshot.hand_B.bills.concat(game_snapshot.deal_bills 'B')
+    ['A', 'B'].each do |party|
+      game_snapshot.send("hand_#{party}").politicians.concat(game_snapshot.deal_politicians party)
+      game_snapshot.send("hand_#{party}").bills.concat(game_snapshot.deal_bills party)
+      game_snapshot.send("hand_#{party}").tactics.concat(game_snapshot.deal_tactics party, Config.get.tactics_num_initial)
+    end
     game_snapshot
   end
 
@@ -138,20 +142,25 @@ class GameSnapshot < BaseObject
 
   def deal_politicians(party)
     politician_deck.shuffle!
-    dealt_politicians = []
-    (Config.get.politicians_num_in_party - send("hand_#{party}").politicians.count - board.num_encumbents(party)).times do
-      dealt_politicians.push politician_deck.pop if !politician_deck.empty?
+    num_to_deal = Config.get.politicians_num_in_party - send("hand_#{party}").politicians.count - board.num_encumbents(party)
+    [num_to_deal, politician_deck.count].min.times.map do
+      politician_deck.pop
     end
-    dealt_politicians
   end
 
   def deal_bills(party)
     bill_deck.shuffle!
-    dealt_bills = []
-    (Config.get.bills_num_in_committee - send("hand_#{party}").bills.count).times do
-      dealt_bills.push bill_deck.pop if !bill_deck.empty?
+    num_to_deal = Config.get.bills_num_in_committee - send("hand_#{party}").bills.count
+    [num_to_deal, bill_deck.count].min.times.map do
+      bill_deck.pop
     end
-    dealt_bills
+  end
+
+  def deal_tactics(party, num_to_deal)
+    tactic_deck.shuffle!
+    [num_to_deal, tactic_deck.count].min.times.map do
+      tactic_deck.pop
+    end
   end
 
   def end_cycle(cycle, is_replay)

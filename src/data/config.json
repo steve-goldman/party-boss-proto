@@ -4,5 +4,6 @@
     "bills_num_in_committee": 8,
     "bills_num_on_floor": 3,
     "fundraising_dice_max": 10,
-    "leadership_dice_max": 10
+    "leadership_dice_max": 10,
+    "tactics_num_initial": 3
 }

@@ -1,6 +1,6 @@
 require_relative '../base_object'
 
-class Precondition < BaseObject
+class Consequence < BaseObject
 
   # define the data that goes in this object
   Members = [

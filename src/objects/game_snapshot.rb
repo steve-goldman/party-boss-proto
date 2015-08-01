@@ -166,7 +166,7 @@ class GameSnapshot < BaseObject
   def end_cycle(cycle, is_replay)
     old_state_of_the_union = board.state_of_the_union
     if !is_replay
-      cycle.next_state_of_the_union = state_of_the_union_deck.shuffle.pop
+      cycle.next_state_of_the_union = state_of_the_union_deck.shuffle!.pop
     else
       state_of_the_union_deck.delete_if do |deck_state_of_the_union|
         deck_state_of_the_union.equals?(cycle.next_state_of_the_union)

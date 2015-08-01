@@ -1,15 +1,13 @@
 require_relative '../base_object'
-require_relative 'action'
+
+# forward declaration
+class Action < BaseObject; end
 
 class ActionParams < BaseObject
 
   # define the data that goes in this object
   Members = [
-    { name: "who",            type: String,  can_be_nil: true },
-    { name: "agenda",         type: String,  can_be_nil: true },
-    { name: "how_many",       type: Integer, can_be_nil: true },
-    { name: "operator",       type: String,  can_be_nil: true },
-    { name: "actions",        type: Action,  is_array:   true },
+    { name: "actions", type: Action, can_be_nil: true, is_array: true },
   ]
 
 end

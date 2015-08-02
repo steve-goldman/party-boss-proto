@@ -40,59 +40,7 @@ class LegislativeSession < BaseObject
                                                  allocation_B,
                                                  [], [], [], [], [])
 
-    last_last_was_pass = false
-    last_was_pass = false
-    party = 'A'
-    while !last_was_pass || !last_last_was_pass
-      Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor legislative_session)
-      Logger.header("Boss #{party} choosing a tactic").indent
-      boss = party == 'A' ? boss_A : boss_B
-      arr = boss.get_tactic(legislative_session)
-      tactic = arr[0]
-      if tactic == Tactic::Pass
-        if last_was_pass
-          last_last_was_pass = true
-        end
-        last_was_pass = true
-      else
-        hand = game_snapshot.send("hand_#{party}")
-        if tactic.is_filibuster
-          drawn_tactics = game_snapshot.deal_tactics(party, 1)
-          if !drawn_tactics.empty?
-            hand.tactics.concat(drawn_tactics)
-            Logger.subheader("You drew: #{drawn_tactics[0]}")
-          else
-            Logger.subheader("The tactics deck is empty")
-          end
-        else
-          drawn_tactics = nil
-        end
-        index = arr[1]
-        party_played_on = arr[2]
-        if !tactic.can_play(party,
-                            party_played_on,
-                            index ? bills_A[index] : nil,
-                            index ? bills_B[index] : nil,
-                            game_snapshot.board)
-          Logger.error "This tactic cannot be played like this"
-          # make them choose again
-          party = (party == 'A' ? 'B' : 'A')
-        else
-          last_was_pass = false
-          hand.tactics.delete_if do |hand_tactic|
-            hand_tactic.equals?(tactic)
-          end
-          legislative_session.tactics.push(PlayedTactic.new(party,
-                                                            party_played_on,
-                                                            index ? bills_A[index] : nil,
-                                                            index ? bills_B[index] : nil,
-                                                            tactic,
-                                                            drawn_tactics))
-        end
-      end
-      party = (party == 'A' ? 'B' : 'A')
-      Logger.unindent
-    end
+    LegislativeSession.run_tactics(legislative_session, game_snapshot, boss_A, boss_B)
     
     Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor legislative_session)
 
@@ -114,5 +62,62 @@ class LegislativeSession < BaseObject
     else
       0
     end
+  end
+
+  private
+
+  def LegislativeSession.run_tactics(legislative_session, game_snapshot, boss_A, boss_B)
+    last_last_was_pass = false
+    last_was_pass = false
+    party = 'A'  # TODO
+    while !last_was_pass || !last_last_was_pass
+      Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor legislative_session)
+      Logger.header("Boss #{party} choosing a tactic").indent
+      arr = (party == 'A' ? boss_A : boss_B).get_tactic(legislative_session)
+      tactic = arr[0]
+      if tactic == Tactic::Pass
+        last_last_was_pass = true if last_was_pass
+        last_was_pass = true
+      else
+        
+        drawn_tactics = LegislativeSession.handle_filibuster(game_snapshot, tactic, party)
+        index = arr[1]; party_played_on = arr[2]
+        if !tactic.can_play(party,
+                            party_played_on,
+                            index ? legislative_session.bills_A[index] : nil,
+                            index ? legislative_session.bills_B[index] : nil,
+                            game_snapshot.board)
+          Logger.error "This tactic cannot be played like this"
+          # make them choose again
+          party = (party == 'A' ? 'B' : 'A')
+        else
+          last_was_pass = false
+          game_snapshot.send("hand_#{party}").tactics.delete_if do |hand_tactic|
+            hand_tactic.equals?(tactic)
+          end
+          legislative_session.tactics.push(PlayedTactic.new(party, party_played_on,
+                                                            index ? legislative_session.bills_A[index] : nil,
+                                                            index ? legislative_session.bills_B[index] : nil,
+                                                            tactic, drawn_tactics))
+        end
+      end
+      party = (party == 'A' ? 'B' : 'A')
+      Logger.unindent
+    end
+  end
+
+  def LegislativeSession.handle_filibuster(game_snapshot, tactic, party)
+    if tactic.is_filibuster
+      drawn_tactics = game_snapshot.deal_tactics(party, 1)
+      if !drawn_tactics.empty?
+        game_snapshot.send("hand_#{party}").tactics.concat(drawn_tactics)
+        Logger.subheader("You drew: #{drawn_tactics[0]}")
+      else
+        Logger.subheader("The tactics deck is empty")
+      end
+    else
+      drawn_tactics = nil
+    end
+    drawn_tactics
   end
 end

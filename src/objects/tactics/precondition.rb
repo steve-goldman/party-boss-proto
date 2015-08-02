@@ -9,13 +9,17 @@ class Precondition < BaseObject
     { name: "params",       type: PreconditionParams },
   ]
 
-  def holds(party, my_bill, other_bill, board)
-    self.send("#{precondition}", party, my_bill, other_bill, board)
+  def holds(party, played_on_party, my_bill, other_bill, board)
+    self.send("#{precondition}", party, played_on_party, my_bill, other_bill, board)
   end
 
   private
   
-  def num_in_office(party, my_bill, other_bill, board)
+  def played_on_party(party, played_on_party, my_bill, other_bill, board)
+    params.who == 'self' ? party == played_on_party : party != played_on_party
+  end
+
+  def num_in_office(party, played_on_party, my_bill, other_bill, board)
     target_party = target_party(party)
     count = board.office_holders.reduce(0) do |count, office_holder|
       count + (office_holder.party == target_party ? 1 : 0)
@@ -23,24 +27,24 @@ class Precondition < BaseObject
     operate(count, params.how_many)
   end
 
-  def bill_agenda(party, my_bill, other_bill, board)
+  def bill_agenda(party, played_on_party, my_bill, other_bill, board)
     target_bill(my_bill, other_bill).agenda == params.agenda
   end
 
-  def or(party, my_bill, other_bill, board)
+  def or(party, played_on_party, my_bill, other_bill, board)
     params.preconditions.each do |precondition|
-      return true if precondition.holds(party, my_bill, other_bill, board)
+      return true if precondition.holds(party, played_on_party, my_bill, other_bill, board)
     end
     false
   end
 
   # used in unit tests
-  def always_true(party, my_bill, other_bill, board)
+  def always_true(party, played_on_party, my_bill, other_bill, board)
     true
   end
 
   # used in unit tests
-  def always_false(party, my_bill, other_bill, board)
+  def always_false(party, played_on_party, my_bill, other_bill, board)
     false
   end
 

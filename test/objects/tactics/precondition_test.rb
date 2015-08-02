@@ -11,48 +11,55 @@ class PreconditionTests < Minitest::Test
         party = target_party(my_party, who)
 
         precondition = get_num_in_office(who, 2, "eq")
-        assert !precondition.holds(my_party, nil, nil, get_board(party, 1))
-        assert  precondition.holds(my_party, nil, nil, get_board(party, 2))
-        assert !precondition.holds(my_party, nil, nil, get_board(party, 3))
+        assert !precondition.holds(my_party, nil, nil, nil, get_board(party, 1))
+        assert  precondition.holds(my_party, nil, nil, nil, get_board(party, 2))
+        assert !precondition.holds(my_party, nil, nil, nil, get_board(party, 3))
 
         precondition = get_num_in_office(who, 2, "gt")
-        assert !precondition.holds(my_party, nil, nil, get_board(party, 1))
-        assert !precondition.holds(my_party, nil, nil, get_board(party, 2))
-        assert  precondition.holds(my_party, nil, nil, get_board(party, 3))
+        assert !precondition.holds(my_party, nil, nil, nil, get_board(party, 1))
+        assert !precondition.holds(my_party, nil, nil, nil, get_board(party, 2))
+        assert  precondition.holds(my_party, nil, nil, nil, get_board(party, 3))
 
         precondition = get_num_in_office(who, 2, "gte")
-        assert !precondition.holds(my_party, nil, nil, get_board(party, 1))
-        assert  precondition.holds(my_party, nil, nil, get_board(party, 2))
-        assert  precondition.holds(my_party, nil, nil, get_board(party, 3))
+        assert !precondition.holds(my_party, nil, nil, nil, get_board(party, 1))
+        assert  precondition.holds(my_party, nil, nil, nil, get_board(party, 2))
+        assert  precondition.holds(my_party, nil, nil, nil, get_board(party, 3))
 
         precondition = get_num_in_office(who, 2, "lt")
-        assert  precondition.holds(my_party, nil, nil, get_board(party, 1))
-        assert !precondition.holds(my_party, nil, nil, get_board(party, 2))
-        assert !precondition.holds(my_party, nil, nil, get_board(party, 3))
+        assert  precondition.holds(my_party, nil, nil, nil, get_board(party, 1))
+        assert !precondition.holds(my_party, nil, nil, nil, get_board(party, 2))
+        assert !precondition.holds(my_party, nil, nil, nil, get_board(party, 3))
 
         precondition = get_num_in_office(who, 2, "lte")
-        assert  precondition.holds(my_party, nil, nil, get_board(party, 1))
-        assert  precondition.holds(my_party, nil, nil, get_board(party, 2))
-        assert !precondition.holds(my_party, nil, nil, get_board(party, 3))
+        assert  precondition.holds(my_party, nil, nil, nil, get_board(party, 1))
+        assert  precondition.holds(my_party, nil, nil, nil, get_board(party, 2))
+        assert !precondition.holds(my_party, nil, nil, nil, get_board(party, 3))
       end
     end
   end
 
   def test_bill_agenda
     precondition = get_bill_agenda('self', 'conservative')
-    assert  precondition.holds(nil, get_bill('conservative'), nil, nil)
-    assert !precondition.holds(nil, get_bill('moderate'),     nil, nil)
+    assert  precondition.holds(nil, nil, get_bill('conservative'), nil, nil)
+    assert !precondition.holds(nil, nil, get_bill('moderate'),     nil, nil)
 
     precondition = get_bill_agenda('opponent', 'conservative')
-    assert  precondition.holds(nil, nil, get_bill('conservative'), nil)
-    assert !precondition.holds(nil, nil, get_bill('moderate'),     nil)
+    assert  precondition.holds(nil, nil, nil, get_bill('conservative'), nil)
+    assert !precondition.holds(nil, nil, nil, get_bill('moderate'),     nil)
   end
 
   def test_or
-    assert !get_or([get_always_false, get_always_false]).holds(nil, nil, nil, nil)
-    assert  get_or([get_always_true,  get_always_false]).holds(nil, nil, nil, nil)
-    assert  get_or([get_always_false, get_always_true ]).holds(nil, nil, nil, nil)
-    assert  get_or([get_always_true,  get_always_true ]).holds(nil, nil, nil, nil)
+    assert !get_or([get_always_false, get_always_false]).holds(nil, nil, nil, nil, nil)
+    assert  get_or([get_always_true,  get_always_false]).holds(nil, nil, nil, nil, nil)
+    assert  get_or([get_always_false, get_always_true ]).holds(nil, nil, nil, nil, nil)
+    assert  get_or([get_always_true,  get_always_true ]).holds(nil, nil, nil, nil, nil)
+  end
+
+  def test_played_on_party
+    assert  get_played_on_party('self').holds('A', 'A', nil, nil, nil)
+    assert !get_played_on_party('self').holds('A', 'B', nil, nil, nil)
+    assert  get_played_on_party('opponent').holds('A', 'B', nil, nil, nil)
+    assert !get_played_on_party('opponent').holds('A', 'A', nil, nil, nil)
   end
 
   private
@@ -72,6 +79,11 @@ class PreconditionTests < Minitest::Test
   def get_or(preconditions)
     Precondition.new("or", PreconditionParams.new(nil, nil, nil, nil,
                                                   preconditions))
+  end
+
+  def get_played_on_party(who)
+    Precondition.new("played_on_party", PreconditionParams.new(who,
+                                                               nil, nil, nil, nil))
   end
 
   def get_bill_agenda(who, agenda)

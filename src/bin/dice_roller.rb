@@ -9,8 +9,12 @@ class DiceRoller
   
   def get_outcomes(allocation)
     allocation.counts.map do |count|
-      DiceOutcome.new Array.new(count).map { @random.rand(3) }
+      get_outcome count
     end
+  end
+
+  def get_outcome(count)
+    DiceOutcome.new Array.new(count).map { @random.rand(3) }
   end
   
 end

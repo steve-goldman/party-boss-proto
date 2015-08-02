@@ -53,6 +53,12 @@
     "name": "Religious Right Lobby",
     "preconditions": [
       {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "self"
+        }
+      },
+      {
         "precondition": "bill_agenda",
         "params": {
           "who": "self",
@@ -84,6 +90,12 @@
     "name": "Environmentalist Lobby",
     "preconditions": [
       {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "self"
+        }
+      },
+      {
         "precondition": "bill_agenda",
         "params": {
           "who": "self",
@@ -114,6 +126,12 @@
   {
     "name": "Norquist Tax Pledge",
     "preconditions": [
+      {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "self"
+        }
+      },
       {
         "precondition": "or",
         "params": {
@@ -189,6 +207,12 @@
     "name": "ACLU Lobby",
     "preconditions": [
       {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "self"
+        }
+      },
+      {
         "precondition": "bill_agenda",
         "params": {
           "who": "self",
@@ -241,7 +265,14 @@
   },
   {
     "name": "Blackmail",
-    "preconditions": [],
+      "preconditions": [
+      {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "opponent"
+        }
+      }
+    ],
     "actions": [
       {
         "action": "take_dice_from_opponent",
@@ -601,6 +632,12 @@
     "name": "Gun Lobby",
     "preconditions": [
       {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "self"
+        }
+      },
+      {
         "precondition": "bill_agenda",
         "params": {
           "who": "self",
@@ -631,6 +668,12 @@
   {
     "name": "AARP Lobby",
     "preconditions": [
+      {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "self"
+        }
+      },
       {
         "precondition": "bill_agenda",
         "params": {

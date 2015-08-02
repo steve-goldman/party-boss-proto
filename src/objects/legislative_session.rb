@@ -55,7 +55,6 @@ class LegislativeSession < BaseObject
         end
         last_was_pass = true
       else
-        last_was_pass = false
         index = arr[1]
         party_played_on = arr[2]
         if !tactic.can_play(party, party_played_on, bills_A[index], bills_B[index], game_snapshot.board)
@@ -63,6 +62,7 @@ class LegislativeSession < BaseObject
           # make them choose again
           party = (party == 'A' ? 'B' : 'A')
         else
+          last_was_pass = false
           game_snapshot.send("hand_#{party}").tactics.delete_if do |hand_tactic|
             hand_tactic.equals?(tactic)
           end

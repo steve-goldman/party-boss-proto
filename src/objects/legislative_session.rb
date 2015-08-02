@@ -55,22 +55,39 @@ class LegislativeSession < BaseObject
         end
         last_was_pass = true
       else
+        hand = game_snapshot.send("hand_#{party}")
+        if tactic.is_filibuster
+          drawn_tactics = game_snapshot.deal_tactics(party, 1)
+          if !drawn_tactics.empty?
+            hand.tactics.concat(drawn_tactics)
+            Logger.subheader("You drew: #{drawn_tactics[0]}")
+          else
+            Logger.subheader("The tactics deck is empty")
+          end
+        else
+          drawn_tactics = nil
+        end
         index = arr[1]
         party_played_on = arr[2]
-        if !tactic.can_play(party, party_played_on, bills_A[index], bills_B[index], game_snapshot.board)
+        if !tactic.can_play(party,
+                            party_played_on,
+                            index ? bills_A[index] : nil,
+                            index ? bills_B[index] : nil,
+                            game_snapshot.board)
           Logger.error "This tactic cannot be played like this"
           # make them choose again
           party = (party == 'A' ? 'B' : 'A')
         else
           last_was_pass = false
-          game_snapshot.send("hand_#{party}").tactics.delete_if do |hand_tactic|
+          hand.tactics.delete_if do |hand_tactic|
             hand_tactic.equals?(tactic)
           end
           legislative_session.tactics.push(PlayedTactic.new(party,
                                                             party_played_on,
-                                                            bills_A[index],
-                                                            bills_B[index],
-                                                            tactic))
+                                                            index ? bills_A[index] : nil,
+                                                            index ? bills_B[index] : nil,
+                                                            tactic,
+                                                            drawn_tactics))
         end
       end
       party = (party == 'A' ? 'B' : 'A')

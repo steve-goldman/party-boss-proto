@@ -25,6 +25,10 @@ class Tactic < BaseObject
       .empty?
   end
 
+  def is_filibuster
+    return name.start_with? 'Filibuster'
+  end
+
   def must_play_on_party(party)
     preconditions.each do |precondition|
       if precondition.precondition == 'played_on_party'

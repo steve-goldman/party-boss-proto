@@ -60,12 +60,18 @@ class HumanBoss
       if tactic.nil?
         return [Tactic::Pass, nil, nil]
       end
-      Logger.subheader("Select floor matchup").indent
-      index = input_floor_matchup_index(legislative_session)
-      Logger.indent
-      party = input_party(tactic)
-      if confirm_tactic(legislative_session, tactic, index, party)
-        return [tactic, index, party]
+      if tactic.is_filibuster
+        if confirm_filibuster
+          return [tactic, nil, nil]
+        end
+      else
+        Logger.subheader("Select floor matchup").indent
+        index = input_floor_matchup_index(legislative_session)
+        Logger.indent
+        party = input_party(tactic)
+        if confirm_tactic(legislative_session, tactic, index, party)
+          return [tactic, index, party]
+        end
       end
     end
   end
@@ -175,6 +181,11 @@ class HumanBoss
     Logger.log "#{legislative_session.bills_A[index]} | #{legislative_session.bills_B[index]}"
     Logger.log "Party '#{party}'s bill"
     Logger.unindent
+    confirm
+  end
+
+  def confirm_filibuster
+    Logger.subheader("You have selected filibuster")
     confirm
   end
 

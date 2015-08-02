@@ -141,8 +141,15 @@ class GameSnapshot < BaseObject
     legislative_session.tactics.each do |played_tactic|
       # remove from the hand if is a replay
       if is_replay
-        send("hand_#{played_tactic.party_played_by}").tactics.delete_if do |tactic|
+        hand = send("hand_#{played_tactic.party_played_by}")
+        hand.tactics.delete_if do |tactic|
           tactic.equals?(played_tactic.tactic)
+        end
+        if !played_tactic.drawn_tactics.nil?
+          played_tactic.drawn_tactics.each do |drawn_tactic|
+            tactic_deck.delete_if { |deck_tactic| deck_tactic.equals?(drawn_tactic) }
+            hand.tactics.push drawn_tactic
+          end
         end
       end
       # put played tactics back in the deck

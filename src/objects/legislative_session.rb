@@ -90,6 +90,17 @@ class LegislativeSession < BaseObject
     return incr_bill_cost(party_index[0], party_index[1], delta)
   end
 
+  def LegislativeSession.apply_tactics_actions(legislative_session,
+                                               game_snapshot, boss_A, boss_B)
+    legislative_session.tactics.each do |played_tactic|
+      Logger.subheader("Applying #{played_tactic.tactic} played by '#{played_tactic.party_played_by}' on '#{played_tactic.party_played_on}'s bill").indent
+      played_tactic.apply_actions(game_snapshot.board,
+                                  legislative_session,
+                                  boss_A, boss_B)
+      Logger.unindent
+    end
+  end
+
   private
 
   def init_bill_vps(bills)
@@ -163,13 +174,4 @@ class LegislativeSession < BaseObject
     drawn_tactics
   end
 
-  def LegislativeSession.apply_tactics_actions(legislative_session, game_snapshot, boss_A, boss_B)
-    legislative_session.tactics.each do |played_tactic|
-      Logger.subheader("Applying #{played_tactic.tactic} played by '#{played_tactic.party_played_by}' on '#{played_tactic.party_played_on}'s bill").indent
-      played_tactic.apply_actions(game_snapshot.board,
-                                  legislative_session,
-                                  boss_A, boss_B)
-      Logger.unindent
-    end
-  end
 end

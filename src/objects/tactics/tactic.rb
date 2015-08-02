@@ -19,12 +19,6 @@ class Tactic < BaseObject
     name
   end
 
-  def can_play(party, played_on_party, bill_A, bill_B, board)
-    preconditions
-      .select { |precondition| !precondition.holds(party, played_on_party, bill_A, bill_B, board) }
-      .empty?
-  end
-
   def is_filibuster
     return name.start_with? 'Filibuster'
   end

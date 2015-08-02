@@ -83,11 +83,11 @@ class LegislativeSession < BaseObject
       else
         drawn_tactics = LegislativeSession.handle_filibuster(game_snapshot, tactic, party)
         index = arr[1]; party_played_on = arr[2]
-        if !tactic.can_play(party,
-                            party_played_on,
-                            index ? legislative_session.bills_A[index] : nil,
-                            index ? legislative_session.bills_B[index] : nil,
-                            game_snapshot.board)
+        played_tactic = PlayedTactic.new(party, party_played_on,
+                                         index ? legislative_session.bills_A[index] : nil,
+                                         index ? legislative_session.bills_B[index] : nil,
+                                         tactic, drawn_tactics)
+        if !played_tactic.can_play(game_snapshot.board)
           Logger.error "This tactic cannot be played like this"
           # make them choose again
           party = (party == 'A' ? 'B' : 'A')
@@ -96,10 +96,7 @@ class LegislativeSession < BaseObject
           game_snapshot.send("hand_#{party}").tactics.delete_if do |hand_tactic|
             hand_tactic.equals?(tactic)
           end
-          legislative_session.tactics.push(PlayedTactic.new(party, party_played_on,
-                                                            index ? legislative_session.bills_A[index] : nil,
-                                                            index ? legislative_session.bills_B[index] : nil,
-                                                            tactic, drawn_tactics))
+          legislative_session.tactics.push(played_tactic)
         end
       end
       party = (party == 'A' ? 'B' : 'A')

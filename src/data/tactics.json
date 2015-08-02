@@ -490,7 +490,14 @@
   },
   {
     "name": "Chairmanship",
-    "preconditions": [],
+    "preconditions": [
+      {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "self"
+        }
+      }
+    ],
     "actions": [],
     "consequences": [
       {

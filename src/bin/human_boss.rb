@@ -91,6 +91,18 @@ class HumanBoss
     end
   end
 
+  def get_choice(count)
+    while true
+      Logger.prompt("(Enter # between 1 and #{count}): ")
+      input = gets.chomp
+      if !int_in_range? input, 1, count
+        Logger.error("Input #{input} is out of range")
+      else
+        return (input.to_i - 1) if confirm
+      end
+    end
+  end
+
   private
 
   def input_from_array(options, remove, zero_okay = false)

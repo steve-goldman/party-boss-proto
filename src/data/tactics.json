@@ -316,12 +316,19 @@
   },
   {
     "name": "Vice President",
-    "preconditions": [],
+    "preconditions": [
+      {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "self"
+        }
+      }
+    ],
     "actions": [
       {
         "action": "or",
         "params": {
-          "options": [
+          "actions": [
             {
               "action": "add_bill_cost",
               "params": {

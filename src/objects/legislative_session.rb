@@ -199,7 +199,8 @@ class LegislativeSession < BaseObject
         played_tactic = PlayedTactic.new(party, party_played_on,
                                          index ? legislative_session.bills_A[index] : nil,
                                          index ? legislative_session.bills_B[index] : nil,
-                                         tactic, drawn_tactics, nil)
+                                         tactic, drawn_tactics,
+                                         nil, nil)
         if !played_tactic.can_play(game_snapshot.board)
           Logger.error "This tactic cannot be played like this"
           # make them choose again

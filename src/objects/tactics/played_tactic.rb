@@ -12,6 +12,7 @@ class PlayedTactic < BaseObject
     { name: "tactic",          type: Tactic },
     { name: "drawn_tactics",   type: Tactic,       can_be_nil: true, is_array: true },
     { name: "outcomes",        type: DiceOutcome,  can_be_nil: true },
+    { name: "or_index",        type: Integer,      can_be_nil: true },
   ]
 
   def can_play(board)

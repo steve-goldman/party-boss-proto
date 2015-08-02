@@ -68,6 +68,15 @@ class Action < BaseObject
     Logger.log("Was #{old_allocation}, is now #{new_allocation}")
   end
 
+  def or(args)
+    Logger.log("Choosing between #{params.actions.count} actions")
+    if args[:played_tactic].or_index.nil?
+      args[:played_tactic].or_index = args[(args[:party_played_by] == 'A') ? :boss_A : :boss_B]
+                                      .get_choice(params.actions.count)
+    end
+    params.actions[args[:played_tactic].or_index].apply(args)
+  end
+
   def target_party(args)
     params.who == 'self' ? args[:party_played_by] :
       params.who == 'opponent' ? other_party(args) :

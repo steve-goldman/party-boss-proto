@@ -63,7 +63,7 @@ class HumanBoss
       Logger.subheader("Select floor matchup").indent
       index = input_floor_matchup_index(legislative_session)
       Logger.indent
-      party = input_party
+      party = input_party(tactic)
       if confirm_tactic(legislative_session, tactic, index, party)
         return [tactic, index, party]
       end
@@ -128,7 +128,13 @@ class HumanBoss
     end
   end
 
-  def input_party
+  def input_party(tactic)
+    play_on_party = tactic.must_play_on_party(@party)
+    if !play_on_party.nil?
+      whose = (play_on_party == @party) ? "your" : "your opponent's"
+      Logger.log("Must be played on #{whose} bill").unindent
+      return play_on_party
+    end
     while true
       Logger.prompt "(Enter party's bill A/B): "
       input = gets.chomp.upcase

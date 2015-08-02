@@ -24,6 +24,8 @@ class LegislativeSession < BaseObject
     @bill_B_vps =  init_bill_vps(bills_B)
     @bill_A_cost = init_bill_vps(bills_A)
     @bill_B_cost = init_bill_vps(bills_B)
+    @bill_A_all_dice_outcomes = bills_A.map { -1 }
+    @bill_B_all_dice_outcomes = bills_B.map { -1 }
   end
   
   def LegislativeSession.run_session(game_snapshot, boss_A, boss_B, dice_roller)
@@ -54,8 +56,8 @@ class LegislativeSession < BaseObject
 
     LegislativeSession.apply_tactics_actions(legislative_session, game_snapshot, boss_A, boss_B, dice_roller)
 
-    legislative_session.outcomes_A.concat(dice_roller.get_outcomes(allocation_A))
-    legislative_session.outcomes_B.concat(dice_roller.get_outcomes(allocation_B))
+    legislative_session.outcomes_A.concat(dice_roller.get_outcomes(allocation_A, legislative_session.all_dice_outcomes('A')))
+    legislative_session.outcomes_B.concat(dice_roller.get_outcomes(allocation_B, legislative_session.all_dice_outcomes('B')))
     
     game_snapshot.apply_legislative_session(legislative_session, false)
   end
@@ -88,6 +90,18 @@ class LegislativeSession < BaseObject
   def change_bill_cost(bill, delta)
     party_index = get_bill_party_index(bill)
     return incr_bill_cost(party_index[0], party_index[1], delta)
+  end
+
+  def set_all_dice_count_as(bill, count)
+    party_index = get_bill_party_index(bill)
+    party_index[1] == 'A' ?
+      @bill_A_all_dice_outcomes[party_index[0]] = count :
+      @bill_B_all_dice_outcomes[party_index[0]] = count
+    outcomes = party_index[1] == 'A' ? @bill_A_all_dice_outcomes : @bill_B_all_dice_outcomes
+  end
+
+  def all_dice_outcomes(party)
+    party == 'A' ? @bill_A_all_dice_outcomes : @bill_B_all_dice_outcomes
   end
 
   def LegislativeSession.apply_tactics_actions(legislative_session, game_snapshot,

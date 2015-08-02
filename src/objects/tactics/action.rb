@@ -37,6 +37,12 @@ class Action < BaseObject
     Logger.log("Was #{old_cost}, is now #{new_cost}")
   end
 
+  def all_dice_count_as(args)
+    bill = args[(args[:party_played_on] == 'A') ? :bill_A : :bill_B]
+    Logger.log("Making all dice count as #{params.how_many} for #{bill}")
+    args[:legislative_session].set_all_dice_count_as(bill, params.how_many)
+  end
+
   def target_party(args)
     params.who == 'self' ? args[:party_played_by] :
       params.who == 'opponent' ? other_party(args) :

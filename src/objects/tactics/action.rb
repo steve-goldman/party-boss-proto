@@ -59,6 +59,15 @@ class Action < BaseObject
     Logger.log("Was #{old_allocation}, is now #{new_allocation}")
   end
 
+  def take_dice_from_opponent(args)
+    bill = args[(args[:party_played_by] == 'A') ? :bill_B : :bill_A]
+    Logger.log("Taking #{params.how_many} dice from opponent's bill #{bill}")
+    old_allocation = args[:legislative_session].get_bill_allocation(bill)
+    new_allocation = args[:legislative_session].give_dice_to_opponent(bill,
+                                                                      params.how_many)
+    Logger.log("Was #{old_allocation}, is now #{new_allocation}")
+  end
+
   def target_party(args)
     params.who == 'self' ? args[:party_played_by] :
       params.who == 'opponent' ? other_party(args) :

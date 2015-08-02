@@ -136,6 +136,19 @@ class LegislativeSession < BaseObject
       @allocation_B.counts[party_index[0]] += [num_dice_B - @allocation_B.sum, delta].min
   end
 
+  def give_dice_to_opponent(bill, count)
+    party_index = get_bill_party_index(bill)
+    if party_index[1] == 'A'
+      delta = [count, @allocation_A.counts[party_index[0]]].min
+      @allocation_B.counts[party_index[0]] += delta
+      @allocation_A.counts[party_index[0]] -= delta
+    else
+      delta = [count, @allocation_B.counts[party_index[0]]].min
+      @allocation_A.counts[party_index[0]] += delta
+      @allocation_B.counts[party_index[0]] -= delta
+    end
+  end
+
   def LegislativeSession.apply_tactics_actions(legislative_session, game_snapshot,
                                                boss_A, boss_B, dice_roller)
     legislative_session.tactics.each do |played_tactic|

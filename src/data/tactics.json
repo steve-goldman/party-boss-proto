@@ -506,7 +506,6 @@
       {
         "action": "send_dice_to_cloakroom",
         "params": {
-          "who": "opponent",
           "all_but_how_many": 3
         }
       }

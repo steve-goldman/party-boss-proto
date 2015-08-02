@@ -26,6 +26,8 @@ class LegislativeSession < BaseObject
     @bill_B_cost = init_bill_vps(bills_B)
     @bill_A_all_dice_outcomes = bills_A.map { -1 }
     @bill_B_all_dice_outcomes = bills_B.map { -1 }
+    @allocation_A = allocation_A.clone
+    @allocation_B = allocation_B.clone
   end
   
   def LegislativeSession.run_session(game_snapshot, boss_A, boss_B, dice_roller)
@@ -56,8 +58,10 @@ class LegislativeSession < BaseObject
 
     LegislativeSession.apply_tactics_actions(legislative_session, game_snapshot, boss_A, boss_B, dice_roller)
 
-    legislative_session.outcomes_A.concat(dice_roller.get_outcomes(allocation_A, legislative_session.all_dice_outcomes('A')))
-    legislative_session.outcomes_B.concat(dice_roller.get_outcomes(allocation_B, legislative_session.all_dice_outcomes('B')))
+    legislative_session.outcomes_A.concat(dice_roller.get_outcomes(legislative_session.get_allocation('A'),
+                                                                   legislative_session.all_dice_outcomes('A')))
+    legislative_session.outcomes_B.concat(dice_roller.get_outcomes(legislative_session.get_allocation('B'),
+                                                                   legislative_session.all_dice_outcomes('B')))
     
     game_snapshot.apply_legislative_session(legislative_session, false)
   end
@@ -102,6 +106,24 @@ class LegislativeSession < BaseObject
 
   def all_dice_outcomes(party)
     party == 'A' ? @bill_A_all_dice_outcomes : @bill_B_all_dice_outcomes
+  end
+
+  def get_allocation(party)
+    party == 'A' ? @allocation_A : @allocation_B
+  end
+
+  def get_bill_allocation(bill)
+    party_index = get_bill_party_index(bill)
+    party_index[1] == 'A' ?
+      @allocation_A.counts[party_index[0]] :
+      @allocation_B.counts[party_index[0]]
+  end
+
+  def set_bill_allocation(bill, count)
+    party_index = get_bill_party_index(bill)
+    party_index[1] == 'A' ?
+      @allocation_A.counts[party_index[0]] = count :
+      @allocation_B.counts[party_index[0]] = count
   end
 
   def LegislativeSession.apply_tactics_actions(legislative_session, game_snapshot,

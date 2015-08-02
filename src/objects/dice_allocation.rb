@@ -14,5 +14,9 @@ class DiceAllocation < BaseObject
   def sum
     counts.reduce(0, :+)
   end
+
+  def clone
+    DiceAllocation.new counts.clone
+  end
   
 end

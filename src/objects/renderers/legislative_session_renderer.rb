@@ -41,29 +41,37 @@ class LegislativeSessionRenderer < Renderer
       [
         two_sides(legislative_session.bills_A[index],
                   legislative_session.bills_B[index]),
-        two_sides(passed(legislative_session, index, 'A'),
-                  passed(legislative_session, index, 'B')),
+        two_sides(worth(legislative_session, board, index, 'A'),
+                  worth(legislative_session, board, index, 'B')),
+        two_sides(cost(legislative_session, index, 'A'),
+                  cost(legislative_session, index, 'B')),
         two_sides(outcomes(legislative_session, index, 'A'),
                   outcomes(legislative_session, index, 'B')),
-        two_sides(vps(legislative_session, board, index, 'A'),
-                  vps(legislative_session, board, index, 'B')),
+        two_sides(passed(legislative_session, index, 'A'),
+                  passed(legislative_session, index, 'B')),
         underline,
       ]
     }.join("\n")
   end
 
   def passed(legislative_session, index, party)
-    legislative_session.passes?(index, party) ? Passes : DoesNotPass
+    result = legislative_session.passes?(index, party) ? Passes : DoesNotPass
+    "Outcome  #{result}"
   end
 
   def outcomes(legislative_session, index, party)
     outcomes = legislative_session.send("outcomes_#{party}")[index]
-    "#{outcomes}"
+    "Rolls    #{outcomes}"
   end
 
-  def vps(legislative_session, board, index, party)
-    vps = legislative_session.vps(index, party, board)
-    "#{vps} vps"
+  def cost(legislative_session, index, party)
+    cost = legislative_session.bill_cost(index, party)
+    "Costs    #{cost}"
+  end
+
+  def worth(legislative_session, board, index, party)
+    vps = legislative_session.bill_vps(index, party, board)
+    "Worth    #{vps} vps"
   end
 
   def bills_dealt(legislative_session)

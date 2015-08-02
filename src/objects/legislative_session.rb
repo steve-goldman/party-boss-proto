@@ -19,6 +19,13 @@ class LegislativeSession < BaseObject
     { name: "bills_dealt_B", type: Bill,         is_array: true },
   ]
 
+  def after_init
+    @bill_A_vps =  init_bill_vps(bills_A)
+    @bill_B_vps =  init_bill_vps(bills_B)
+    @bill_A_cost = init_bill_vps(bills_A)
+    @bill_B_cost = init_bill_vps(bills_B)
+  end
+  
   def LegislativeSession.run_session(game_snapshot, boss_A, boss_B, dice_roller)
     Logger.header("Boss 'A' choosing bills").indent
     bills_A = boss_A.get_bills
@@ -60,8 +67,17 @@ class LegislativeSession < BaseObject
 
   def vps(index, party, board)
     bill = passes?(index, party)
-    bill ? bill_vps(index, party) +
-           (bill.sector == board.state_of_the_union.priorities[0] ? 1 : 0) : 0
+    bill ? bill_vps(index, party, board) : 0
+  end
+
+  def bill_vps(index, party, board)
+    bill = send("bills_#{party}")[index]
+    (bill.sector == board.state_of_the_union.priorities[0] ? 1 : 0) +
+      (party == 'A' ? @bill_A_vps[index] : @bill_B_vps[index])
+  end
+
+  def bill_cost(index, party)
+    party == 'A' ? @bill_A_cost[index] : @bill_B_cost[index]
   end
 
   def get_bill_cost(bill)
@@ -71,11 +87,20 @@ class LegislativeSession < BaseObject
 
   def change_bill_cost(bill, delta)
     party_index = get_bill_party_index(bill)
-    incr_bill_cost(party_index[0], party_index[1], delta)
-    return bill_cost(party_index[0], party_index[1])
+    return incr_bill_cost(party_index[0], party_index[1], delta)
   end
 
   private
+
+  def init_bill_vps(bills)
+    bills.map { |bill| bill.vps }
+  end
+
+  def incr_bill_cost(index, party, delta)
+    party == 'A' ?
+      @bill_A_cost[index] = [@bill_A_cost[index] + delta, 0].max :
+      @bill_B_cost[index] = [@bill_B_cost[index] + delta, 0].max
+  end
 
   def get_bill_party_index(bill)
     ['A', 'B'].each do |party|
@@ -84,50 +109,6 @@ class LegislativeSession < BaseObject
         return [index, party] if bill.equals?(bills[index])
       end
     end
-  end
-
-  def bill_vps_pindex(party)
-    @bill_vps_delta = [] if @bill_vps_delta.nil?
-    pindex = party == 'A' ? 0 : 1
-    @bill_vps_delta[pindex] =
-      Config.get.bills_num_on_floor.times.map { 0 } if @bill_vps_delta[pindex].nil?
-    pindex
-  end
-  
-  def bill_cost_pindex(party)
-    @bill_cost_delta = [] if @bill_cost_delta.nil?
-    pindex = party == 'A' ? 0 : 1
-    @bill_cost_delta[pindex] =
-      Config.get.bills_num_on_floor.times.map { 0 } if @bill_cost_delta[pindex].nil?
-    pindex
-  end
-
-  def bill_vps_delta(index, party)
-    pindex = bill_vps_pindex(party)
-    @bill_vps_delta[pindex][index]
-  end
-
-  def bill_cost_delta(index, party)
-    pindex = bill_cost_pindex(party)
-    @bill_cost_delta[pindex][index]
-  end
-
-  def incr_bill_vps(index, party, delta)
-    pindex = bill_vps_pindex(party)
-    @bill_vps_delta[pindex][index] += delta
-  end
-
-  def incr_bill_cost(index, party, delta)
-    pindex = bill_cost_pindex(party)
-    @bill_cost_delta[pindex][index] += delta
-  end
-
-  def bill_vps(index, party)
-    send("bills_#{party}")[index].vps + bill_vps_delta(index, party)
-  end
-
-  def bill_cost(index, party)
-    bill_vps(index, party) + bill_cost_delta(index, party)
   end
 
   def LegislativeSession.get_tactics(legislative_session, game_snapshot, boss_A, boss_B)

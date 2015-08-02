@@ -110,7 +110,7 @@ class GameSnapshot < BaseObject
       end
     end
 
-    # handle with the dealt bill cards
+    # handle the dealt bill cards
     ['A', 'B'].each do |party|
       if !is_replay
         # deal the cards

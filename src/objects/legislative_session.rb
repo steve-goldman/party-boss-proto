@@ -40,10 +40,12 @@ class LegislativeSession < BaseObject
                                                  allocation_B,
                                                  [], [], [], [], [])
 
-    LegislativeSession.run_tactics(legislative_session, game_snapshot, boss_A, boss_B)
+    LegislativeSession.get_tactics(legislative_session, game_snapshot, boss_A, boss_B)
     
     Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor(legislative_session,
                                                                        game_snapshot.board))
+
+    LegislativeSession.apply_tactics_actions(legislative_session, game_snapshot, boss_A, boss_B)
 
     legislative_session.outcomes_A.concat(dice_roller.get_outcomes(allocation_A))
     legislative_session.outcomes_B.concat(dice_roller.get_outcomes(allocation_B))
@@ -53,21 +55,82 @@ class LegislativeSession < BaseObject
 
   def passes?(index, party)
     bill = send("bills_#{party}")[index]
-    send("outcomes_#{party}")[index].sum >= bill.vps ? bill : nil
+    send("outcomes_#{party}")[index].sum >= bill_cost(index, party) ? bill : nil
   end
 
   def vps(index, party, board)
-    bill = send("bills_#{party}")[index]
-    if passes?(index, party)
-      bill.vps + (bill.sector == board.state_of_the_union.priorities[0] ? 1 : 0)
-    else
-      0
-    end
+    bill = passes?(index, party)
+    bill ? bill_vps(index, party) +
+           (bill.sector == board.state_of_the_union.priorities[0] ? 1 : 0) : 0
+  end
+
+  def get_bill_cost(bill)
+    party_index = get_bill_party_index(bill)
+    return bill_cost(party_index[0], party_index[1])
+  end
+
+  def change_bill_cost(bill, delta)
+    party_index = get_bill_party_index(bill)
+    incr_bill_cost(party_index[0], party_index[1], delta)
+    return bill_cost(party_index[0], party_index[1])
   end
 
   private
 
-  def LegislativeSession.run_tactics(legislative_session, game_snapshot, boss_A, boss_B)
+  def get_bill_party_index(bill)
+    ['A', 'B'].each do |party|
+      bills = send("bills_#{party}") 
+      bills.each_index do |index|
+        return [index, party] if bill.equals?(bills[index])
+      end
+    end
+  end
+
+  def bill_vps_pindex(party)
+    @bill_vps_delta = [] if @bill_vps_delta.nil?
+    pindex = party == 'A' ? 0 : 1
+    @bill_vps_delta[pindex] =
+      Config.get.bills_num_on_floor.times.map { 0 } if @bill_vps_delta[pindex].nil?
+    pindex
+  end
+  
+  def bill_cost_pindex(party)
+    @bill_cost_delta = [] if @bill_cost_delta.nil?
+    pindex = party == 'A' ? 0 : 1
+    @bill_cost_delta[pindex] =
+      Config.get.bills_num_on_floor.times.map { 0 } if @bill_cost_delta[pindex].nil?
+    pindex
+  end
+
+  def bill_vps_delta(index, party)
+    pindex = bill_vps_pindex(party)
+    @bill_vps_delta[pindex][index]
+  end
+
+  def bill_cost_delta(index, party)
+    pindex = bill_cost_pindex(party)
+    @bill_cost_delta[pindex][index]
+  end
+
+  def incr_bill_vps(index, party, delta)
+    pindex = bill_vps_pindex(party)
+    @bill_vps_delta[pindex][index] += delta
+  end
+
+  def incr_bill_cost(index, party, delta)
+    pindex = bill_cost_pindex(party)
+    @bill_cost_delta[pindex][index] += delta
+  end
+
+  def bill_vps(index, party)
+    send("bills_#{party}")[index].vps + bill_vps_delta(index, party)
+  end
+
+  def bill_cost(index, party)
+    bill_vps(index, party) + bill_cost_delta(index, party)
+  end
+
+  def LegislativeSession.get_tactics(legislative_session, game_snapshot, boss_A, boss_B)
     last_last_was_pass = false
     last_was_pass = false
     party = 'A'  # TODO
@@ -117,5 +180,15 @@ class LegislativeSession < BaseObject
       drawn_tactics = nil
     end
     drawn_tactics
+  end
+
+  def LegislativeSession.apply_tactics_actions(legislative_session, game_snapshot, boss_A, boss_B)
+    legislative_session.tactics.each do |played_tactic|
+      Logger.subheader("Applying #{played_tactic.tactic} played by '#{played_tactic.party_played_by}' on '#{played_tactic.party_played_on}'s bill").indent
+      played_tactic.apply_actions(game_snapshot.board,
+                                  legislative_session,
+                                  boss_A, boss_B)
+      Logger.unindent
+    end
   end
 end

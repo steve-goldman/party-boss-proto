@@ -72,6 +72,7 @@ module ClassRecord
       true
     end
 
+    after_init
   end
 
 end

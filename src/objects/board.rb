@@ -9,6 +9,7 @@ class Board < BaseObject
   Members = [
     { name: "state_of_the_union", type: StateOfTheUnion              },
     { name: "office_holders",     type: OfficeHolder, is_array: true },
+    { name: "tactics_lead_party", type: String                       },
     { name: "passed_bills_A",     type: Bill,         is_array: true },
     { name: "passed_bills_B",     type: Bill,         is_array: true },
     { name: "hard_vps_A",         type: Integer                      },

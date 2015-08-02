@@ -42,7 +42,8 @@ class LegislativeSession < BaseObject
 
     LegislativeSession.run_tactics(legislative_session, game_snapshot, boss_A, boss_B)
     
-    Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor legislative_session)
+    Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor(legislative_session,
+                                                                       game_snapshot.board))
 
     legislative_session.outcomes_A.concat(dice_roller.get_outcomes(allocation_A))
     legislative_session.outcomes_B.concat(dice_roller.get_outcomes(allocation_B))
@@ -71,7 +72,8 @@ class LegislativeSession < BaseObject
     last_was_pass = false
     party = 'A'  # TODO
     while !last_was_pass || !last_last_was_pass
-      Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor legislative_session)
+      Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor(legislative_session,
+                                                                         game_snapshot.board))
       Logger.header("Boss #{party} choosing a tactic").indent
       arr = (party == 'A' ? boss_A : boss_B).get_tactic(legislative_session)
       tactic = arr[0]

@@ -29,7 +29,7 @@ class GameSnapshot < BaseObject
       office_holders.push OfficeHolder.new(office_holders.count % 2 == 0 ? 'A' : 'B', politician_deck.pop)
     end
     # create the board
-    board = Board.new(state_of_the_union_deck.pop, office_holders, [], [], 0, 0)
+    board = Board.new(state_of_the_union_deck.pop, office_holders, ['A', 'B'].shuffle[0], [], [], 0, 0)
     # create the snapshot
     game_snapshot = GameSnapshot.new(board,
                                      Hand.new([], [], []),
@@ -214,6 +214,7 @@ class GameSnapshot < BaseObject
     end
     board.state_of_the_union = cycle.next_state_of_the_union
     state_of_the_union_deck.push old_state_of_the_union
+    board.tactics_lead_party = board.tactics_lead_party == 'A' ? 'B' : 'A'
   end
 
 end

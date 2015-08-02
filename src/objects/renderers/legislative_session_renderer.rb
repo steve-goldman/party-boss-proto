@@ -19,16 +19,16 @@ class LegislativeSessionRenderer < Renderer
   def render(legislative_session, board)
     [
       "Legislation results",               underline,
-      party_header,                        underline,
+      party_header(board),                 underline,
       results(legislative_session, board),
       bills_dealt(legislative_session),    underline
     ].join("\n")
   end
 
-  def render_bills_on_floor(legislative_session)
+  def render_bills_on_floor(legislative_session, board)
     [
       "Bills on the floor", underline,
-      party_header,         underline,
+      party_header(board),  underline,
     ].concat(
       Config.get.bills_num_on_floor.times.map { |index| bill_matchup(legislative_session, index) }
     ).join("\n")

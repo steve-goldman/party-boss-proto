@@ -17,7 +17,7 @@ class BoardRenderer < Renderer
   def render(board)
     [
       "The state of the union: #{board.state_of_the_union}", underline,
-      party_header,          underline,
+      party_header(board),   underline,
       office_holders(board), underline,
       vps(board),            underline,
       passed_bills(board),   underline,

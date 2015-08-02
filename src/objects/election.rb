@@ -41,7 +41,7 @@ class Election < BaseObject
     Logger.header("Boss 'B' choosing candidates").indent
     candidates_B = boss_B.get_candidates(game_snapshot)
     Logger.unindent
-    Logger.header(ElectionRenderer.get.render_matchups candidates_A, candidates_B)
+    Logger.header(ElectionRenderer.get.render_matchups game_snapshot.board, candidates_A, candidates_B)
     Logger.header("Boss 'A' choosing dice allocation").indent
     allocation_A = boss_A.get_allocation(game_snapshot.board.num_fundraising_dice(candidates_A),
                                          Politician.matchup_descriptions(candidates_A, candidates_B))

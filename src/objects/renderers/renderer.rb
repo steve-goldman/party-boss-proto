@@ -5,8 +5,10 @@ class Renderer
     @length = 2 * side_length + 3
   end
 
-  def party_header
-    two_sides 'Party A', 'Party B'
+  def party_header(board)
+    a = "Party A#{board.tactics_lead_party == 'A' ? '*' : ''}"
+    b = "Party B#{board.tactics_lead_party == 'B' ? '*' : ''}"
+    two_sides a, b
   end
 
   def underline

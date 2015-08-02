@@ -19,17 +19,17 @@ class ElectionRenderer < Renderer
   def render(election, board)
     [
       "Election results",          underline,
-      party_header,                underline,
+      party_header(board),         underline,
       results(election, board),
       politicians_dealt(election), underline,
       tactics_dealt(election)
     ].join("\n")
   end
 
-  def render_matchups(candidates_A, candidates_B)
+  def render_matchups(board, candidates_A, candidates_B)
     [
       "Election matchups", underline,
-      party_header,        underline,
+      party_header(board), underline,
     ].concat(
       Config.get.seats_num.times.map { |index|
         two_sides(candidates_A[index], candidates_B[index])

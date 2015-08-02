@@ -9,54 +9,59 @@ class Precondition < BaseObject
     { name: "params",       type: PreconditionParams },
   ]
 
-  def holds(party, played_on_party, bill_A, bill_B, board)
-    self.send("#{precondition}", party, played_on_party, bill_A, bill_B, board)
+  def holds(args)
+    self.send("#{precondition}", args)
   end
 
   private
   
-  def played_on_party(party, played_on_party, bill_A, bill_B, board)
-    params.who == 'self' ? party == played_on_party : party != played_on_party
+  def played_on_party(args)
+    puts args
+    puts params.who
+    params.who == 'self' ?
+      args[:party_played_by] == args[:party_played_on] :
+      args[:party_played_by] != args[:party_played_on]
   end
 
-  def num_in_office(party, played_on_party, bill_A, bill_B, board)
-    target_party = target_party(party)
-    count = board.office_holders.reduce(0) do |count, office_holder|
-      count + (office_holder.party == target_party ? 1 : 0)
+  def num_in_office(args)
+    count = args[:board].office_holders.reduce(0) do |count, office_holder|
+      count + (office_holder.party == target_party(args) ? 1 : 0)
     end
     operate(count, params.how_many)
   end
 
-  def bill_agenda(party, played_on_party, bill_A, bill_B, board)
-    target_bill(party, played_on_party, bill_A, bill_B).agenda == params.agenda
+  def bill_agenda(args)
+    target_bill(args).agenda == params.agenda
   end
 
-  def or(party, played_on_party, bill_A, bill_B, board)
+  def or(args)
     params.preconditions.each do |precondition|
-      return true if precondition.holds(party, played_on_party, bill_A, bill_B, board)
+      return true if precondition.holds(args)
     end
     false
   end
 
   # used in unit tests
-  def always_true(party, played_on_party, bill_A, bill_B, board)
+  def always_true(args)
     true
   end
 
   # used in unit tests
-  def always_false(party, played_on_party, bill_A, bill_B, board)
+  def always_false(args)
     false
   end
 
-  def target_party(party)
-    params.who == 'self' ? party :
-      params.who == 'opponent' ? other_party(party) :
+  def target_party(args)
+    params.who == 'self' ? args[:party_played_by] :
+      params.who == 'opponent' ? other_party(args) :
         nil
   end
 
-  def target_bill(party, played_on_party, bill_A, bill_B)
-    params.who == 'self' ? (party == 'A' ? bill_A : bill_B) :
-      params.who == 'opponent' ? (party == 'A' ? bill_B : bill_A) :
+  def target_bill(args)
+    params.who == 'self' ? (args[:party_played_by] == 'A' ?
+                              args[:bill_A] : args[:bill_B]) :
+      params.who == 'opponent' ? (args[:party_played_by] == 'A' ?
+                                    args[:bill_B] : args[:bill_A]) :
         nil
   end
 
@@ -74,7 +79,7 @@ class Precondition < BaseObject
     end
   end
   
-  def other_party(party)
-    party == 'A' ? 'B' : 'A'
+  def other_party(args)
+    args[:party_played_by] == 'A' ? 'B' : 'A'
   end
 end

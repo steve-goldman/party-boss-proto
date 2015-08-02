@@ -15,8 +15,20 @@ class PlayedTactic < BaseObject
 
   def can_play(board)
     tactic.preconditions.select do |precondition|
-      !precondition.holds(party_played_by, party_played_on, bill_A, bill_B, board)
+      !precondition.holds(precondition_args(board))
     end.empty?
+  end
+
+  private
+
+  def precondition_args(board)
+    {
+      party_played_by: party_played_by,
+      party_played_on: party_played_on,
+      bill_A: bill_A,
+      bill_B: bill_B,
+      board: board,
+    }
   end
 
 end

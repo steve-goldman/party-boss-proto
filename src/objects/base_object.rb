@@ -13,4 +13,7 @@ class BaseObject
   # to get Class.deserialize
   extend Deserializable
 
+  def after_init
+  end
+
 end

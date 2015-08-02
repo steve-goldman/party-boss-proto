@@ -40,12 +40,12 @@ class PreconditionTests < Minitest::Test
 
   def test_bill_agenda
     precondition = get_bill_agenda('self', 'conservative')
-    assert  precondition.holds(nil, nil, get_bill('conservative'), nil, nil)
-    assert !precondition.holds(nil, nil, get_bill('moderate'),     nil, nil)
+    assert  precondition.holds('A', 'A', get_bill('conservative'), nil, nil)
+    assert !precondition.holds('A', 'A', get_bill('moderate'),     nil, nil)
 
     precondition = get_bill_agenda('opponent', 'conservative')
-    assert  precondition.holds(nil, nil, nil, get_bill('conservative'), nil)
-    assert !precondition.holds(nil, nil, nil, get_bill('moderate'),     nil)
+    assert  precondition.holds('A', 'B', nil, get_bill('conservative'), nil)
+    assert !precondition.holds('A', 'B', nil, get_bill('moderate'),     nil)
   end
 
   def test_or

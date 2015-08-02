@@ -30,9 +30,7 @@ class LegislativeSessionRenderer < Renderer
       "Bills on the floor", underline,
       party_header,         underline,
     ].concat(
-      Config.get.bills_num_on_floor.times.map { |index|
-        two_sides(legislative_session.bills_A[index], legislative_session.bills_B[index])
-      }
+      Config.get.bills_num_on_floor.times.map { |index| bill_matchup(legislative_session, index) }
     ).join("\n")
   end
 
@@ -82,4 +80,30 @@ class LegislativeSessionRenderer < Renderer
     ).join("\n")
   end
 
+  def bill_matchup(legislative_session, index)
+    tactics_A = []
+    tactics_B = []
+    legislative_session.tactics.each do |played_tactic|
+      if played_tactic.bill_A.equals?(legislative_session.bills_A[index])
+        (played_tactic.party_played_on == 'A' ? tactics_A : tactics_B).push(
+          "#{played_tactic.tactic} played by '#{played_tactic.party_played_by}'")
+      end
+    end
+    if tactics_A.empty? && tactics_B.empty?
+      [
+        two_sides(legislative_session.bills_A[index], legislative_session.bills_B[index]),
+        underline
+      ].join("\n")
+    else
+      [
+        two_sides(legislative_session.bills_A[index], legislative_session.bills_B[index]),
+        underline
+      ]
+        .concat([tactics_A.count, tactics_B.count].max.times.map { |index|
+                  two_sides(index < tactics_A.count ? tactics_A[index] : "",
+                            index < tactics_B.count ? tactics_B[index] : "") })
+        .concat([underline])
+        .join("\n")
+    end
+  end
 end

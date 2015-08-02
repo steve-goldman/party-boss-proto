@@ -9,17 +9,17 @@ class Precondition < BaseObject
     { name: "params",       type: PreconditionParams },
   ]
 
-  def holds(party, played_on_party, my_bill, other_bill, board)
-    self.send("#{precondition}", party, played_on_party, my_bill, other_bill, board)
+  def holds(party, played_on_party, bill_A, bill_B, board)
+    self.send("#{precondition}", party, played_on_party, bill_A, bill_B, board)
   end
 
   private
   
-  def played_on_party(party, played_on_party, my_bill, other_bill, board)
+  def played_on_party(party, played_on_party, bill_A, bill_B, board)
     params.who == 'self' ? party == played_on_party : party != played_on_party
   end
 
-  def num_in_office(party, played_on_party, my_bill, other_bill, board)
+  def num_in_office(party, played_on_party, bill_A, bill_B, board)
     target_party = target_party(party)
     count = board.office_holders.reduce(0) do |count, office_holder|
       count + (office_holder.party == target_party ? 1 : 0)
@@ -27,24 +27,24 @@ class Precondition < BaseObject
     operate(count, params.how_many)
   end
 
-  def bill_agenda(party, played_on_party, my_bill, other_bill, board)
-    target_bill(my_bill, other_bill).agenda == params.agenda
+  def bill_agenda(party, played_on_party, bill_A, bill_B, board)
+    target_bill(party, played_on_party, bill_A, bill_B).agenda == params.agenda
   end
 
-  def or(party, played_on_party, my_bill, other_bill, board)
+  def or(party, played_on_party, bill_A, bill_B, board)
     params.preconditions.each do |precondition|
-      return true if precondition.holds(party, played_on_party, my_bill, other_bill, board)
+      return true if precondition.holds(party, played_on_party, bill_A, bill_B, board)
     end
     false
   end
 
   # used in unit tests
-  def always_true(party, played_on_party, my_bill, other_bill, board)
+  def always_true(party, played_on_party, bill_A, bill_B, board)
     true
   end
 
   # used in unit tests
-  def always_false(party, played_on_party, my_bill, other_bill, board)
+  def always_false(party, played_on_party, bill_A, bill_B, board)
     false
   end
 
@@ -54,9 +54,9 @@ class Precondition < BaseObject
         nil
   end
 
-  def target_bill(my_bill, other_bill)
-    params.who == 'self' ? my_bill :
-      params.who == 'opponent' ? other_bill :
+  def target_bill(party, played_on_party, bill_A, bill_B)
+    params.who == 'self' ? (party == 'A' ? bill_A : bill_B) :
+      params.who == 'opponent' ? (party == 'A' ? bill_B : bill_A) :
         nil
   end
 

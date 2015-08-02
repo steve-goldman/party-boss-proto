@@ -3,6 +3,12 @@
     "name": "Unholy Alliance",
     "preconditions": [
       {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "self"
+        }
+      },
+      {
         "precondition": "num_in_office",
         "params": {
           "who": "opponent",
@@ -111,7 +117,7 @@
       {
         "precondition": "or",
         "params": {
-          "options": [
+          "preconditions": [
             {
               "precondition": "bill_agenda",
               "params": {

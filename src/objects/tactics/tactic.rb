@@ -19,9 +19,12 @@ class Tactic < BaseObject
     name
   end
 
-  def can_play(party, is_my_bill, bill_A, bill_B)
+  def can_play(party, played_on_party, bill_A, bill_B, board)
     preconditions
-      .select { |precondition| !precondition.holds(party, is_my_bill, bill_A, bill_B) }
+      .select { |precondition| !precondition.holds(party, played_on_party, bill_A, bill_B, board) }
       .empty?
   end
+
+  Pass = Tactic.new("pass", [], [], [])
+
 end

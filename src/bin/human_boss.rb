@@ -23,7 +23,7 @@ class HumanBoss
           office_holder.politician
         else
           Logger.log "Candidate to run against #{office_holder.politician}"
-          input_from_and_remove_from_array temp_politicians
+          input_from_array temp_politicians, true
         end
       end
       # ask user to confirm
@@ -38,14 +38,30 @@ class HumanBoss
       # don't spoil the data until the user confirms
       temp_bills = @hand.bills.clone
       # get the bills from the user
-      bills = []
-      Config.get.bills_num_on_floor.times do |index|
+      bills = Config.get.bills_num_on_floor.times.map do |index|
         Logger.subheader("Selecting bill for floor matchup ##{index + 1}").indent
-        bills.push input_from_and_remove_from_array(temp_bills)
+        input_from_array(temp_bills, true)
       end
       # ask user to confirm
       if confirm_bills bills
         return bills
+      end
+    end
+  end
+
+  def get_tactic(legislative_session)
+    while true
+      Logger.subheader("Select tactic").indent
+      tactic = input_from_array(@hand.tactics, false, true)
+      if tactic.nil?
+        return [Tactic::Pass, nil, nil]
+      end
+      Logger.subheader("Select floor matchup").indent
+      index = input_floor_matchup_index(legislative_session)
+      Logger.indent
+      party = input_party
+      if confirm_tactic(legislative_session, tactic, index, party)
+        return [tactic, index, party]
       end
     end
   end
@@ -67,22 +83,56 @@ class HumanBoss
 
   private
 
-  def input_from_and_remove_from_array(options)
+  def input_from_array(options, remove, zero_okay = false)
     # show the list
     options.count.times do |index|
       Logger.log "#{index + 1}: #{options[index]}"
     end
     # get the input
     while true
-      Logger.prompt "(Enter #): "
+      Logger.prompt "(Enter ##{zero_okay ? ' or 0 for none' : ''}): "
       input = gets.chomp
-      if !int_in_range? input, 1, options.count
+      if input == "0" && zero_okay
+        Logger.unindent
+        return nil
+      elsif !int_in_range? input, 1, options.count
         Logger.error "Input #{input} is out of range"
       else
-        politician = options[input.to_i - 1]
-        options.delete_at(input.to_i - 1)
+        elem = options[input.to_i - 1]
+        options.delete_at(input.to_i - 1) if remove
         Logger.unindent
-        return politician
+        return elem
+      end
+    end
+  end
+
+  def input_floor_matchup_index(legislative_session)
+    # show the list
+    Config.get.bills_num_on_floor.times do |index|
+      Logger.log "#{index + 1}: #{legislative_session.bills_A[index]} | #{legislative_session.bills_B[index]}"
+    end
+
+    while true
+      Logger.prompt "(Enter #): "
+      input = gets.chomp
+      if !int_in_range? input, 1, Config.get.bills_num_on_floor
+        Logger.error "Input #{input} is out of range"
+      else
+        Logger.unindent
+        return input.to_i - 1
+      end
+    end
+  end
+
+  def input_party
+    while true
+      Logger.prompt "(Enter party's bill A/B): "
+      input = gets.chomp.upcase
+      if input != 'A' && input != 'B'
+        Logger.error "Input #{input} is invalid"
+      else
+        Logger.unindent
+        return input
       end
     end
   end
@@ -105,6 +155,15 @@ class HumanBoss
     Config.get.bills_num_on_floor.times do |index|
       Logger.log "#{bills[index]}"
     end
+    Logger.unindent
+    confirm
+  end
+
+  def confirm_tactic(legislative_session, tactic, index, party)
+    Logger.subheader("You have selected:").indent
+    Logger.log "#{tactic}"
+    Logger.log "#{legislative_session.bills_A[index]} | #{legislative_session.bills_B[index]}"
+    Logger.log "Party '#{party}'s bill"
     Logger.unindent
     confirm
   end

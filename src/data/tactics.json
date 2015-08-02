@@ -2,45 +2,25 @@
   {
     "name": "Filibuster1",
     "preconditions": [],
-    "actions": [
-      {
-        "action": "filibuster",
-        "params": {}
-      }
-    ],
+    "actions": [],
     "consequences": []
   },
   {
     "name": "Filibuster2",
     "preconditions": [],
-    "actions": [
-      {
-        "action": "filibuster",
-        "params": {}
-      }
-    ],
+    "actions": [],
     "consequences": []
   },
   {
     "name": "Filibuster3",
     "preconditions": [],
-    "actions": [
-      {
-        "action": "filibuster",
-        "params": {}
-      }
-    ],
+    "actions": [],
     "consequences": []
   },
   {
     "name": "Filibuster4",
     "preconditions": [],
-    "actions": [
-      {
-        "action": "filibuster",
-        "params": {}
-      }
-    ],
+    "actions": [],
     "consequences": []
   },
   {
@@ -490,12 +470,7 @@
         }
       }
     ],
-    "actions": [
-      {
-        "action": "tabling_motion",
-        "params": {}
-      }
-    ],
+    "actions": [],
     "consequences": []
   },
   {
@@ -706,13 +681,7 @@
     "name": "Cloture",
     "preconditions": [],
     "actions": [],
-    "consequences": [
-      {
-        "consequence": "previous_tactics_have_no_effect",
-        "params": {},
-        "conditions": []
-      }
-    ]
+    "consequences": []
   },
   {
     "name": "Rally the Base",

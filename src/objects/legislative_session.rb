@@ -79,7 +79,6 @@ class LegislativeSession < BaseObject
         last_last_was_pass = true if last_was_pass
         last_was_pass = true
       else
-        
         drawn_tactics = LegislativeSession.handle_filibuster(game_snapshot, tactic, party)
         index = arr[1]; party_played_on = arr[2]
         if !tactic.can_play(party,

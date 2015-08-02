@@ -348,7 +348,7 @@
       {
         "precondition": "played_on_party",
         "params": {
-          "who": "self"
+          "who": "opponent"
         }
       }
     ],

@@ -8,7 +8,7 @@ class DiceOutcome < BaseObject
   ]
 
   def sum
-    rolls.reduce(0) { |sum, roll| sum + roll }
+    rolls.reduce(0, :+)
   end
 
   def to_s

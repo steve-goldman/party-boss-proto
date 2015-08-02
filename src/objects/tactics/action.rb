@@ -24,6 +24,19 @@ class Action < BaseObject
     Logger.log("Was #{old_cost}, is now #{new_cost}")
   end
 
+  def add_bill_cost_by_dice(args)
+    Logger.log("Rolling #{args[:how_many_dice]} dice to add to cost of #{target_bill(args)}")
+    if args[:played_tactic].outcomes.nil?
+      args[:played_tactic].outcomes =
+        args[:dice_roller].get_outcome(params.how_many_dice)
+    end
+    Logger.log("Rolled #{args[:played_tactic].outcomes}")
+    old_cost = args[:legislative_session].get_bill_cost(target_bill(args))
+    new_cost = args[:legislative_session].change_bill_cost(target_bill(args),
+                                                           args[:played_tactic].outcomes.sum)
+    Logger.log("Was #{old_cost}, is now #{new_cost}")
+  end
+
   def target_party(args)
     params.who == 'self' ? args[:party_played_by] :
       params.who == 'opponent' ? other_party(args) :

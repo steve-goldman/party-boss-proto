@@ -52,7 +52,7 @@ class LegislativeSession < BaseObject
     Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor(legislative_session,
                                                                        game_snapshot.board))
 
-    LegislativeSession.apply_tactics_actions(legislative_session, game_snapshot, boss_A, boss_B)
+    LegislativeSession.apply_tactics_actions(legislative_session, game_snapshot, boss_A, boss_B, dice_roller)
 
     legislative_session.outcomes_A.concat(dice_roller.get_outcomes(allocation_A))
     legislative_session.outcomes_B.concat(dice_roller.get_outcomes(allocation_B))
@@ -90,13 +90,12 @@ class LegislativeSession < BaseObject
     return incr_bill_cost(party_index[0], party_index[1], delta)
   end
 
-  def LegislativeSession.apply_tactics_actions(legislative_session,
-                                               game_snapshot, boss_A, boss_B)
+  def LegislativeSession.apply_tactics_actions(legislative_session, game_snapshot,
+                                               boss_A, boss_B, dice_roller)
     legislative_session.tactics.each do |played_tactic|
       Logger.subheader("Applying #{played_tactic.tactic} played by '#{played_tactic.party_played_by}' on '#{played_tactic.party_played_on}'s bill").indent
-      played_tactic.apply_actions(game_snapshot.board,
-                                  legislative_session,
-                                  boss_A, boss_B)
+      played_tactic.apply_actions(game_snapshot.board, legislative_session,
+                                  boss_A, boss_B, dice_roller)
       Logger.unindent
     end
   end
@@ -141,7 +140,7 @@ class LegislativeSession < BaseObject
         played_tactic = PlayedTactic.new(party, party_played_on,
                                          index ? legislative_session.bills_A[index] : nil,
                                          index ? legislative_session.bills_B[index] : nil,
-                                         tactic, drawn_tactics)
+                                         tactic, drawn_tactics, nil)
         if !played_tactic.can_play(game_snapshot.board)
           Logger.error "This tactic cannot be played like this"
           # make them choose again

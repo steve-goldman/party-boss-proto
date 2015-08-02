@@ -45,8 +45,8 @@ class GameEngine
 
       legislative_session = @game.cycles[index].legislative_session
       LegislativeSession.apply_tactics_actions(legislative_session,
-                                                       @game_snapshot,
-                                                       nil, nil)
+                                               @game_snapshot,
+                                               nil, nil, nil)
       Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor(legislative_session,
                                                                          @game_snapshot.board))
 

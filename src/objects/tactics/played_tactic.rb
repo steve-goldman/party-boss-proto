@@ -5,12 +5,13 @@ class PlayedTactic < BaseObject
 
   # define the data that goes in this object
   Members = [
-    { name: "party_played_by", type: String, can_be_nil: true },
-    { name: "party_played_on", type: String, can_be_nil: true },
-    { name: "bill_A",          type: Bill,   can_be_nil: true },
-    { name: "bill_B",          type: Bill,   can_be_nil: true },
+    { name: "party_played_by", type: String,       can_be_nil: true },
+    { name: "party_played_on", type: String,       can_be_nil: true },
+    { name: "bill_A",          type: Bill,         can_be_nil: true },
+    { name: "bill_B",          type: Bill,         can_be_nil: true },
     { name: "tactic",          type: Tactic },
-    { name: "drawn_tactics",   type: Tactic, is_array: true, can_be_nil: true },
+    { name: "drawn_tactics",   type: Tactic,       can_be_nil: true, is_array: true },
+    { name: "outcomes",        type: DiceOutcome,  can_be_nil: true },
   ]
 
   def can_play(board)
@@ -19,9 +20,9 @@ class PlayedTactic < BaseObject
     end.empty?
   end
 
-  def apply_actions(board, legislative_session, boss_A, boss_B)
+  def apply_actions(board, legislative_session, boss_A, boss_B, dice_roller)
     tactic.actions.each do |action|
-      action.apply(action_args(board, legislative_session, boss_A, boss_B))
+      action.apply(action_args(board, legislative_session, boss_A, boss_B, dice_roller))
     end
   end
 
@@ -37,7 +38,7 @@ class PlayedTactic < BaseObject
     }
   end
 
-  def action_args(board, legislative_session, boss_A, boss_B)
+  def action_args(board, legislative_session, boss_A, boss_B, dice_roller)
     {
       party_played_by: party_played_by,
       party_played_on: party_played_on,
@@ -46,7 +47,9 @@ class PlayedTactic < BaseObject
       board: board,
       legislative_session: legislative_session,
       boss_A: boss_A,
-      boss_B: boss_B
+      boss_B: boss_B,
+      played_tactic: self,
+      dice_roller: dice_roller,
     }
   end
 

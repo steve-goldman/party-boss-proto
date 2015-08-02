@@ -10,5 +10,9 @@ class DiceAllocation < BaseObject
   def to_s
     "#{counts}"
   end
+
+  def sum
+    counts.reduce(0, :+)
+  end
   
 end

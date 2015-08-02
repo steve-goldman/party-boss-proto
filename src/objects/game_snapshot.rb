@@ -48,6 +48,27 @@ class GameSnapshot < BaseObject
   end
 
   def apply_election(election, is_replay)
+    # deal tactics before messing with the board
+    ['A', 'B'].each do |party|
+      if !is_replay
+        # deal the cards
+        num_unused = board.num_fundraising_dice(election.send("candidates_#{party}")) -
+                     election.send("allocation_#{party}").sum
+        election.send("tactics_dealt_#{party}")
+          .concat(deal_tactics(party, Config.get.tactics_num_per_campaign_die * num_unused))
+      else
+        # this is a replay, so take the dealt cards out of the deck
+        election.send("tactics_dealt_#{party}").each do |tactic|
+          tactic_deck.delete_if do |deck_tactic|
+            deck_tactic.equals?(tactic)
+          end
+        end
+      end
+      # put the cards in the hand
+      send("hand_#{party}").tactics.concat(
+        election.send("tactics_dealt_#{party}"))
+    end
+
     # remove candidates from hands
     ['A', 'B'].each do |party|
       election.send("candidates_#{party}").each do |candidate|
@@ -64,7 +85,7 @@ class GameSnapshot < BaseObject
         OfficeHolder.new(result[:winning_party], result[:winner])
     end
 
-    # handle with the dealt politician cards
+    # handle the dealt politician cards
     ['A', 'B'].each do |party|
       if !is_replay
         # deal the cards

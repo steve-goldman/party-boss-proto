@@ -21,7 +21,8 @@ class ElectionRenderer < Renderer
       "Election results",          underline,
       party_header,                underline,
       results(election, board),
-      politicians_dealt(election), underline
+      politicians_dealt(election), underline,
+      tactics_dealt(election)
     ].join("\n")
   end
 
@@ -79,6 +80,20 @@ class ElectionRenderer < Renderer
                     election.politicians_dealt_A[index] : "",
                   index < election.politicians_dealt_B.count ?
                     election.politicians_dealt_B[index] : "")
+      }
+    ).join("\n")
+  end
+
+  def tactics_dealt(election)
+    [
+      "Tactics dealt", underline,
+    ].concat(
+      [election.tactics_dealt_A.count,
+       election.tactics_dealt_B.count].max.times.map { |index|
+        two_sides(index < election.tactics_dealt_A.count ?
+                    election.tactics_dealt_A[index] : "",
+                  index < election.tactics_dealt_B.count ?
+                    election.tactics_dealt_B[index] : "")
       }
     ).join("\n")
   end

@@ -15,6 +15,8 @@ class Election < BaseObject
     { name: "outcomes_B",          type: DiceOutcome,  is_array: true },
     { name: "politicians_dealt_A", type: Politician,   is_array: true },
     { name: "politicians_dealt_B", type: Politician,   is_array: true },
+    { name: "tactics_dealt_A",     type: Tactic,       is_array: true },
+    { name: "tactics_dealt_B",     type: Tactic,       is_array: true },
   ]
 
   def get_result(index, board)
@@ -54,8 +56,7 @@ class Election < BaseObject
                             allocation_B,
                             dice_roller.get_outcomes(allocation_A),
                             dice_roller.get_outcomes(allocation_B),
-                            [], # fill this in below
-                            []) # fill this in below
+                            [], [], [], [])
 
     game_snapshot.apply_election(election, false)
   end

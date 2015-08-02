@@ -132,7 +132,7 @@ class HumanBoss
     play_on_party = tactic.must_play_on_party(@party)
     if !play_on_party.nil?
       whose = (play_on_party == @party) ? "your" : "your opponent's"
-      Logger.log("Must be played on #{whose} bill").unindent
+      Logger.log("(Enter party's bill A/B): #{play_on_party} (forced)").unindent
       return play_on_party
     end
     while true

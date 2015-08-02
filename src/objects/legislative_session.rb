@@ -10,8 +10,10 @@ class LegislativeSession < BaseObject
   Members = [
     { name: "bills_A",       type: Bill,         is_array: true },
     { name: "bills_B",       type: Bill,         is_array: true },
-    { name: "allocation_A",  type: DiceAllocation              },
-    { name: "allocation_B",  type: DiceAllocation              },
+    { name: "num_dice_A",    type: Integer,                     },
+    { name: "num_dice_B",    type: Integer,                     },
+    { name: "allocation_A",  type: DiceAllocation               },
+    { name: "allocation_B",  type: DiceAllocation               },
     { name: "tactics",       type: PlayedTactic, is_array: true },
     { name: "outcomes_A",    type: DiceOutcome,  is_array: true },
     { name: "outcomes_B",    type: DiceOutcome,  is_array: true },
@@ -31,24 +33,25 @@ class LegislativeSession < BaseObject
   end
   
   def LegislativeSession.run_session(game_snapshot, boss_A, boss_B, dice_roller)
+    num_dice_A = game_snapshot.board.num_leadership_dice('A')
+    num_dice_B = game_snapshot.board.num_leadership_dice('B')
+
     Logger.header("Boss 'A' choosing bills").indent
     bills_A = boss_A.get_bills
     Logger.unindent
     Logger.header("Boss 'A' choosing dice allocation").indent
-    allocation_A = boss_A.get_allocation(game_snapshot.board.num_leadership_dice('A'),
-                                         bills_A)
+    allocation_A = boss_A.get_allocation(num_dice_A, bills_A)
     Logger.unindent
     Logger.header("Boss 'B' choosing bills").indent
     bills_B = boss_B.get_bills
     Logger.unindent
     Logger.header("Boss 'B' choosing dice allocation").indent
-    allocation_B = boss_B.get_allocation(game_snapshot.board.num_leadership_dice('B'),
-                                         bills_B)
+    allocation_B = boss_B.get_allocation(num_dice_B, bills_B)
     Logger.unindent
-    legislative_session = LegislativeSession.new(bills_A,
-                                                 bills_B,
-                                                 allocation_A,
-                                                 allocation_B,
+
+    legislative_session = LegislativeSession.new(bills_A, bills_B,
+                                                 num_dice_A, num_dice_B,
+                                                 allocation_A, allocation_B,
                                                  [], [], [], [], [])
 
     LegislativeSession.get_tactics(legislative_session, game_snapshot, boss_A, boss_B)
@@ -124,6 +127,13 @@ class LegislativeSession < BaseObject
     party_index[1] == 'A' ?
       @allocation_A.counts[party_index[0]] = count :
       @allocation_B.counts[party_index[0]] = count
+  end
+
+  def change_bill_allocation(bill, delta)
+    party_index = get_bill_party_index(bill)
+    party_index[1] == 'A' ?
+      @allocation_A.counts[party_index[0]] += [num_dice_A - @allocation_A.sum, delta].min :
+      @allocation_B.counts[party_index[0]] += [num_dice_B - @allocation_B.sum, delta].min
   end
 
   def LegislativeSession.apply_tactics_actions(legislative_session, game_snapshot,

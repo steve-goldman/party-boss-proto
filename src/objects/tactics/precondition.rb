@@ -16,8 +16,6 @@ class Precondition < BaseObject
   private
   
   def played_on_party(args)
-    puts args
-    puts params.who
     params.who == 'self' ?
       args[:party_played_by] == args[:party_played_on] :
       args[:party_played_by] != args[:party_played_on]

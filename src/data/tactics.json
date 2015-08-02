@@ -453,7 +453,6 @@
       {
         "action": "all_dice_count_as",
         "params": {
-          "who": "self",
           "how_many": 1
         }
       }

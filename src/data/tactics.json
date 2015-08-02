@@ -421,7 +421,14 @@
   },
   {
     "name": "Tabling Motion",
-    "preconditions": [],
+    "preconditions": [
+      {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "opponent"
+        }
+      }
+    ]
     "actions": [
       {
         "action": "tabling_motion",

@@ -30,7 +30,14 @@
   },
   {
     "name": "Log Rolling",
-    "preconditions": [],
+    "preconditions": [
+      {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "self"
+        }
+      }
+    ],
     "actions": [
       {
         "action": "take_cloakroom_dice",
@@ -313,7 +320,14 @@
   },
   {
     "name": "Point of Order",
-    "preconditions": [],
+    "preconditions": [
+      {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "self"
+        }
+      }
+    ],
     "actions": [
       {
         "action": "add_bill_cost_by_dice",
@@ -327,7 +341,14 @@
   },
   {
     "name": "Pork Barreling A",
-    "preconditions": [],
+    "preconditions": [
+      {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "self"
+        }
+      }
+    ],
     "actions": [
       {
         "action": "take_dice_from_opponent",
@@ -373,7 +394,14 @@
   },
   {
     "name": "Pork Barreling B",
-    "preconditions": [],
+    "preconditions": [
+      {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "self"
+        }
+      }
+    ],
     "actions": [],
     "consequences": [
       {
@@ -439,7 +467,14 @@
   },
   {
     "name": "Party Switching",
-    "preconditions": [],
+    "preconditions": [
+      {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "self"
+        }
+      }
+    ],
     "actions": [
       {
         "action": "take_dice_from_opponent",
@@ -452,7 +487,14 @@
   },
   {
     "name": "Quorum Passage",
-    "preconditions": [],
+    "preconditions": [
+      {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "opponent"
+        }
+      }
+    ],
     "actions": [
       {
         "action": "send_dice_to_cloakroom",
@@ -466,7 +508,14 @@
   },
   {
     "name": "Veto Thread",
-    "preconditions": [],
+    "preconditions": [
+      {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "opponent"
+        }
+      }
+    ],
     "actions": [],
     "consequences": [
       {
@@ -520,7 +569,14 @@
   },
   {
     "name": "Bill Rider",
-    "preconditions": [],
+    "preconditions": [
+      {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "self"
+        }
+      }
+    ],
     "actions": [],
     "consequences": [
       {
@@ -541,7 +597,14 @@
   },
   {
     "name": "Unanimous Consent",
-    "preconditions": [],
+    "preconditions": [
+      {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "self"
+        }
+      }
+    ],
     "actions": [],
     "consequences": []
   },
@@ -620,7 +683,14 @@
   },
   {
     "name": "Rally the Base",
-    "preconditions": [],
+    "preconditions": [
+      {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "self"
+        }
+      }
+    ],
     "actions": [],
     "consequences": [
       {
@@ -643,7 +713,14 @@
   },
   {
     "name": "Joint Resolution",
-    "preconditions": [],
+    "preconditions": [
+      {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "self"
+        }
+      }
+    ],
     "actions": [],
     "consequences": [
       {

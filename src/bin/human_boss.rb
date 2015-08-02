@@ -50,6 +50,10 @@ class HumanBoss
   end
 
   def get_tactic(legislative_session)
+    if @hand.tactics.empty?
+      Logger.subheader("No tactics to choose from")
+      return [Tactic::Pass, nil, nil]
+    end
     while true
       Logger.subheader("Select tactic").indent
       tactic = input_from_array(@hand.tactics, false, true)

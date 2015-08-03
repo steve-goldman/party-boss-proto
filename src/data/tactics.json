@@ -45,7 +45,6 @@
       {
         "action": "take_cloakroom_dice",
         "params": {
-          "who": "self",
           "how_many": 2
         }
       }
@@ -66,14 +65,13 @@
       {
         "action": "take_cloakroom_dice",
         "params": {
-          "who": "self",
           "how_many": 1
         }
       },
       {
         "action": "take_cloakroom_dice",
         "params": {
-          "who": "opponent",
+          "who": "opposite",
           "how_many": 1
         }
       }
@@ -189,7 +187,6 @@
       {
         "action": "take_cloakroom_dice",
         "params": {
-          "who": "self",
           "how_many": 1
         }
       }
@@ -278,7 +275,6 @@
       {
         "action": "add_bill_cost",
         "params": {
-          "who": "self",
           "how_many": -1
         }
       }
@@ -287,7 +283,6 @@
       {
         "consequence": "add_bill_vps",
         "params": {
-          "who": "self",
           "how_many": -1
         },
         "conditions": []
@@ -332,14 +327,13 @@
             {
               "action": "add_bill_cost",
               "params": {
-                "who": "self",
                 "how_many": -1
               }
             },
             {
               "action": "add_bill_cost",
               "params": {
-                "who": "opponent",
+                "which": "opposite",
                 "how_many": 1
               }
             }
@@ -363,7 +357,6 @@
       {
         "action": "add_bill_cost_by_dice",
         "params": {
-          "who": "opponent",
           "how_many_dice": 1
         }
       }
@@ -635,14 +628,13 @@
       {
         "action": "add_bill_cost",
         "params": {
-          "who": "self",
           "how_many": 1
         }
       },
       {
         "action": "add_bill_cost",
         "params": {
-          "who": "opponent",
+          "which": "opposite",
           "how_many": 1
         }
       }

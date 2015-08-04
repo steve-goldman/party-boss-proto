@@ -7,17 +7,16 @@ class PlayedTactic < BaseObject
   Members = [
     { name: "party_played_by", type: String,       can_be_nil: true },
     { name: "party_played_on", type: String,       can_be_nil: true },
-    { name: "bill_A",          type: Bill,         can_be_nil: true },
-    { name: "bill_B",          type: Bill,         can_be_nil: true },
+    { name: "index",           type: Integer,      can_be_nil: true },
     { name: "tactic",          type: Tactic },
     { name: "drawn_tactic",    type: Tactic,       can_be_nil: true },
     { name: "outcomes",        type: DiceOutcome,  can_be_nil: true },
     { name: "or_index",        type: Integer,      can_be_nil: true },
   ]
 
-  def can_play(board)
+  def can_play(board, legislative_session)
     tactic.preconditions.select do |precondition|
-      !precondition.holds(precondition_args(board))
+      !precondition.holds(precondition_args(board, legislative_session))
     end.empty?
   end
 
@@ -61,13 +60,13 @@ class PlayedTactic < BaseObject
     end
   end
 
-  def precondition_args(board)
+  def precondition_args(board, legislative_session)
     {
       party_played_by: party_played_by,
       party_played_on: party_played_on,
-      bill_A: bill_A,
-      bill_B: bill_B,
+      index: index,
       board: board,
+      legislative_session: legislative_session,
     }
   end
 
@@ -75,8 +74,7 @@ class PlayedTactic < BaseObject
     {
       party_played_by: party_played_by,
       party_played_on: party_played_on,
-      bill_A: bill_A,
-      bill_B: bill_B,
+      index: index,
       board: board,
       legislative_session: legislative_session,
       boss_A: boss_A,

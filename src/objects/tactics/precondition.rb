@@ -56,11 +56,10 @@ class Precondition < BaseObject
   end
 
   def target_bill(args)
-    params.who == 'self' ? (args[:party_played_by] == 'A' ?
-                              args[:bill_A] : args[:bill_B]) :
-      params.who == 'opponent' ? (args[:party_played_by] == 'A' ?
-                                    args[:bill_B] : args[:bill_A]) :
+    party = params.who == 'self' ? (args[:party_played_by] == 'A' ? 'A' : 'B') :
+      params.who == 'opponent' ? (args[:party_played_by] == 'A' ? 'B' : 'A') :
         nil
+    args[:legislative_session].send("bill_#{party}")
   end
 
   def operate(operand_A, operand_B)

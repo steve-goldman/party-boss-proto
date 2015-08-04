@@ -71,7 +71,7 @@
       {
         "action": "take_cloakroom_dice",
         "params": {
-          "who": "opposite",
+          "which": "opposite",
           "how_many": 1
         }
       }

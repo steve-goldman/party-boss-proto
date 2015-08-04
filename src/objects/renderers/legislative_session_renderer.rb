@@ -91,7 +91,7 @@ class LegislativeSessionRenderer < Renderer
   def bill_matchup(legislative_session, index)
     tactics_A = []
     tactics_B = []
-    legislative_session.tactics.each do |played_tactic|
+    legislative_session.played_tactics.each do |played_tactic|
       if !played_tactic.tactic.filibuster? &&
          played_tactic.bill_A.equals?(legislative_session.bills_A[index])
         (played_tactic.party_played_on == 'A' ? tactics_A : tactics_B).push(

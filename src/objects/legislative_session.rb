@@ -8,17 +8,17 @@ class LegislativeSession < BaseObject
 
   # define the data that goes in this object
   Members = [
-    { name: "bills_A",       type: Bill,         is_array: true },
-    { name: "bills_B",       type: Bill,         is_array: true },
-    { name: "num_dice_A",    type: Integer,                     },
-    { name: "num_dice_B",    type: Integer,                     },
-    { name: "allocation_A",  type: DiceAllocation               },
-    { name: "allocation_B",  type: DiceAllocation               },
-    { name: "tactics",       type: PlayedTactic, is_array: true },
-    { name: "outcomes_A",    type: DiceOutcome,  is_array: true },
-    { name: "outcomes_B",    type: DiceOutcome,  is_array: true },
-    { name: "bills_dealt_A", type: Bill,         is_array: true },
-    { name: "bills_dealt_B", type: Bill,         is_array: true },
+    { name: "bills_A",        type: Bill,         is_array: true },
+    { name: "bills_B",        type: Bill,         is_array: true },
+    { name: "num_dice_A",     type: Integer,                     },
+    { name: "num_dice_B",     type: Integer,                     },
+    { name: "allocation_A",   type: DiceAllocation               },
+    { name: "allocation_B",   type: DiceAllocation               },
+    { name: "played_tactics", type: PlayedTactic, is_array: true },
+    { name: "outcomes_A",     type: DiceOutcome,  is_array: true },
+    { name: "outcomes_B",     type: DiceOutcome,  is_array: true },
+    { name: "bills_dealt_A",  type: Bill,         is_array: true },
+    { name: "bills_dealt_B",  type: Bill,         is_array: true },
   ]
 
   def after_init
@@ -150,7 +150,7 @@ class LegislativeSession < BaseObject
   end
 
   def apply_tactics_actions(game_snapshot, boss_A, boss_B, dice_roller)
-    tactics.each do |played_tactic|
+    played_tactics.each do |played_tactic|
       if played_tactic.immediate?
         played_tactic.apply_preactions(game_snapshot, boss_A, boss_B) if boss_A.nil?
       else
@@ -194,7 +194,7 @@ class LegislativeSession < BaseObject
           # handle filibusters, tabling motions, and clotures
           played_tactic.apply_preactions(game_snapshot, boss_A, boss_B)
           # make it official
-          tactics.push(played_tactic)
+          played_tactics.push(played_tactic)
         end
       end
       party = (party == 'A' ? 'B' : 'A')

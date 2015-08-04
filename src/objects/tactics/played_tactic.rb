@@ -21,27 +21,29 @@ class PlayedTactic < BaseObject
     end.empty?
   end
 
-  def apply_preactions(legislative_session, game_state, boss_A, boss_B)
+  def apply_preactions(played_tactic_index, legislative_session, game_state, boss_A, boss_B)
     if tactic.filibuster?
-      apply_filibuster(game_state, boss_A, boss_B)
+      apply_filibuster(game_state)
     elsif tactic.tabling_motion?
       apply_tabling_motion(legislative_session, game_state, boss_A, boss_B)
+    elsif tactic.cloture?
+      apply_cloture(played_tactic_index, legislative_session)
     end
   end
 
-  def apply_actions(board, legislative_session, boss_A, boss_B, dice_roller)
+  def apply_actions(board, legislative_session, boss_A, boss_B, dice_roller, played_tactic_index)
     tactic.actions.each do |action|
-      action.apply(action_args(board, legislative_session, boss_A, boss_B, dice_roller))
+      action.apply(action_args(board, legislative_session, boss_A, boss_B, dice_roller, played_tactic_index))
     end
   end
 
   def immediate?
-    tactic.filibuster? || tactic.tabling_motion?
+    tactic.filibuster? || tactic.tabling_motion? || tactic.cloture?
   end
 
   private
 
-  def apply_filibuster(game_state, boss_A, boss_B)
+  def apply_filibuster(game_state)
     if drawn_tactic.nil?
       drawn_tactics = game_state.deal_tactics(party_played_by, 1)
       if !drawn_tactics.empty?
@@ -74,6 +76,11 @@ class PlayedTactic < BaseObject
     Logger.subheader "Boss '#{party_played_on}' tabled #{old_bill} for #{replacement_bill}"
     legislative_session.table_bill(index, party_played_on, replacement_bill)
   end
+
+  def apply_cloture(played_tactic_index, legislative_session)
+    Logger.subheader "Cloture played on '#{party_played_on}'s bill #{legislative_session.get_bill_on_floor(index, party_played_on)}"
+    legislative_session.cloture_bill(played_tactic_index, party_played_on)
+  end
   
   def precondition_args(board, legislative_session)
     {
@@ -85,7 +92,7 @@ class PlayedTactic < BaseObject
     }
   end
 
-  def action_args(board, legislative_session, boss_A, boss_B, dice_roller)
+  def action_args(board, legislative_session, boss_A, boss_B, dice_roller, played_tactic_index)
     {
       party_played_by: party_played_by,
       party_played_on: party_played_on,
@@ -96,6 +103,7 @@ class PlayedTactic < BaseObject
       boss_B: boss_B,
       played_tactic: self,
       dice_roller: dice_roller,
+      played_tactic_index: played_tactic_index,
     }
   end
 

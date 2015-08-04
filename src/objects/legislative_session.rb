@@ -165,7 +165,7 @@ class LegislativeSession < BaseObject
   def get_tactics(game_snapshot, boss_A, boss_B)
     last_last_was_pass = false
     last_was_pass = false
-    party = 'A'  # TODO
+    party = game_snapshot.board.tactics_lead_party
     while !last_was_pass || !last_last_was_pass
       Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor(self, game_snapshot.board))
       Logger.header("Boss #{party} choosing a tactic").indent

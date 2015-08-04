@@ -32,9 +32,9 @@ class LegislativeSession < BaseObject
     @allocation_B = allocation_B.clone
   end
   
-  def LegislativeSession.run_session(game_snapshot, boss_A, boss_B, dice_roller)
-    num_dice_A = game_snapshot.board.num_leadership_dice('A')
-    num_dice_B = game_snapshot.board.num_leadership_dice('B')
+  def LegislativeSession.run_session(game_state, boss_A, boss_B, dice_roller)
+    num_dice_A = game_state.board.num_leadership_dice('A')
+    num_dice_B = game_state.board.num_leadership_dice('B')
 
     Logger.header("Boss 'A' choosing bills").indent
     bills_A = boss_A.get_bills
@@ -54,19 +54,19 @@ class LegislativeSession < BaseObject
                                                  allocation_A, allocation_B,
                                                  [], [], [], [], [])
 
-    legislative_session.get_tactics(game_snapshot, boss_A, boss_B)
+    legislative_session.get_tactics(game_state, boss_A, boss_B)
     
     Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor(legislative_session,
-                                                                       game_snapshot.board))
+                                                                       game_state.board))
 
-    legislative_session.apply_tactics_actions(game_snapshot, boss_A, boss_B, dice_roller)
+    legislative_session.apply_tactics_actions(game_state, boss_A, boss_B, dice_roller)
 
     legislative_session.outcomes_A.concat(dice_roller.get_outcomes(legislative_session.get_allocation('A'),
                                                                    legislative_session.all_dice_outcomes('A')))
     legislative_session.outcomes_B.concat(dice_roller.get_outcomes(legislative_session.get_allocation('B'),
                                                                    legislative_session.all_dice_outcomes('B')))
     
-    game_snapshot.apply_legislative_session(legislative_session, false)
+    game_state.apply_legislative_session(legislative_session, false)
   end
 
   def passes?(index, party)
@@ -149,25 +149,25 @@ class LegislativeSession < BaseObject
     end
   end
 
-  def apply_tactics_actions(game_snapshot, boss_A, boss_B, dice_roller)
+  def apply_tactics_actions(game_state, boss_A, boss_B, dice_roller)
     played_tactics.each do |played_tactic|
       if played_tactic.immediate?
-        played_tactic.apply_preactions(game_snapshot, boss_A, boss_B) if boss_A.nil?
+        played_tactic.apply_preactions(game_state, boss_A, boss_B) if boss_A.nil?
       else
         Logger.subheader("Applying #{played_tactic.tactic} played by '#{played_tactic.party_played_by}' on '#{played_tactic.party_played_on}'s bill").indent
-        played_tactic.apply_actions(game_snapshot.board, self,
+        played_tactic.apply_actions(game_state.board, self,
                                     boss_A, boss_B, dice_roller)
         Logger.unindent
       end
     end
   end
 
-  def get_tactics(game_snapshot, boss_A, boss_B)
+  def get_tactics(game_state, boss_A, boss_B)
     last_last_was_pass = false
     last_was_pass = false
-    party = game_snapshot.board.tactics_lead_party
+    party = game_state.board.tactics_lead_party
     while !last_was_pass || !last_last_was_pass
-      Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor(self, game_snapshot.board))
+      Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor(self, game_state.board))
       Logger.header("Boss #{party} choosing a tactic").indent
       arr = (party == 'A' ? boss_A : boss_B).get_tactic(self)
       tactic = arr[0]
@@ -181,18 +181,18 @@ class LegislativeSession < BaseObject
                                          index ? bills_B[index] : nil,
                                          tactic,
                                          nil, nil, nil)
-        if !played_tactic.can_play(game_snapshot.board)
+        if !played_tactic.can_play(game_state.board)
           Logger.error "This tactic cannot be played like this"
           # make them choose again
           party = (party == 'A' ? 'B' : 'A')
         else
           last_was_pass = false
           # remove from the hand
-          game_snapshot.send("hand_#{party}").tactics.delete_if do |hand_tactic|
+          game_state.send("hand_#{party}").tactics.delete_if do |hand_tactic|
             hand_tactic.equals?(tactic)
           end
           # handle filibusters, tabling motions, and clotures
-          played_tactic.apply_preactions(game_snapshot, boss_A, boss_B)
+          played_tactic.apply_preactions(game_state, boss_A, boss_B)
           # make it official
           played_tactics.push(played_tactic)
         end

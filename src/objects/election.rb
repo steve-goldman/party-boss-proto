@@ -33,21 +33,21 @@ class Election < BaseObject
     @result[index]
   end
 
-  def Election.run_election(game_snapshot, boss_A, boss_B, dice_roller)
+  def Election.run_election(game_state, boss_A, boss_B, dice_roller)
     # create the election
     Logger.header("Boss 'A' choosing candidates").indent
-    candidates_A = boss_A.get_candidates(game_snapshot)
+    candidates_A = boss_A.get_candidates(game_state)
     Logger.unindent
     Logger.header("Boss 'B' choosing candidates").indent
-    candidates_B = boss_B.get_candidates(game_snapshot)
+    candidates_B = boss_B.get_candidates(game_state)
     Logger.unindent
-    Logger.header(ElectionRenderer.get.render_matchups game_snapshot.board, candidates_A, candidates_B)
+    Logger.header(ElectionRenderer.get.render_matchups game_state.board, candidates_A, candidates_B)
     Logger.header("Boss 'A' choosing dice allocation").indent
-    allocation_A = boss_A.get_allocation(game_snapshot.board.num_fundraising_dice(candidates_A),
+    allocation_A = boss_A.get_allocation(game_state.board.num_fundraising_dice(candidates_A),
                                          Politician.matchup_descriptions(candidates_A, candidates_B))
     Logger.unindent
     Logger.header("Boss 'B' choosing dice allocation").indent
-    allocation_B = boss_B.get_allocation(game_snapshot.board.num_fundraising_dice(candidates_B),
+    allocation_B = boss_B.get_allocation(game_state.board.num_fundraising_dice(candidates_B),
                                          Politician.matchup_descriptions(candidates_B, candidates_A))
     Logger.unindent
     election = Election.new(candidates_A,
@@ -58,7 +58,7 @@ class Election < BaseObject
                             dice_roller.get_outcomes(allocation_B),
                             [], [], [], [])
 
-    game_snapshot.apply_election(election, false)
+    game_state.apply_election(election, false)
   end
 
   def points(index, board, party)

@@ -21,9 +21,9 @@ class PlayedTactic < BaseObject
     end.empty?
   end
 
-  def apply_preactions(game_snapshot, boss_A, boss_B)
+  def apply_preactions(game_state, boss_A, boss_B)
     if tactic.filibuster?
-      apply_filibuster(game_snapshot, boss_A, boss_B)
+      apply_filibuster(game_state, boss_A, boss_B)
     end
   end
 
@@ -39,9 +39,9 @@ class PlayedTactic < BaseObject
 
   private
 
-  def apply_filibuster(game_snapshot, boss_A, boss_B)
+  def apply_filibuster(game_state, boss_A, boss_B)
     if drawn_tactic.nil?
-      drawn_tactics = game_snapshot.deal_tactics(party_played_by, 1)
+      drawn_tactics = game_state.deal_tactics(party_played_by, 1)
       if !drawn_tactics.empty?
         self.drawn_tactic = drawn_tactics[0]
       else
@@ -49,13 +49,13 @@ class PlayedTactic < BaseObject
       end
     else
       # drawn tactic comes out of the deck
-      game_snapshot.delete_from(game_snapshot.tactic_deck, drawn_tactic)
+      game_state.delete_from(game_state.tactic_deck, drawn_tactic)
     end
 
     # drawn tactic goes into the hand
     if drawn_tactic != Tactic::Pass
       Logger.subheader "Boss '#{party_played_by}' filibustered and drew #{drawn_tactic}"
-      game_snapshot.send("hand_#{party_played_by}").tactics.push(drawn_tactic)
+      game_state.send("hand_#{party_played_by}").tactics.push(drawn_tactic)
     else
       Logger.subheader "The '#{party_played_by}' filibustered but the tactics deck was empty"
     end

@@ -1,5 +1,5 @@
 require_relative '../objects/config'
-require_relative '../objects/game_snapshot'
+require_relative '../objects/game_state'
 require_relative 'logger'
 
 class HumanBoss
@@ -9,13 +9,13 @@ class HumanBoss
     @hand = hand
   end
 
-  def get_candidates(game_snapshot)
+  def get_candidates(game_state)
     while true
       # don't spoil the data until the user confirms
       temp_politicians = @hand.politicians.clone
       # get the candidates from the user
       i = 0
-      candidates = game_snapshot.board.office_holders.map do |office_holder|
+      candidates = game_state.board.office_holders.map do |office_holder|
         i += 1
         Logger.subheader("Selecting candidate for race ##{i}").indent
         if @party == office_holder.party
@@ -27,7 +27,7 @@ class HumanBoss
         end
       end
       # ask user to confirm
-      if confirm_candidates game_snapshot.board.office_holders, candidates
+      if confirm_candidates game_state.board.office_holders, candidates
         return candidates
       end
     end

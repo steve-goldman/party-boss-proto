@@ -3,7 +3,7 @@ require_relative 'config'
 require_relative 'board'
 require_relative 'hand'
 
-class GameSnapshot < BaseObject
+class GameState < BaseObject
 
   # define the data that goes in this object
   Members = [
@@ -17,7 +17,7 @@ class GameSnapshot < BaseObject
   ]
 
   # utility method for creating a new game
-  def GameSnapshot.new_game
+  def GameState.new_game
     # create the decks of politicians
     politician_deck = Politician.from_array_file('src/data/politicians.json').shuffle
     bill_deck = Bill.from_array_file('src/data/bills.json').shuffle
@@ -31,20 +31,20 @@ class GameSnapshot < BaseObject
     # create the board
     board = Board.new(state_of_the_union_deck.pop, office_holders, ['A', 'B'].shuffle[0], [], [], 0, 0)
     # create the snapshot
-    game_snapshot = GameSnapshot.new(board,
-                                     Hand.new([], [], []),
-                                     Hand.new([], [], []),
-                                     politician_deck,
-                                     bill_deck,
-                                     state_of_the_union_deck,
-                                     tactic_deck)
+    game_state = GameState.new(board,
+                               Hand.new([], [], []),
+                               Hand.new([], [], []),
+                               politician_deck,
+                               bill_deck,
+                               state_of_the_union_deck,
+                               tactic_deck)
     # deal the cards
     ['A', 'B'].each do |party|
-      game_snapshot.send("hand_#{party}").politicians.concat(game_snapshot.deal_politicians party)
-      game_snapshot.send("hand_#{party}").bills.concat(game_snapshot.deal_bills party)
-      game_snapshot.send("hand_#{party}").tactics.concat(game_snapshot.deal_tactics party, Config.get.tactics_num_initial)
+      game_state.send("hand_#{party}").politicians.concat(game_state.deal_politicians party)
+      game_state.send("hand_#{party}").bills.concat(game_state.deal_bills party)
+      game_state.send("hand_#{party}").tactics.concat(game_state.deal_tactics party, Config.get.tactics_num_initial)
     end
-    game_snapshot
+    game_state
   end
 
   def apply_election(election, is_replay)

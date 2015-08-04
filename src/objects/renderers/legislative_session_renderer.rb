@@ -39,8 +39,8 @@ class LegislativeSessionRenderer < Renderer
   def results(legislative_session, board)
     Config.get.bills_num_on_floor.times.map { |index|
       [
-        two_sides(legislative_session.bills_A[index],
-                  legislative_session.bills_B[index]),
+        two_sides(legislative_session.get_bill_on_floor(index, 'A'),
+                  legislative_session.get_bill_on_floor(index, 'B')),
         two_sides(worth(legislative_session, board, index, 'A'),
                   worth(legislative_session, board, index, 'B')),
         two_sides(cost(legislative_session, index, 'A'),
@@ -99,12 +99,14 @@ class LegislativeSessionRenderer < Renderer
     end
     if tactics_A.empty? && tactics_B.empty?
       [
-        two_sides(legislative_session.bills_A[index], legislative_session.bills_B[index]),
+        two_sides(legislative_session.get_bill_on_floor(index, 'A'),
+                  legislative_session.get_bill_on_floor(index, 'B')),
         underline
       ].join("\n")
     else
       [
-        two_sides(legislative_session.bills_A[index], legislative_session.bills_B[index]),
+        two_sides(legislative_session.get_bill_on_floor(index, 'A'),
+                  legislative_session.get_bill_on_floor(index, 'B')),
         underline
       ]
         .concat([tactics_A.count, tactics_B.count].max.times.map { |index|

@@ -18,7 +18,7 @@ class Action < BaseObject
   def add_bill_cost(args)
     direction = params.how_many > 0 ? "Increasing" : "Decreasing"
     party = target_party(args)
-    bill = args[:legislative_session].send("bills_#{party}")[args[:index]]
+    bill = args[:legislative_session].get_bill_on_floor(args[:index], party)
     Logger.log("#{direction} cost of #{bill} by #{params.how_many.to_i.abs}")
     old_cost = args[:legislative_session].bill_cost(args[:index], party)
     new_cost = args[:legislative_session].incr_bill_cost(args[:index], party,
@@ -28,7 +28,7 @@ class Action < BaseObject
 
   def add_bill_cost_by_dice(args)
     party = target_party(args)
-    bill = args[:legislative_session].send("bills_#{party}")[args[:index]]
+    bill = args[:legislative_session].get_bill_on_floor(args[:index], party)
     Logger.log("Rolling #{args[:how_many_dice]} dice to add to cost of #{bill}")
     if args[:played_tactic].outcomes.nil?
       args[:played_tactic].outcomes =
@@ -42,14 +42,14 @@ class Action < BaseObject
   end
 
   def all_dice_count_as(args)
-    bill = args[(args[:party_played_on] == 'A') ? :bill_A : :bill_B]
+    bill = args[:legislative_session].get_bill_on_floor(args[:index], args[:party_played_on])
     Logger.log("Making all dice count as #{params.how_many} for #{bill}")
     args[:legislative_session].set_all_dice_count_as(args[:index], args[:party_played_on], params.how_many)
   end
 
   def send_dice_to_cloakroom(args)
     party = target_party(args)
-    bill = args[:legislative_session].send("bills_#{party}")[args[:index]]
+    bill = args[:legislative_session].get_bill_on_floor(args[:index], party)
     Logger.log("Sending all dice but #{params.all_but_how_many} dice to cloakroom for #{bill}")
     old_allocation = args[:legislative_session].get_bill_allocation(args[:index], party)
     new_allocation = args[:legislative_session].set_bill_allocation(args[:index], party,
@@ -59,7 +59,7 @@ class Action < BaseObject
 
   def take_cloakroom_dice(args)
     party = target_party(args)
-    bill = args[:legislative_session].send("bills_#{party}")[args[:index]]
+    bill = args[:legislative_session].get_bill_on_floor(args[:index], party)
     Logger.log("Taking #{params.how_many} dice from cloakroom for #{bill}")
     old_allocation = args[:legislative_session].get_bill_allocation(args[:index], party)
     new_allocation = args[:legislative_session].change_bill_allocation(args[:index], party, params.how_many)
@@ -67,7 +67,7 @@ class Action < BaseObject
   end
 
   def take_dice_from_opponent(args)
-    bill = args[:legislative_session].send("bills_#{args[:party_played_by]}")[args[:index]]
+    bill = args[:legislative_session].get_bill_on_floor(args[:index], args[:party_played_by])
     Logger.log("Taking #{params.how_many} dice from opponent's bill #{bill}")
     old_allocation = args[:legislative_session].get_bill_allocation(args[:index], args[:party_played_by])
     new_allocation = args[:legislative_session].give_dice_to_opponent(args[:index], args[:party_played_by],
@@ -85,9 +85,9 @@ class Action < BaseObject
   end
 
   def target_party(args)
-    (params.which.nil? || params.which == "same") ?
+    (params.which.nil? || params.which == 'same') ?
       (args[:party_played_on] == 'A' ? 'A' : 'B') :
-      params.which == "opposite" ?
+      params.which == 'opposite' ?
         (args[:party_played_on] == 'A' ? 'B' : 'A') :
         nil
   end

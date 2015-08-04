@@ -23,6 +23,10 @@ class Tactic < BaseObject
     return name.start_with? 'Filibuster'
   end
 
+  def tabling_motion?
+    return name.start_with? 'Tabling Motion'
+  end
+
   def must_play_on_party(party)
     preconditions.each do |precondition|
       if precondition.precondition == 'played_on_party'

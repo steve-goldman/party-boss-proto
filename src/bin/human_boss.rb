@@ -131,7 +131,7 @@ class HumanBoss
   def input_floor_matchup_index(legislative_session)
     # show the list
     Config.get.bills_num_on_floor.times do |index|
-      Logger.log "#{index + 1}: #{legislative_session.bills_A[index]} | #{legislative_session.bills_B[index]}"
+      Logger.log "#{index + 1}: #{legislative_session.get_bill_on_floor(index, 'A')} | #{legislative_session.get_bill_on_floor(index, 'B')}"
     end
 
     while true
@@ -190,7 +190,7 @@ class HumanBoss
   def confirm_tactic(legislative_session, tactic, index, party)
     Logger.subheader("You have selected:").indent
     Logger.log "#{tactic}"
-    Logger.log "#{legislative_session.bills_A[index]} | #{legislative_session.bills_B[index]}"
+    Logger.log "#{legislative_session.get_bill_on_floor(index, 'A')} | #{legislative_session.get_bill_on_floor(index, 'A')}"
     Logger.log "Party '#{party}'s bill"
     Logger.unindent
     confirm

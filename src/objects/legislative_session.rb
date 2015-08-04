@@ -30,6 +30,8 @@ class LegislativeSession < BaseObject
     @bill_B_all_dice_outcomes = bills_B.map { -1 }
     @allocation_A = allocation_A.clone
     @allocation_B = allocation_B.clone
+    @current_bills_A = bills_A.clone
+    @current_bills_B = bills_B.clone
   end
   
   def LegislativeSession.run_session(game_state, boss_A, boss_B, dice_roller)
@@ -70,8 +72,8 @@ class LegislativeSession < BaseObject
   end
 
   def passes?(index, party)
-    bill = send("bills_#{party}")[index]
-    send("outcomes_#{party}")[index].sum >= bill_cost(index, party) ? bill : nil
+    send("outcomes_#{party}")[index].sum >= bill_cost(index, party) ?
+      get_bill_on_floor(index, party) : nil
   end
 
   def vps(index, party, board)
@@ -80,7 +82,7 @@ class LegislativeSession < BaseObject
   end
 
   def bill_vps(index, party, board)
-    bill = send("bills_#{party}")[index]
+    bill = get_bill_on_floor(index, party)
     (bill.sector == board.state_of_the_union.priorities[0] ? 1 : 0) +
       (party == 'A' ? @bill_A_vps[index] : @bill_B_vps[index])
   end
@@ -147,6 +149,24 @@ class LegislativeSession < BaseObject
     end
   end
 
+  def get_bill_on_floor(index, party)
+    party == 'A' ?
+      @current_bills_A[index] :
+      @current_bills_B[index]
+  end
+
+  def get_bills_on_floor(party)
+    party == 'A' ?
+      @current_bills_A :
+      @current_bills_B
+  end
+
+  def table_bill(index, party, replacement_bill)
+    party == 'A' ?
+      @current_bills_A[index] = replacement_bill :
+      @current_bills_B[index] = replacement_bill
+  end
+
   def get_tactics(game_state, boss_A, boss_B)
     last_last_was_pass = false
     last_was_pass = false
@@ -162,7 +182,7 @@ class LegislativeSession < BaseObject
       else
         index = arr[1]; party_played_on = arr[2]
         played_tactic = PlayedTactic.new(party, party_played_on, index, tactic,
-                                         nil, nil, nil)
+                                         nil, nil, nil, nil)
         if !played_tactic.can_play(game_state.board, self)
           Logger.error "This tactic cannot be played like this"
           # make them choose again

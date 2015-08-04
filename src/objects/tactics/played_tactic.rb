@@ -5,13 +5,14 @@ class PlayedTactic < BaseObject
 
   # define the data that goes in this object
   Members = [
-    { name: "party_played_by", type: String,       can_be_nil: true },
-    { name: "party_played_on", type: String,       can_be_nil: true },
-    { name: "index",           type: Integer,      can_be_nil: true },
-    { name: "tactic",          type: Tactic },
-    { name: "drawn_tactic",    type: Tactic,       can_be_nil: true },
-    { name: "outcomes",        type: DiceOutcome,  can_be_nil: true },
-    { name: "or_index",        type: Integer,      can_be_nil: true },
+    { name: "party_played_by",  type: String,       can_be_nil: true },
+    { name: "party_played_on",  type: String,       can_be_nil: true },
+    { name: "index",            type: Integer,      can_be_nil: true },
+    { name: "tactic",           type: Tactic                         },
+    { name: "drawn_tactic",     type: Tactic,       can_be_nil: true },
+    { name: "replacement_bill", type: Tactic,       can_be_nil: true },
+    { name: "outcomes",         type: DiceOutcome,  can_be_nil: true },
+    { name: "or_index",         type: Integer,      can_be_nil: true },
   ]
 
   def can_play(board, legislative_session)
@@ -23,6 +24,8 @@ class PlayedTactic < BaseObject
   def apply_preactions(game_state, boss_A, boss_B)
     if tactic.filibuster?
       apply_filibuster(game_state, boss_A, boss_B)
+    elsif tactic.tabling_motion?
+      apply_tabling_motion(game_state, boss_A, boss_B)
     end
   end
 
@@ -33,7 +36,7 @@ class PlayedTactic < BaseObject
   end
 
   def immediate?
-    tactic.filibuster?
+    tactic.filibuster? || tactic.tabling_motion?
   end
 
   private
@@ -60,6 +63,14 @@ class PlayedTactic < BaseObject
     end
   end
 
+  def apply_tabling_motion(game_state, boss_A, boss_B)
+    if replacement_bill.nil?
+
+    else
+      
+    end
+  end
+  
   def precondition_args(board, legislative_session)
     {
       party_played_by: party_played_by,

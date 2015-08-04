@@ -109,7 +109,7 @@ class GameState < BaseObject
   def apply_legislative_session(legislative_session, is_replay)
     ['A', 'B'].each do |party|
       # remove bills from hands
-      legislative_session.send("bills_#{party}").each do |bill|
+      legislative_session.get_bills_on_floor(party).each do |bill|
         delete_from(send("hand_#{party}").bills, bill)
       end
 
@@ -143,7 +143,7 @@ class GameState < BaseObject
     ['A', 'B'].each do |party|
       Config.get.bills_num_on_floor.times do |index|
         if !legislative_session.passes?(index, party)
-          bill_deck.push(legislative_session.send("bills_#{party}")[index])
+          bill_deck.push(legislative_session.get_bill_on_floor(index, party))
         end
       end
     end

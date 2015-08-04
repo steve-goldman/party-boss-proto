@@ -59,9 +59,7 @@ class GameSnapshot < BaseObject
       else
         # this is a replay, so take the dealt cards out of the deck
         election.send("tactics_dealt_#{party}").each do |tactic|
-          tactic_deck.delete_if do |deck_tactic|
-            deck_tactic.equals?(tactic)
-          end
+          delete_from(tactic_deck, tactic)
         end
       end
       # put the cards in the hand
@@ -72,9 +70,7 @@ class GameSnapshot < BaseObject
     # remove candidates from hands
     ['A', 'B'].each do |party|
       election.send("candidates_#{party}").each do |candidate|
-        send("hand_#{party}").politicians.delete_if do |politician|
-          politician.equals?(candidate)
-        end
+        delete_from(send("hand_#{party}").politicians, candidate)
       end
     end
 
@@ -93,9 +89,7 @@ class GameSnapshot < BaseObject
       else
         # this is a replay, so take the dealt cards out of the deck
         election.send("politicians_dealt_#{party}").each do |politician|
-          politician_deck.delete_if do |deck_politician|
-            deck_politician.equals?(politician)
-          end
+          delete_from(politician_deck, politician)
         end
       end
       # put the cards in the hand
@@ -116,9 +110,7 @@ class GameSnapshot < BaseObject
     ['A', 'B'].each do |party|
       # remove bills from hands
       legislative_session.send("bills_#{party}").each do |bill|
-        send("hand_#{party}").bills.delete_if do |hand_bill|
-          hand_bill.equals?(bill)
-        end
+        delete_from(send("hand_#{party}").bills, bill)
       end
 
       # sign winners into law
@@ -139,9 +131,7 @@ class GameSnapshot < BaseObject
       else
         # this is a replay, so take the dealt cards out of the deck
         legislative_session.send("bills_dealt_#{party}").each do |bill|
-          bill_deck.delete_if do |deck_bill|
-            deck_bill.equals?(bill)
-          end
+          delete_from(bill_deck, bill)
         end
       end
       # put the cards in the hand
@@ -163,15 +153,19 @@ class GameSnapshot < BaseObject
       # remove from the hand if is a replay
       if is_replay
         hand = send("hand_#{played_tactic.party_played_by}")
-        hand.tactics.delete_if do |tactic|
-          tactic.equals?(played_tactic.tactic)
-        end
+        delete_from(hand.tactics, played_tactic.tactic)
       end
       # put played tactics back in the deck
       tactic_deck.push(played_tactic.tactic)
     end
 
     legislative_session
+  end
+
+  def delete_from(array, elem)
+    array.delete_if do |array_elem|
+      array_elem.equals?(elem)
+    end
   end
 
   def deal_politicians(party)
@@ -202,9 +196,7 @@ class GameSnapshot < BaseObject
     if !is_replay
       cycle.next_state_of_the_union = state_of_the_union_deck.shuffle!.pop
     else
-      state_of_the_union_deck.delete_if do |deck_state_of_the_union|
-        deck_state_of_the_union.equals?(cycle.next_state_of_the_union)
-      end
+      delete_from(state_of_the_union_deck, cycle.next_state_of_the_union)
     end
     board.state_of_the_union = cycle.next_state_of_the_union
     state_of_the_union_deck.push old_state_of_the_union

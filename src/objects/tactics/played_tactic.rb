@@ -49,9 +49,7 @@ class PlayedTactic < BaseObject
       end
     else
       # drawn tactic comes out of the deck
-      game_snapshot.tactic_deck.delete_if do |deck_tactic|
-        deck_tactic.equals?(drawn_tactic)
-      end
+      game_snapshot.delete_from(game_snapshot.tactic_deck, drawn_tactic)
     end
 
     # drawn tactic goes into the hand

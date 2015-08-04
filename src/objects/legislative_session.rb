@@ -10,8 +10,6 @@ class LegislativeSession < BaseObject
   Members = [
     { name: "bills_A",        type: Bill,         is_array: true },
     { name: "bills_B",        type: Bill,         is_array: true },
-    { name: "num_dice_A",     type: Integer,                     },
-    { name: "num_dice_B",     type: Integer,                     },
     { name: "allocation_A",   type: DiceAllocation               },
     { name: "allocation_B",   type: DiceAllocation               },
     { name: "played_tactics", type: PlayedTactic, is_array: true },
@@ -37,24 +35,20 @@ class LegislativeSession < BaseObject
   end
   
   def LegislativeSession.run_session(game_state, boss_A, boss_B, dice_roller)
-    num_dice_A = game_state.board.num_leadership_dice('A')
-    num_dice_B = game_state.board.num_leadership_dice('B')
-
     Logger.header("Boss 'A' choosing bills").indent
     bills_A = boss_A.get_bills
     Logger.unindent
     Logger.header("Boss 'A' choosing dice allocation").indent
-    allocation_A = boss_A.get_allocation(num_dice_A, bills_A)
+    allocation_A = boss_A.get_allocation(game_state.board.num_leadership_dice('A'), bills_A)
     Logger.unindent
     Logger.header("Boss 'B' choosing bills").indent
     bills_B = boss_B.get_bills
     Logger.unindent
     Logger.header("Boss 'B' choosing dice allocation").indent
-    allocation_B = boss_B.get_allocation(num_dice_B, bills_B)
+    allocation_B = boss_B.get_allocation(game_state.board.num_leadership_dice('B'), bills_B)
     Logger.unindent
 
     legislative_session = LegislativeSession.new(bills_A, bills_B,
-                                                 num_dice_A, num_dice_B,
                                                  allocation_A, allocation_B,
                                                  [], [], [], [], [])
 
@@ -122,8 +116,8 @@ class LegislativeSession < BaseObject
 
   def change_bill_allocation(index, party, delta)
     party == 'A' ?
-      @allocation_A.counts[index] += [num_dice_A - @allocation_A.sum, delta].min :
-      @allocation_B.counts[index] += [num_dice_B - @allocation_B.sum, delta].min
+      @allocation_A.counts[index] += [Config.get.leadership_dice_max - @allocation_A.sum, delta].min :
+      @allocation_B.counts[index] += [Config.get.leadership_dice_max - @allocation_B.sum, delta].min
   end
 
   def give_dice_to_opponent(index, party, count)

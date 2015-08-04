@@ -190,7 +190,7 @@ class HumanBoss
   def confirm_tactic(legislative_session, tactic, index, party)
     Logger.subheader("You have selected:").indent
     Logger.log "#{tactic}"
-    Logger.log "#{legislative_session.get_bill_on_floor(index, 'A')} | #{legislative_session.get_bill_on_floor(index, 'A')}"
+    Logger.log "#{legislative_session.get_bill_on_floor(index, 'A')} | #{legislative_session.get_bill_on_floor(index, 'B')}"
     Logger.log "Party '#{party}'s bill"
     Logger.unindent
     confirm

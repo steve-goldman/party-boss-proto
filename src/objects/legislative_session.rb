@@ -162,9 +162,15 @@ class LegislativeSession < BaseObject
   end
 
   def table_bill(index, party, replacement_bill)
-    party == 'A' ?
-      @current_bills_A[index] = replacement_bill :
+    if party == 'A'
+      @current_bills_A[index] = replacement_bill
+      @bill_A_vps[index]      = replacement_bill.vps
+      @bill_A_cost[index]     = replacement_bill.vps
+    else
       @current_bills_B[index] = replacement_bill
+      @bill_B_vps[index]      = replacement_bill.vps
+      @bill_B_cost[index]     = replacement_bill.vps
+    end
   end
 
   def get_tactics(game_state, boss_A, boss_B)

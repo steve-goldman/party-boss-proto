@@ -109,6 +109,6 @@ class GameEngine
 
 end
 
-engine = GameEngine.new(Game.from_file('input.json'))
-#engine = GameEngine.new(nil)
+#engine = GameEngine.new(Game.from_file('input.json'))
+engine = GameEngine.new(nil)
 engine.run((ARGV.shift || 1).to_i).to_file('output.json')

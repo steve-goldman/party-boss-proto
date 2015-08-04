@@ -89,22 +89,11 @@ class LegislativeSession < BaseObject
     party == 'A' ? @bill_A_cost[index] : @bill_B_cost[index]
   end
 
-  def get_bill_cost(bill)
-    party_index = get_bill_party_index(bill)
-    return bill_cost(party_index[0], party_index[1])
-  end
-
-  def change_bill_cost(bill, delta)
-    party_index = get_bill_party_index(bill)
-    return incr_bill_cost(party_index[0], party_index[1], delta)
-  end
-
-  def set_all_dice_count_as(bill, count)
-    party_index = get_bill_party_index(bill)
-    party_index[1] == 'A' ?
-      @bill_A_all_dice_outcomes[party_index[0]] = count :
-      @bill_B_all_dice_outcomes[party_index[0]] = count
-    outcomes = party_index[1] == 'A' ? @bill_A_all_dice_outcomes : @bill_B_all_dice_outcomes
+  def set_all_dice_count_as(index, party, count)
+    party == 'A' ?
+      @bill_A_all_dice_outcomes[index] = count :
+      @bill_B_all_dice_outcomes[index] = count
+    outcomes = party == 'A' ? @bill_A_all_dice_outcomes : @bill_B_all_dice_outcomes
   end
 
   def all_dice_outcomes(party)
@@ -115,37 +104,33 @@ class LegislativeSession < BaseObject
     party == 'A' ? @allocation_A : @allocation_B
   end
 
-  def get_bill_allocation(bill)
-    party_index = get_bill_party_index(bill)
-    party_index[1] == 'A' ?
-      @allocation_A.counts[party_index[0]] :
-      @allocation_B.counts[party_index[0]]
+  def get_bill_allocation(index, party)
+    party == 'A' ?
+      @allocation_A.counts[index] :
+      @allocation_B.counts[index]
   end
 
-  def set_bill_allocation(bill, count)
-    party_index = get_bill_party_index(bill)
-    party_index[1] == 'A' ?
-      @allocation_A.counts[party_index[0]] = count :
-      @allocation_B.counts[party_index[0]] = count
+  def set_bill_allocation(index, party, count)
+    party == 'A' ?
+      @allocation_A.counts[index] = count :
+      @allocation_B.counts[index] = count
   end
 
-  def change_bill_allocation(bill, delta)
-    party_index = get_bill_party_index(bill)
-    party_index[1] == 'A' ?
-      @allocation_A.counts[party_index[0]] += [num_dice_A - @allocation_A.sum, delta].min :
-      @allocation_B.counts[party_index[0]] += [num_dice_B - @allocation_B.sum, delta].min
+  def change_bill_allocation(index, party, delta)
+    party == 'A' ?
+      @allocation_A.counts[index] += [num_dice_A - @allocation_A.sum, delta].min :
+      @allocation_B.counts[index] += [num_dice_B - @allocation_B.sum, delta].min
   end
 
-  def give_dice_to_opponent(bill, count)
-    party_index = get_bill_party_index(bill)
-    if party_index[1] == 'A'
-      delta = [count, @allocation_A.counts[party_index[0]]].min
-      @allocation_B.counts[party_index[0]] += delta
-      @allocation_A.counts[party_index[0]] -= delta
+  def give_dice_to_opponent(index, party, count)
+    if party == 'A'
+      delta = [count, @allocation_A.counts[index]].min
+      @allocation_B.counts[index] += delta
+      @allocation_A.counts[index] -= delta
     else
-      delta = [count, @allocation_B.counts[party_index[0]]].min
-      @allocation_A.counts[party_index[0]] += delta
-      @allocation_B.counts[party_index[0]] -= delta
+      delta = [count, @allocation_B.counts[index]].min
+      @allocation_A.counts[index] += delta
+      @allocation_B.counts[index] -= delta
     end
   end
 
@@ -209,15 +194,6 @@ class LegislativeSession < BaseObject
     party == 'A' ?
       @bill_A_cost[index] = [@bill_A_cost[index] + delta, 0].max :
       @bill_B_cost[index] = [@bill_B_cost[index] + delta, 0].max
-  end
-
-  def get_bill_party_index(bill)
-    ['A', 'B'].each do |party|
-      bills = send("bills_#{party}") 
-      bills.each_index do |index|
-        return [index, party] if bill.equals?(bills[index])
-      end
-    end
   end
 
 end

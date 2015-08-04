@@ -59,7 +59,7 @@ class Precondition < BaseObject
     party = params.who == 'self' ? (args[:party_played_by] == 'A' ? 'A' : 'B') :
       params.who == 'opponent' ? (args[:party_played_by] == 'A' ? 'B' : 'A') :
         nil
-    args[:legislative_session].send("bill_#{party}")
+    args[:legislative_session].send("bills_#{party}")[args[:index]]
   end
 
   def operate(operand_A, operand_B)

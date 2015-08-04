@@ -139,7 +139,7 @@ class LegislativeSession < BaseObject
   def apply_tactics_actions(game_state, boss_A, boss_B, dice_roller)
     played_tactics.each do |played_tactic|
       if played_tactic.immediate?
-        played_tactic.apply_preactions(game_state, boss_A, boss_B) if boss_A.nil?
+        played_tactic.apply_preactions(self, game_state, boss_A, boss_B) if boss_A.nil?
       else
         Logger.subheader("Applying #{played_tactic.tactic} played by '#{played_tactic.party_played_by}' on '#{played_tactic.party_played_on}'s bill").indent
         played_tactic.apply_actions(game_state.board, self,
@@ -200,7 +200,7 @@ class LegislativeSession < BaseObject
             hand_tactic.equals?(tactic)
           end
           # handle filibusters, tabling motions, and clotures
-          played_tactic.apply_preactions(game_state, boss_A, boss_B)
+          played_tactic.apply_preactions(self, game_state, boss_A, boss_B)
           # make it official
           played_tactics.push(played_tactic)
         end

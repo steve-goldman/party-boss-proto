@@ -103,6 +103,18 @@ class HumanBoss
     end
   end
 
+  def get_bill(mask_out_bills)
+    temp_bills = @hand.bills.select do |bill|
+      mask_out_bills.select { |mask_bill| mask_bill.equals?(bill) }.empty?
+    end
+    while true
+      bill = input_from_array(temp_bills, false)
+      if confirm_bills [bill]
+        return bill
+      end
+    end
+  end
+
   private
 
   def input_from_array(options, remove, zero_okay = false)

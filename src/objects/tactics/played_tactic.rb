@@ -10,7 +10,7 @@ class PlayedTactic < BaseObject
     { name: "bill_A",          type: Bill,         can_be_nil: true },
     { name: "bill_B",          type: Bill,         can_be_nil: true },
     { name: "tactic",          type: Tactic },
-    { name: "drawn_tactics",   type: Tactic,       can_be_nil: true, is_array: true },
+    { name: "drawn_tactic",    type: Tactic,       can_be_nil: true },
     { name: "outcomes",        type: DiceOutcome,  can_be_nil: true },
     { name: "or_index",        type: Integer,      can_be_nil: true },
   ]

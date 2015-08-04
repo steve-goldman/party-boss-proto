@@ -166,11 +166,11 @@ class GameSnapshot < BaseObject
         hand.tactics.delete_if do |tactic|
           tactic.equals?(played_tactic.tactic)
         end
-        if !played_tactic.drawn_tactics.nil?
-          played_tactic.drawn_tactics.each do |drawn_tactic|
-            tactic_deck.delete_if { |deck_tactic| deck_tactic.equals?(drawn_tactic) }
-            hand.tactics.push drawn_tactic
+        if !played_tactic.drawn_tactic.nil?
+          tactic_deck.delete_if do |deck_tactic|
+            deck_tactic.equals?(played_tactic.drawn_tactic)
           end
+          hand.tactics.push played_tactic.drawn_tactic
         end
       end
       # put played tactics back in the deck

@@ -194,12 +194,12 @@ class LegislativeSession < BaseObject
         last_last_was_pass = true if last_was_pass
         last_was_pass = true
       else
-        drawn_tactics = LegislativeSession.handle_filibuster(game_snapshot, tactic, party)
+        drawn_tactic = LegislativeSession.handle_filibuster(game_snapshot, tactic, party)
         index = arr[1]; party_played_on = arr[2]
         played_tactic = PlayedTactic.new(party, party_played_on,
                                          index ? legislative_session.bills_A[index] : nil,
                                          index ? legislative_session.bills_B[index] : nil,
-                                         tactic, drawn_tactics,
+                                         tactic, drawn_tactic,
                                          nil, nil)
         if !played_tactic.can_play(game_snapshot.board)
           Logger.error "This tactic cannot be played like this"
@@ -224,13 +224,14 @@ class LegislativeSession < BaseObject
       if !drawn_tactics.empty?
         game_snapshot.send("hand_#{party}").tactics.concat(drawn_tactics)
         Logger.subheader("You drew: #{drawn_tactics[0]}")
+        drawn_tactics[0]
       else
         Logger.subheader("The tactics deck is empty")
+        nil
       end
     else
-      drawn_tactics = nil
+      nil
     end
-    drawn_tactics
   end
 
 end

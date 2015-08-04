@@ -48,6 +48,8 @@ class GameEngine
       Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor(legislative_session,
                                                                          @game_state.board))
 
+      legislative_session.apply_tactics_preactions(@game_state)
+
       legislative_session.apply_tactics_actions(@game_state, nil, nil, nil)
 
       @game_state.apply_legislative_session(legislative_session, true)
@@ -109,6 +111,6 @@ class GameEngine
 
 end
 
-#engine = GameEngine.new(Game.from_file('input.json'))
-engine = GameEngine.new(nil)
+engine = GameEngine.new(Game.from_file('input.json'))
+#engine = GameEngine.new(nil)
 engine.run((ARGV.shift || 1).to_i).to_file('output.json')

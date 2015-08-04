@@ -136,11 +136,15 @@ class LegislativeSession < BaseObject
     end
   end
 
+  def apply_tactics_preactions(game_state)
+    played_tactics.each do |played_tactic|
+      played_tactic.apply_preactions(self, game_state, nil, nil)
+    end
+  end
+
   def apply_tactics_actions(game_state, boss_A, boss_B, dice_roller)
     played_tactics.each do |played_tactic|
-      if played_tactic.immediate?
-        played_tactic.apply_preactions(self, game_state, boss_A, boss_B) if boss_A.nil?
-      else
+      if !played_tactic.immediate?
         Logger.subheader("Applying #{played_tactic.tactic} played by '#{played_tactic.party_played_by}' on '#{played_tactic.party_played_on}'s bill").indent
         played_tactic.apply_actions(game_state.board, self,
                                     boss_A, boss_B, dice_roller)

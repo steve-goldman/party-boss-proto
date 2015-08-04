@@ -19,7 +19,7 @@ class Tactic < BaseObject
     name
   end
 
-  def is_filibuster
+  def filibuster?
     return name.start_with? 'Filibuster'
   end
 

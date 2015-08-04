@@ -54,12 +54,12 @@ class LegislativeSession < BaseObject
                                                  allocation_A, allocation_B,
                                                  [], [], [], [], [])
 
-    LegislativeSession.get_tactics(legislative_session, game_snapshot, boss_A, boss_B)
+    legislative_session.get_tactics(game_snapshot, boss_A, boss_B)
     
     Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor(legislative_session,
                                                                        game_snapshot.board))
 
-    LegislativeSession.apply_tactics_actions(legislative_session, game_snapshot, boss_A, boss_B, dice_roller)
+    legislative_session.apply_tactics_actions(game_snapshot, boss_A, boss_B, dice_roller)
 
     legislative_session.outcomes_A.concat(dice_roller.get_outcomes(legislative_session.get_allocation('A'),
                                                                    legislative_session.all_dice_outcomes('A')))
@@ -149,12 +149,55 @@ class LegislativeSession < BaseObject
     end
   end
 
-  def LegislativeSession.apply_tactics_actions(legislative_session, game_snapshot,
-                                               boss_A, boss_B, dice_roller)
-    legislative_session.tactics.each do |played_tactic|
-      Logger.subheader("Applying #{played_tactic.tactic} played by '#{played_tactic.party_played_by}' on '#{played_tactic.party_played_on}'s bill").indent
-      played_tactic.apply_actions(game_snapshot.board, legislative_session,
-                                  boss_A, boss_B, dice_roller)
+  def apply_tactics_actions(game_snapshot, boss_A, boss_B, dice_roller)
+    tactics.each do |played_tactic|
+      if played_tactic.immediate?
+        played_tactic.apply_preactions(game_snapshot, boss_A, boss_B) if boss_A.nil?
+      else
+        Logger.subheader("Applying #{played_tactic.tactic} played by '#{played_tactic.party_played_by}' on '#{played_tactic.party_played_on}'s bill").indent
+        played_tactic.apply_actions(game_snapshot.board, self,
+                                    boss_A, boss_B, dice_roller)
+        Logger.unindent
+      end
+    end
+  end
+
+  def get_tactics(game_snapshot, boss_A, boss_B)
+    last_last_was_pass = false
+    last_was_pass = false
+    party = 'A'  # TODO
+    while !last_was_pass || !last_last_was_pass
+      Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor(self, game_snapshot.board))
+      Logger.header("Boss #{party} choosing a tactic").indent
+      arr = (party == 'A' ? boss_A : boss_B).get_tactic(self)
+      tactic = arr[0]
+      if tactic == Tactic::Pass
+        last_last_was_pass = true if last_was_pass
+        last_was_pass = true
+      else
+        index = arr[1]; party_played_on = arr[2]
+        played_tactic = PlayedTactic.new(party, party_played_on,
+                                         index ? bills_A[index] : nil,
+                                         index ? bills_B[index] : nil,
+                                         tactic,
+                                         nil, nil, nil)
+        if !played_tactic.can_play(game_snapshot.board)
+          Logger.error "This tactic cannot be played like this"
+          # make them choose again
+          party = (party == 'A' ? 'B' : 'A')
+        else
+          last_was_pass = false
+          # remove from the hand
+          game_snapshot.send("hand_#{party}").tactics.delete_if do |hand_tactic|
+            hand_tactic.equals?(tactic)
+          end
+          # handle filibusters, tabling motions, and clotures
+          played_tactic.apply_preactions(game_snapshot, boss_A, boss_B)
+          # make it official
+          tactics.push(played_tactic)
+        end
+      end
+      party = (party == 'A' ? 'B' : 'A')
       Logger.unindent
     end
   end
@@ -177,60 +220,6 @@ class LegislativeSession < BaseObject
       bills.each_index do |index|
         return [index, party] if bill.equals?(bills[index])
       end
-    end
-  end
-
-  def LegislativeSession.get_tactics(legislative_session, game_snapshot, boss_A, boss_B)
-    last_last_was_pass = false
-    last_was_pass = false
-    party = 'A'  # TODO
-    while !last_was_pass || !last_last_was_pass
-      Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor(legislative_session,
-                                                                         game_snapshot.board))
-      Logger.header("Boss #{party} choosing a tactic").indent
-      arr = (party == 'A' ? boss_A : boss_B).get_tactic(legislative_session)
-      tactic = arr[0]
-      if tactic == Tactic::Pass
-        last_last_was_pass = true if last_was_pass
-        last_was_pass = true
-      else
-        drawn_tactic = LegislativeSession.handle_filibuster(game_snapshot, tactic, party)
-        index = arr[1]; party_played_on = arr[2]
-        played_tactic = PlayedTactic.new(party, party_played_on,
-                                         index ? legislative_session.bills_A[index] : nil,
-                                         index ? legislative_session.bills_B[index] : nil,
-                                         tactic, drawn_tactic,
-                                         nil, nil)
-        if !played_tactic.can_play(game_snapshot.board)
-          Logger.error "This tactic cannot be played like this"
-          # make them choose again
-          party = (party == 'A' ? 'B' : 'A')
-        else
-          last_was_pass = false
-          game_snapshot.send("hand_#{party}").tactics.delete_if do |hand_tactic|
-            hand_tactic.equals?(tactic)
-          end
-          legislative_session.tactics.push(played_tactic)
-        end
-      end
-      party = (party == 'A' ? 'B' : 'A')
-      Logger.unindent
-    end
-  end
-
-  def LegislativeSession.handle_filibuster(game_snapshot, tactic, party)
-    if tactic.is_filibuster
-      drawn_tactics = game_snapshot.deal_tactics(party, 1)
-      if !drawn_tactics.empty?
-        game_snapshot.send("hand_#{party}").tactics.concat(drawn_tactics)
-        Logger.subheader("You drew: #{drawn_tactics[0]}")
-        drawn_tactics[0]
-      else
-        Logger.subheader("The tactics deck is empty")
-        nil
-      end
-    else
-      nil
     end
   end
 

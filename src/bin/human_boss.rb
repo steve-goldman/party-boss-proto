@@ -60,7 +60,7 @@ class HumanBoss
       if tactic.nil?
         return [Tactic::Pass, nil, nil]
       end
-      if tactic.is_filibuster
+      if tactic.filibuster?
         if confirm_filibuster
           return [tactic, nil, nil]
         end

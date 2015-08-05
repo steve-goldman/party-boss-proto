@@ -210,8 +210,8 @@ class LegislativeSession < BaseObject
 
   def cloture_bill(index, party)
     party == 'A' ?
-      @cloture_A_index = played_tactics.count :
-      @cloture_B_index = played_tactics.count
+      @cloture_A_index[index] = played_tactics.count :
+      @cloture_B_index[index] = played_tactics.count
   end
 
   def clotured?(index, party, played_tactic_index)

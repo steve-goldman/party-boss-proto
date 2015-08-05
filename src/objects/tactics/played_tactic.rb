@@ -100,7 +100,7 @@ class PlayedTactic < BaseObject
   end
 
   def apply_cloture(played_tactic_index, legislative_session)
-    legislative_session.cloture_bill(played_tactic_index, party_played_on)
+    legislative_session.cloture_bill(index, party_played_on)
     "Clotured #{legislative_session.get_bill_on_floor(index, party_played_on)}"
   end
   

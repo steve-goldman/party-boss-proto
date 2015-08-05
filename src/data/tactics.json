@@ -100,14 +100,12 @@
       {
         "consequence": "add_bill_vps",
         "params": {
-          "who": "self",
           "how_many": 2
         },
         "conditions": [
           {
             "condition": "bill_agenda",
             "params": {
-              "who": "self",
               "agenda": "conservative"
             }
           }
@@ -137,14 +135,12 @@
       {
         "consequence": "add_bill_vps",
         "params": {
-          "who": "self",
           "how_many": 2
         },
         "conditions": [
           {
             "condition": "bill_agenda",
             "params": {
-              "who": "self",
               "agenda": "leftist"
             }
           }
@@ -202,7 +198,6 @@
           {
             "condition": "bill_passes",
             "params": {
-              "who": "self",
               "passes": "true"
             }
           },
@@ -213,14 +208,14 @@
                 {
                   "condition": "bill_agenda",
                   "params": {
-                    "who": "opponent",
+                    "which": "opposite",
                     "agenda": "progressive"
                   }
                 },
                 {
                   "condition": "bill_agenda",
                   "params": {
-                    "who": "opponent",
+                    "which": "opposite",
                     "agenda": "leftist"
                   }
                 }
@@ -253,14 +248,12 @@
       {
         "consequence": "add_bill_vps",
         "params": {
-          "who": "self",
           "how_many": 2
         },
         "conditions": [
           {
             "condition": "bill_agenda",
             "params": {
-              "who": "self",
               "agenda": "progressive"
             }
           }
@@ -392,7 +385,6 @@
           {
             "condition": "bill_passes",
             "params": {
-              "who": "self",
               "passes": "true"
             }
           }
@@ -407,7 +399,6 @@
           {
             "condition": "bill_passes",
             "params": {
-              "who": "self",
               "passes": "true"
             }
           }
@@ -436,7 +427,6 @@
           {
             "condition": "bill_passes",
             "params": {
-              "who": "self",
               "passes": "true"
             }
           }
@@ -525,14 +515,12 @@
       {
         "consequence": "add_bill_vps",
         "params": {
-          "who": "self",
           "how_many": -1
         },
         "conditions": [
           {
             "condition": "bill_rolls_minus_cost",
             "params": {
-              "who": "self",
               "operator": "lt",
               "how_many": 2
             }
@@ -556,7 +544,6 @@
       {
         "consequence": "add_bill_vps",
         "params": {
-          "who": "self",
           "how_many": 1
         },
         "conditions": []
@@ -564,7 +551,6 @@
       {
         "consequence": "add_bill_vps",
         "params": {
-          "who": "opponent",
           "how_many": 1
         },
         "conditions": []
@@ -586,13 +572,13 @@
       {
         "consequence": "bill_passes",
         "params": {
-          "who": "self"
+
         },
         "conditions": [
           {
             "condition": "bill_passes",
             "params": {
-              "who": "opponent"
+              "which": "opposite"
             }
           }
         ]
@@ -641,14 +627,13 @@
       {
         "consequence": "add_bill_vps",
         "params": {
-          "who": "self",
           "how_many": 1
         },
         "conditions": [
           {
             "condition": "bill_passes",
             "params": {
-              "who": "opponent",
+              "which": "opposite",
               "passes": "false"
             }
           }
@@ -657,14 +642,13 @@
       {
         "consequence": "add_bill_vps",
         "params": {
-          "who": "opponent",
+          "which": "opposite",
           "how_many": 1
         },
         "conditions": [
           {
             "condition": "bill_passes",
             "params": {
-              "who": "self",
               "passes": "false"
             }
           }
@@ -699,7 +683,6 @@
           {
             "condition": "bill_passes",
             "params": {
-              "who": "self",
               "passes": "false"
             }
           }
@@ -722,14 +705,12 @@
       {
         "consequence": "add_bill_vps",
         "params": {
-          "who": "self",
           "how_many": 2
         },
         "conditions": [
           {
             "condition": "bill_rolls_minus_cost",
             "params": {
-              "who": "self",
               "operator": "gte",
               "how_many": 2
             }
@@ -760,14 +741,12 @@
       {
         "consequence": "add_bill_vps",
         "params": {
-          "who": "self",
           "how_many": 2
         },
         "conditions": [
           {
             "condition": "bill_agenda",
             "params": {
-              "who": "self",
               "agenda": "libertarian"
             }
           }
@@ -797,14 +776,12 @@
       {
         "consequence": "add_bill_vps",
         "params": {
-          "who": "self",
           "how_many": 2
         },
         "conditions": [
           {
             "condition": "bill_agenda",
             "params": {
-              "who": "self",
               "agenda": "moderate"
             }
           }

@@ -158,7 +158,8 @@ class LegislativeSession < BaseObject
 
   def apply_tactics_preactions(game_state)
     played_tactics.each_index do |index|
-      played_tactics[index].apply_preactions(index, self, game_state, nil, nil)
+      log_if_output("Applying #{played_tactics[index]} [1]",
+                    played_tactics[index].apply_preactions(index, self, game_state, nil, nil))
     end
   end
 
@@ -166,10 +167,9 @@ class LegislativeSession < BaseObject
     played_tactics.each_index do |played_tactic_index|
       played_tactic = played_tactics[played_tactic_index]
       if !played_tactic.immediate?
-        Logger.subheader("Applying #{played_tactic.tactic} played by '#{played_tactic.party_played_by}' on '#{played_tactic.party_played_on}'s bill").indent
-        played_tactic.apply_actions(game_state.board, self,
-                                    boss_A, boss_B, dice_roller, played_tactic_index)
-        Logger.unindent
+        log_if_output("Applying #{played_tactic} [2]",
+                      played_tactic.apply_actions(game_state.board, self,
+                                                  boss_A, boss_B, dice_roller, played_tactic_index))
       end
     end
   end
@@ -178,7 +178,8 @@ class LegislativeSession < BaseObject
     played_tactics.each_index do |played_tactic_index|
       played_tactic = played_tactics[played_tactic_index]
       if !played_tactic.immediate?
-        played_tactic.apply_consequences(played_tactic_index, board, self)
+        log_if_output("Applying #{played_tactic} [3]",
+                      played_tactic.apply_consequences(played_tactic_index, board, self))
       end
     end
   end
@@ -246,7 +247,8 @@ class LegislativeSession < BaseObject
             hand_tactic.equals?(tactic)
           end
           # handle filibusters, tabling motions, and clotures
-          played_tactic.apply_preactions(played_tactics.count, self, game_state, boss_A, boss_B)
+          log_if_output("Applying #{played_tactic} [1]",
+                        played_tactic.apply_preactions(played_tactics.count, self, game_state, boss_A, boss_B))
           # make it official
           played_tactics.push(played_tactic)
         end
@@ -264,6 +266,13 @@ class LegislativeSession < BaseObject
 
   def auto_passes?(index, party)
     party == 'A' ? @auto_pass_A[index] : @auto_pass_B[index]
+  end
+
+  def log_if_output(header, output)
+    if !output.nil?
+      Logger.subheader(header).indent
+      Logger.log(output).unindent
+    end
   end
 
 end

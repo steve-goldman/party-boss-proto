@@ -15,6 +15,13 @@ class PlayedTactic < BaseObject
     { name: "or_index",         type: Integer,      can_be_nil: true },
   ]
 
+  def to_s
+    by_section = "#{tactic} played by '#{party_played_by}'"
+    on_section = !party_played_on.nil? ? " on '#{party_played_on}'" : ""
+    index_section = !index.nil? ? " on matchup #{index}" : ""
+    "#{by_section}#{on_section}#{index_section}"
+  end
+
   def can_play(board, legislative_session)
     tactic.preconditions.select do |precondition|
       !precondition.holds(precondition_args(board, legislative_session))
@@ -28,18 +35,28 @@ class PlayedTactic < BaseObject
       apply_tabling_motion(legislative_session, game_state, boss_A, boss_B)
     elsif tactic.cloture?
       apply_cloture(played_tactic_index, legislative_session)
+    else
+      nil
     end
   end
 
   def apply_actions(board, legislative_session, boss_A, boss_B, dice_roller, played_tactic_index)
-    tactic.actions.each do |action|
-      action.apply(action_args(board, legislative_session, boss_A, boss_B, dice_roller, played_tactic_index))
+    if !tactic.actions.empty?
+      tactic.actions.map { |action|
+        action.apply(action_args(board, legislative_session, boss_A, boss_B, dice_roller, played_tactic_index))
+      }.join("\n")
+    else
+      nil
     end
   end
 
   def apply_consequences(played_tactic_index, board, legislative_session)
-    tactic.consequences.each do |consequence|
-      consequence.apply(consequence_args(played_tactic_index, board, legislative_session))
+    if !tactic.consequences.empty?
+      tactic.consequences.map { |consequence|
+        consequence.apply(consequence_args(played_tactic_index, board, legislative_session))
+      }.join("\n")
+    else
+      nil
     end
   end
 
@@ -64,10 +81,10 @@ class PlayedTactic < BaseObject
 
     # drawn tactic goes into the hand
     if drawn_tactic != Tactic::Pass
-      Logger.subheader "Boss '#{party_played_by}' filibustered and drew #{drawn_tactic}"
       game_state.send("hand_#{party_played_by}").tactics.push(drawn_tactic)
+      "Drew #{drawn_tactic}"
     else
-      Logger.subheader "The '#{party_played_by}' filibustered but the tactics deck was empty"
+      "Tactics deck empty"
     end
   end
 
@@ -77,15 +94,14 @@ class PlayedTactic < BaseObject
       self.replacement_bill = (party_played_on == 'A' ? boss_A : boss_B)
                               .get_bill(legislative_session.get_bills_on_floor(party_played_on))
     end
-
     old_bill = legislative_session.get_bill_on_floor(index, party_played_on)
-    Logger.subheader "Boss '#{party_played_on}' tabled #{old_bill} for #{replacement_bill}"
     legislative_session.table_bill(index, party_played_on, replacement_bill)
+    "Tabled #{old_bill} for #{replacement_bill}"
   end
 
   def apply_cloture(played_tactic_index, legislative_session)
-    Logger.subheader "Cloture played on '#{party_played_on}'s bill #{legislative_session.get_bill_on_floor(index, party_played_on)}"
     legislative_session.cloture_bill(played_tactic_index, party_played_on)
+    "Clotured #{legislative_session.get_bill_on_floor(index, party_played_on)}"
   end
   
   def precondition_args(board, legislative_session)

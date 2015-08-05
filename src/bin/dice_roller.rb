@@ -13,7 +13,7 @@ class DiceRoller
     end
   end
 
-  def get_outcome(count, all_dice_outcomes)
+  def get_outcome(count, all_dice_outcomes = -1)
     all_dice_outcomes < 0 ?
       DiceOutcome.new(Array.new(count).map { @random.rand(3)   }) :
       DiceOutcome.new(Array.new(count).map { all_dice_outcomes })

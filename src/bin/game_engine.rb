@@ -1,3 +1,5 @@
+require 'optparse'
+require 'tempfile'
 require_relative '../objects/game'
 require_relative '../objects/game_state'
 require_relative '../objects/election'
@@ -113,6 +115,37 @@ class GameEngine
 
 end
 
-engine = GameEngine.new(Game.from_file('input.json'))
-#engine = GameEngine.new(nil)
-engine.run((ARGV.shift || 1).to_i).to_file('output.json')
+options = {
+  input_file: nil,
+  output_file: nil,
+  num_cycles: 1,
+}
+
+opt_parser = OptionParser.new do |opts|
+  
+  opts.on("-i", "--input-file FILE",
+          "JSON file to load game state from") do |file|
+    options[:input_file] = file
+  end
+  
+  opts.on("-o", "--output-file FILE",
+          "JSON file to write game state to") do |file|
+    options[:output_file] = file
+  end
+  
+  opts.on("-n", "--num-cycles NUM",
+          "How many new cycles to play, default #{options[:num_cycles]}") do |num_cycles|
+    options[:num_cycles] = num_cycles
+  end
+  
+end
+
+opt_parser.parse!
+
+engine = options[:input_file].nil? ?
+           engine = GameEngine.new(nil) :          
+           GameEngine.new(Game.from_file(options[:input_file]))
+
+game = engine.run(options[:num_cycles].to_i)
+
+game.to_file(options[:output_file]) if !options[:output_file].nil?

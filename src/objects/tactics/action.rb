@@ -87,13 +87,15 @@ class Action < BaseObject
   end
 
   def take_dice_from_opponent(args)
-    if args[:legislative_session].clotured?(args[:index], args[:party_played_by], args[:played_tactic_index])
+    opponent_party = args[:party_played_by] == 'A' ? 'B' : 'A'
+    if args[:legislative_session].clotured?(args[:index], args[:party_played_by], args[:played_tactic_index]) ||
+       args[:legislative_session].clotured?(args[:index], opponent_party, args[:played_tactic_index])
       Logger.log("Moot due to cloture")
     else
-      bill = args[:legislative_session].get_bill_on_floor(args[:index], args[:party_played_by])
+      bill = args[:legislative_session].get_bill_on_floor(args[:index], opponent_party)
       Logger.log("Taking #{params.how_many} dice from opponent's bill #{bill}")
-      old_allocation = args[:legislative_session].get_bill_allocation(args[:index], args[:party_played_by])
-      new_allocation = args[:legislative_session].give_dice_to_opponent(args[:index], args[:party_played_by],
+      old_allocation = args[:legislative_session].get_bill_allocation(args[:index], opponent_party)
+      new_allocation = args[:legislative_session].give_dice_to_opponent(args[:index], opponent_party,
                                                                         params.how_many)
       Logger.log("Was #{old_allocation}, is now #{new_allocation}")
     end

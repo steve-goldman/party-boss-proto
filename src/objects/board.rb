@@ -14,6 +14,8 @@ class Board < BaseObject
     { name: "passed_bills_B",     type: Bill,         is_array: true },
     { name: "hard_vps_A",         type: Integer                      },
     { name: "hard_vps_B",         type: Integer                      },
+    { name: "fundraising_dice_A", type: Integer                      },
+    { name: "fundraising_dice_B", type: Integer                      },
   ]
 
   def num_encumbents(party)
@@ -22,9 +24,10 @@ class Board < BaseObject
     end
   end
 
-  def num_fundraising_dice(candidates)
+  def num_fundraising_dice(party, candidates)
     [
       Config.get.fundraising_dice_max,
+      send("fundraising_dice_#{party}") +
       candidates.reduce(0) { |sum, candidate|
         sum + candidate.fundraising + (office_holder?(candidate) ? 1 : 0)
       }
@@ -56,6 +59,12 @@ class Board < BaseObject
     party == 'A' ?
       self.hard_vps_A = hard_vps_A.to_i + vps :
       self.hard_vps_B = hard_vps_B.to_i + vps
+  end
+
+  def add_fundraising_dice(party, delta)
+    party == 'A' ?
+      self.fundraising_dice_A += delta :
+      self.fundraising_dice_B += delta
   end
   
   private

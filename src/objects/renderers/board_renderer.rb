@@ -17,10 +17,11 @@ class BoardRenderer < Renderer
   def render(board)
     [
       "The state of the union: #{board.state_of_the_union}", underline,
-      party_header(board),   underline,
-      office_holders(board), underline,
-      vps(board),            underline,
-      passed_bills(board),   underline,
+      party_header(board),     underline,
+      office_holders(board),   underline,
+      vps(board),              underline,
+      passed_bills(board),     underline,
+      fundraising_dice(board), underline,
     ].join("\n")
   end
 
@@ -56,4 +57,12 @@ class BoardRenderer < Renderer
       .join("\n")
   end
 
+  def fundraising_dice(board)
+    [
+      "Pending fundraising dice",
+      underline,
+      two_sides(board.fundraising_dice_A, board.fundraising_dice_B),
+    ].join("\n")
+  end
+  
 end

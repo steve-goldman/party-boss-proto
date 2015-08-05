@@ -193,9 +193,9 @@
     ],
     "consequences": [
       {
-        "consequence": "add_campaign_dice",
+        "consequence": "add_fundraising_dice",
         "params": {
-          "who": "opponent",
+          "which": "opposite",
           "how_many": -1
         },
         "conditions": [
@@ -383,9 +383,9 @@
     ],
     "consequences": [
       {
-        "consequence": "add_campaign_dice",
+        "consequence": "add_fundraising_dice",
         "params": {
-          "who": "opponent",
+          "which": "opposite",
           "how_many": 1
         },
         "conditions": [
@@ -399,9 +399,8 @@
         ]
       },
       {
-        "consequence": "add_campaign_dice",
+        "consequence": "add_fundraising_dice",
         "params": {
-          "who": "self",
           "how_many": -1
         },
         "conditions": [
@@ -429,9 +428,8 @@
     "actions": [],
     "consequences": [
       {
-        "consequence": "add_campaign_dice",
+        "consequence": "add_fundraising_dice",
         "params": {
-          "who": "self",
           "how_many": 2
         },
         "conditions": [
@@ -693,9 +691,8 @@
     "actions": [],
     "consequences": [
       {
-        "consequence": "add_campaign_dice",
+        "consequence": "add_fundraising_dice",
         "params": {
-          "who": "self",
           "how_many": 2
         },
         "conditions": [

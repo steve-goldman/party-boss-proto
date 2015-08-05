@@ -48,6 +48,20 @@ class Consequence < BaseObject
     Logger.unindent
   end
 
+  def add_fundraising_dice(args)
+    Logger.indent.log("")
+    party = target_party(args)
+    bill = args[:legislative_session].get_bill_on_floor(args[:index], party)
+    if args[:legislative_session].
+        clotured?(args[:index], party, args[:played_tactic_index])
+      Logger.log("Not adding fundraising dice for #{bill} due to cloture")
+    else
+      args[:board].add_fundraising_dice(party, params.how_many)
+      Logger.log("Party '#{party}' getting #{params.how_many} fundraising dice")
+    end
+    Logger.unindent
+  end
+
   def target_party(args)
     (params.which.nil? || params.which == 'same') ?
       (args[:party_played_on] == 'A' ? 'A' : 'B') :

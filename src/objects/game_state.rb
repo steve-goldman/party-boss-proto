@@ -29,7 +29,7 @@ class GameState < BaseObject
       office_holders.push OfficeHolder.new(office_holders.count % 2 == 0 ? 'A' : 'B', politician_deck.pop)
     end
     # create the board
-    board = Board.new(state_of_the_union_deck.pop, office_holders, ['A', 'B'].shuffle[0], [], [], 0, 0)
+    board = Board.new(state_of_the_union_deck.pop, office_holders, ['A', 'B'].shuffle[0], [], [], 0, 0, 0, 0)
     # create the snapshot
     game_state = GameState.new(board,
                                Hand.new([], [], []),
@@ -52,7 +52,7 @@ class GameState < BaseObject
     ['A', 'B'].each do |party|
       if !is_replay
         # deal the cards
-        num_unused = board.num_fundraising_dice(election.send("candidates_#{party}")) -
+        num_unused = board.num_fundraising_dice(party, election.send("candidates_#{party}")) -
                      election.send("allocation_#{party}").sum
         election.send("tactics_dealt_#{party}")
           .concat(deal_tactics(party, Config.get.tactics_num_per_campaign_die * num_unused))
@@ -102,6 +102,10 @@ class GameState < BaseObject
       result = election.get_result(index, board)
       politician_deck.push(result[:loser])
     end
+
+    # zero out the extra fundraising dice
+    board.fundraising_dice_A = 0
+    board.fundraising_dice_B = 0
 
     election
   end

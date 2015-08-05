@@ -24,12 +24,13 @@ class GameEngine
     end
     @boss_A = HumanBoss.new("A", @game_state.hand_A)
     @boss_B = HumanBoss.new("B", @game_state.hand_B)
+    @num_catchup_cycles = @game.cycles.count
     catch_up if !game.nil?
   end
 
   def catch_up
     @game.cycles.each_index do |index|
-      Logger.subheader "Catch-up cycle #{index + 1} / #{@game.cycles.count}"
+      Logger.subheader "Catch-up cycle #{index + 1} / #{@num_catchup_cycles}"
 
       Logger.header "Election phase"
       Logger.header(BoardRenderer.get.render @game_state.board)
@@ -78,7 +79,7 @@ class GameEngine
     
     dice_roller = DiceRoller.new
     num_cycles.times do |index|
-      Logger.subheader "Cycle #{index + 1} / #{num_cycles}"
+      Logger.subheader "Cycle #{@num_catchup_cycles + index + 1} / #{@num_catchup_cycles + num_cycles}"
 
       Logger.header "Election phase"
       Logger.header(BoardRenderer.get.render @game_state.board)

@@ -37,6 +37,12 @@ class PlayedTactic < BaseObject
     end
   end
 
+  def apply_consequences(played_tactic_index, board, legislative_session)
+    tactic.consequences.each do |consequence|
+      consequence.apply(consequence_args(played_tactic_index, board, legislative_session))
+    end
+  end
+
   def immediate?
     tactic.filibuster? || tactic.tabling_motion? || tactic.cloture?
   end
@@ -105,6 +111,18 @@ class PlayedTactic < BaseObject
       dice_roller: dice_roller,
       played_tactic_index: played_tactic_index,
     }
+  end
+
+  def consequence_args(played_tactic_index, board, legislative_session)
+    {
+      party_played_by: party_played_by,
+      party_played_on: party_played_on,
+      index: index,
+      board: board,
+      legislative_session: legislative_session,
+      played_tactic: self,
+      played_tactic_index: played_tactic_index,
+    }      
   end
 
 end

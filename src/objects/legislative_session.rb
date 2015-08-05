@@ -64,6 +64,8 @@ class LegislativeSession < BaseObject
     legislative_session.outcomes_B.concat(dice_roller.get_outcomes(legislative_session.get_allocation('B'),
                                                                    legislative_session.all_dice_outcomes('B')))
     
+    legislative_session.apply_tactics_consequences(game_state.board)
+
     game_state.apply_legislative_session(legislative_session, false)
   end
 
@@ -83,8 +85,21 @@ class LegislativeSession < BaseObject
       (party == 'A' ? @bill_A_vps[index] : @bill_B_vps[index])
   end
 
+  def incr_bill_vps(index, party, board, delta)
+    party == 'A' ?
+      @bill_A_vps[index] = [@bill_A_vps[index] + delta, 0].max :
+      @bill_B_vps[index] = [@bill_B_vps[index] + delta, 0].max
+    bill_vps(index, party, board)
+  end
+
   def bill_cost(index, party)
     party == 'A' ? @bill_A_cost[index] : @bill_B_cost[index]
+  end
+
+  def incr_bill_cost(index, party, delta)
+    party == 'A' ?
+      @bill_A_cost[index] = [@bill_A_cost[index] + delta, 0].max :
+      @bill_B_cost[index] = [@bill_B_cost[index] + delta, 0].max
   end
 
   def set_all_dice_count_as(index, party, count)
@@ -146,6 +161,15 @@ class LegislativeSession < BaseObject
         played_tactic.apply_actions(game_state.board, self,
                                     boss_A, boss_B, dice_roller, played_tactic_index)
         Logger.unindent
+      end
+    end
+  end
+
+  def apply_tactics_consequences(board)
+    played_tactics.each_index do |played_tactic_index|
+      played_tactic = played_tactics[played_tactic_index]
+      if !played_tactic.immediate?
+        played_tactic.apply_consequences(played_tactic_index, board, self)
       end
     end
   end
@@ -227,12 +251,6 @@ class LegislativeSession < BaseObject
 
   def init_bill_vps(bills)
     bills.map { |bill| bill.vps }
-  end
-
-  def incr_bill_cost(index, party, delta)
-    party == 'A' ?
-      @bill_A_cost[index] = [@bill_A_cost[index] + delta, 0].max :
-      @bill_B_cost[index] = [@bill_B_cost[index] + delta, 0].max
   end
 
 end

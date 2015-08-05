@@ -32,6 +32,8 @@ class LegislativeSession < BaseObject
     @current_bills_B = bills_B.clone
     @cloture_A_index = bills_A.map { -1 }
     @cloture_B_index = bills_B.map { -1 }
+    @auto_pass_A = bills_A.map { false }
+    @auto_pass_B = bills_B.map { false }
   end
   
   def LegislativeSession.run_session(game_state, boss_A, boss_B, dice_roller)
@@ -70,7 +72,8 @@ class LegislativeSession < BaseObject
   end
 
   def passes?(index, party)
-    send("outcomes_#{party}")[index].sum >= bill_cost(index, party) ?
+    auto_passes?(index, party) ||
+      send("outcomes_#{party}")[index].sum >= bill_cost(index, party) ?
       get_bill_on_floor(index, party) : nil
   end
 
@@ -100,6 +103,12 @@ class LegislativeSession < BaseObject
     party == 'A' ?
       @bill_A_cost[index] = [@bill_A_cost[index] + delta, 0].max :
       @bill_B_cost[index] = [@bill_B_cost[index] + delta, 0].max
+  end
+
+  def auto_pass_bill(index, party)
+    party == 'A' ?
+      @auto_pass_A[index] = true :
+      @auto_pass_B[index] = true
   end
 
   def set_all_dice_count_as(index, party, count)
@@ -251,6 +260,10 @@ class LegislativeSession < BaseObject
 
   def init_bill_vps(bills)
     bills.map { |bill| bill.vps }
+  end
+
+  def auto_passes?(index, party)
+    party == 'A' ? @auto_pass_A[index] : @auto_pass_B[index]
   end
 
 end

@@ -36,6 +36,12 @@ class Precondition < BaseObject
     args[:legislative_session].passes?(args[:index], target_party(args))
   end
 
+  def bill_rolls_minus_cost(args)
+    operate(args[:legislative_session].send("outcomes_#{target_party(args)}")[args[:index]].sum -
+            args[:legislative_session].bill_cost(args[:index], target_party(args)),
+            params.how_many)
+  end
+
   def or(args)
     params.preconditions.each do |precondition|
       return true if precondition.holds(args)

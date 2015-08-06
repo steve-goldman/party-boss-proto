@@ -90,7 +90,6 @@
       {
         "precondition": "bill_agenda",
         "params": {
-          "who": "self",
           "agenda": "conservative"
         }
       }
@@ -117,7 +116,6 @@
       {
         "precondition": "bill_agenda",
         "params": {
-          "who": "self",
           "agenda": "leftist"
         }
       }
@@ -148,14 +146,12 @@
             {
               "precondition": "bill_agenda",
               "params": {
-                "who": "self",
                 "agenda": "conservative"
               }
             },
             {
               "precondition": "bill_agenda",
               "params": {
-                "who": "self",
                 "agenda": "libertarian"
               }
             }
@@ -222,7 +218,6 @@
       {
         "precondition": "bill_agenda",
         "params": {
-          "who": "self",
           "agenda": "progressive"
         }
       }
@@ -707,7 +702,6 @@
       {
         "precondition": "bill_agenda",
         "params": {
-          "who": "self",
           "agenda": "libertarian"
         }
       }
@@ -734,7 +728,6 @@
       {
         "precondition": "bill_agenda",
         "params": {
-          "who": "self",
           "agenda": "moderate"
         }
       }

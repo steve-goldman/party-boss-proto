@@ -56,9 +56,11 @@ class Precondition < BaseObject
   end
 
   def target_bill(args)
-    party = params.who == 'self' ? (args[:party_played_by] == 'A' ? 'A' : 'B') :
-      params.who == 'opponent' ? (args[:party_played_by] == 'A' ? 'B' : 'A') :
-        nil
+    party = params.which.nil? || params.which == 'self' ?
+              (args[:party_played_by] == 'A' ? 'A' : 'B') :
+              params.which == 'opposite' ?
+                (args[:party_played_by] == 'A' ? 'B' : 'A') :
+                nil
     args[:legislative_session].get_bill_on_floor(args[:index], party)
   end
 

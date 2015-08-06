@@ -101,15 +101,7 @@
         "consequence": "add_bill_vps",
         "params": {
           "how_many": 2
-        },
-        "conditions": [
-          {
-            "condition": "bill_agenda",
-            "params": {
-              "agenda": "conservative"
-            }
-          }
-        ]
+        }
       }
     ]
   },
@@ -136,15 +128,7 @@
         "consequence": "add_bill_vps",
         "params": {
           "how_many": 2
-        },
-        "conditions": [
-          {
-            "condition": "bill_agenda",
-            "params": {
-              "agenda": "leftist"
-            }
-          }
-        ]
+        }
       }
     ]
   },
@@ -249,15 +233,7 @@
         "consequence": "add_bill_vps",
         "params": {
           "how_many": 2
-        },
-        "conditions": [
-          {
-            "condition": "bill_agenda",
-            "params": {
-              "agenda": "progressive"
-            }
-          }
-        ]
+        }
       }
     ]
   },
@@ -742,15 +718,7 @@
         "consequence": "add_bill_vps",
         "params": {
           "how_many": 2
-        },
-        "conditions": [
-          {
-            "condition": "bill_agenda",
-            "params": {
-              "agenda": "libertarian"
-            }
-          }
-        ]
+        }
       }
     ]
   },
@@ -777,15 +745,7 @@
         "consequence": "add_bill_vps",
         "params": {
           "how_many": 2
-        },
-        "conditions": [
-          {
-            "condition": "bill_agenda",
-            "params": {
-              "agenda": "moderate"
-            }
-          }
-        ]
+        }
       }
     ]
   }

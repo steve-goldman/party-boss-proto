@@ -172,37 +172,37 @@
         "consequence": "add_fundraising_dice",
         "params": {
           "which": "opposite",
-          "how_many": -1
-        },
-        "conditions": [
-          {
-            "condition": "bill_passes",
-            "params": {
-              "passes": "true"
-            }
-          },
-          {
-            "condition": "or",
-            "params": {
-              "options": [
-                {
-                  "condition": "bill_agenda",
-                  "params": {
-                    "which": "opposite",
-                    "agenda": "progressive"
+          "how_many": -1,
+          "preconditions": [
+            {
+              "precondition": "bill_passes",
+              "params": {
+                "passes": "true"
+              }
+            },
+            {
+              "precondition": "or",
+              "params": {
+                "options": [
+                  {
+                    "precondition": "bill_agenda",
+                    "params": {
+                      "which": "opposite",
+                      "agenda": "progressive"
+                    }
+                  },
+                  {
+                    "precondition": "bill_agenda",
+                    "params": {
+                      "which": "opposite",
+                      "agenda": "leftist"
+                    }
                   }
-                },
-                {
-                  "condition": "bill_agenda",
-                  "params": {
-                    "which": "opposite",
-                    "agenda": "leftist"
-                  }
-                }
-              ]
+                ]
+              }
             }
-          }
-        ]
+          ]
+        }
       }
     ]
   },
@@ -248,8 +248,7 @@
         "consequence": "add_bill_vps",
         "params": {
           "how_many": -1
-        },
-        "conditions": []
+        }
       }
     ]
   },
@@ -350,30 +349,30 @@
         "consequence": "add_fundraising_dice",
         "params": {
           "which": "opposite",
-          "how_many": 1
-        },
-        "conditions": [
-          {
-            "condition": "bill_passes",
-            "params": {
-              "passes": "true"
+          "how_many": 1,
+          "preconditions": [
+            {
+              "precondition": "bill_passes",
+              "params": {
+                "passes": "true"
+              }
             }
-          }
-        ]
+          ]
+        }
       },
       {
         "consequence": "add_fundraising_dice",
         "params": {
-          "how_many": -1
-        },
-        "conditions": [
-          {
-            "condition": "bill_passes",
-            "params": {
-              "passes": "true"
+          "how_many": -1,
+          "preconditions": [
+            {
+              "precondition": "bill_passes",
+              "params": {
+                "passes": "true"
+              }
             }
-          }
-        ]
+          ]
+        }
       }
     ]
   },
@@ -392,16 +391,16 @@
       {
         "consequence": "add_fundraising_dice",
         "params": {
-          "how_many": 2
-        },
-        "conditions": [
-          {
-            "condition": "bill_passes",
-            "params": {
-              "passes": "true"
+          "how_many": 2,
+          "preconditions": [
+            {
+              "precondition": "bill_passes",
+              "params": {
+                "passes": "true"
+              }
             }
-          }
-        ]
+          ]
+        }
       }
     ]
   },
@@ -486,17 +485,17 @@
       {
         "consequence": "add_bill_vps",
         "params": {
-          "how_many": -1
-        },
-        "conditions": [
-          {
-            "condition": "bill_rolls_minus_cost",
-            "params": {
-              "operator": "lt",
-              "how_many": 2
+          "how_many": -1,
+          "preconditions": [
+            {
+              "precondition": "bill_rolls_minus_cost",
+              "params": {
+                "operator": "lt",
+                "how_many": 2
+              }
             }
-          }
-        ]
+          ]
+        }
       }
     ]
   },
@@ -516,15 +515,13 @@
         "consequence": "add_bill_vps",
         "params": {
           "how_many": 1
-        },
-        "conditions": []
+        }
       },
       {
         "consequence": "add_bill_vps",
         "params": {
           "how_many": 1
-        },
-        "conditions": []
+        }
       }
     ]
   },
@@ -543,16 +540,15 @@
       {
         "consequence": "bill_passes",
         "params": {
-
-        },
-        "conditions": [
-          {
-            "condition": "bill_passes",
-            "params": {
-              "which": "opposite"
+          "preconditions": [
+            {
+              "precondition": "bill_passes",
+              "params": {
+                "which": "opposite"
+              }
             }
-          }
-        ]
+          ]
+        }
       }
     ]
   },
@@ -598,17 +594,17 @@
       {
         "consequence": "add_bill_vps",
         "params": {
-          "how_many": 1
-        },
-        "conditions": [
-          {
-            "condition": "bill_passes",
-            "params": {
-              "which": "opposite",
-              "passes": "false"
+          "how_many": 1,
+          "preconditions": [
+            {
+              "precondition": "bill_passes",
+              "params": {
+                "which": "opposite",
+                "passes": "false"
+              }
             }
-          }
-        ]
+          ]
+        }
       },
       {
         "consequence": "add_bill_vps",
@@ -616,9 +612,9 @@
           "which": "opposite",
           "how_many": 1
         },
-        "conditions": [
+        "preconditions": [
           {
-            "condition": "bill_passes",
+            "precondition": "bill_passes",
             "params": {
               "passes": "false"
             }
@@ -650,9 +646,9 @@
         "params": {
           "how_many": 2
         },
-        "conditions": [
+        "preconditions": [
           {
-            "condition": "bill_passes",
+            "precondition": "bill_passes",
             "params": {
               "passes": "false"
             }
@@ -676,17 +672,17 @@
       {
         "consequence": "add_bill_vps",
         "params": {
-          "how_many": 2
-        },
-        "conditions": [
-          {
-            "condition": "bill_rolls_minus_cost",
-            "params": {
-              "operator": "gte",
-              "how_many": 2
+          "how_many": 2,
+          "preconditions": [
+            {
+              "precondition": "bill_rolls_minus_cost",
+              "params": {
+                "operator": "gte",
+                "how_many": 2
+              }
             }
-          }
-        ]
+          ]
+        }
       }
     ]
   },

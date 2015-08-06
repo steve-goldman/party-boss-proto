@@ -66,7 +66,7 @@ class LegislativeSession < BaseObject
     legislative_session.outcomes_B.concat(dice_roller.get_outcomes(legislative_session.get_allocation('B'),
                                                                    legislative_session.all_dice_outcomes('B')))
     
-    legislative_session.apply_tactics_consequences(game_state.board)
+    legislative_session.apply_tactics_consequences(game_state)
 
     game_state.apply_legislative_session(legislative_session, false)
   end
@@ -178,7 +178,7 @@ class LegislativeSession < BaseObject
     end
   end
 
-  def apply_tactics_consequences(board)
+  def apply_tactics_consequences(game_state)
     played_tactics.each_index do |played_tactic_index|
       played_tactic = played_tactics[played_tactic_index]
       if !played_tactic.immediate?

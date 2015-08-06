@@ -55,7 +55,7 @@ class GameEngine
 
       legislative_session.apply_tactics_actions(@game_state, nil, nil, nil)
 
-      legislative_session.apply_tactics_consequences(@game_state.board)
+      legislative_session.apply_tactics_consequences(@game_state)
 
       @game_state.apply_legislative_session(legislative_session, true)
       Logger.header(LegislativeSessionRenderer.get.render legislative_session,

@@ -39,8 +39,9 @@ class GameState < BaseObject
                                state_of_the_union_deck,
                                tactic_deck)
     # deal the cards
+    dealt_politicians = deal_politicians(game_state.board)
     ['A', 'B'].each do |party|
-      game_state.send("hand_#{party}").politicians.concat(game_state.deal_politicians party)
+      game_state.send("hand_#{party}").politicians.concat(dealt_politicians[party])
       game_state.send("hand_#{party}").bills.concat(game_state.deal_bills party)
       game_state.send("hand_#{party}").tactics.concat(game_state.deal_tactics party, Config.get.tactics_num_initial)
     end
@@ -82,10 +83,11 @@ class GameState < BaseObject
     end
 
     # handle the dealt politician cards
+    dealt_politicians = deal_politicians(board) if !is_replay
     ['A', 'B'].each do |party|
       if !is_replay
         # deal the cards
-        election.send("politicians_dealt_#{party}").concat(deal_politicians party)
+        election.send("politicians_dealt_#{party}").concat(dealt_politicians[party.to_sym])
       else
         # this is a replay, so take the dealt cards out of the deck
         election.send("politicians_dealt_#{party}").each do |politician|
@@ -172,12 +174,21 @@ class GameState < BaseObject
     end
   end
 
-  def deal_politicians(party)
+  def deal_politicians(board)
     politician_deck.shuffle!
-    num_to_deal = Config.get.politicians_num_in_party - send("hand_#{party}").politicians.count - board.num_encumbents(party)
-    [num_to_deal, politician_deck.count].min.times.map do
-      politician_deck.pop
+    dealt = { A: [], B: [] }
+    next_dealt = board.tactics_lead_party
+    while !politician_deck.empty? && politicians_needed(next_dealt, board) > dealt[next_dealt.to_sym].count
+      dealt[next_dealt.to_sym].push(politician_deck.pop)
+      next_dealt = next_dealt == 'A' ? 'B' : 'A'
     end
+    if !politician_deck.empty?
+      next_dealt = next_dealt == 'A' ? 'B' : 'A'
+      while !politician_deck.empty? && politicians_needed(next_dealt, board) > dealt[next_dealt.to_sym].count
+        dealt[next_dealt.to_sym].push(politician_deck.pop)
+      end
+    end
+    dealt
   end
 
   def deal_bills(party)
@@ -205,6 +216,12 @@ class GameState < BaseObject
     board.state_of_the_union = cycle.next_state_of_the_union
     state_of_the_union_deck.push old_state_of_the_union
     board.tactics_lead_party = board.tactics_lead_party == 'A' ? 'B' : 'A'
+  end
+
+  def politicians_needed(party, board)
+    Config.get.politicians_num_in_party -
+      send("hand_#{party}").politicians.count -
+      board.num_encumbents(party)    
   end
 
 end

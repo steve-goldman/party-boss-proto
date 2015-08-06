@@ -50,18 +50,15 @@ class Precondition < BaseObject
   end
 
   def target_party(args)
-    params.who == 'self' ? args[:party_played_by] :
-      params.who == 'opponent' ? other_party(args) :
+    params.which.nil? || params.which == 'self' ?
+      (args[:party_played_by] == 'A' ? 'A' : 'B') :
+      params.which == 'opposite' ?
+        (args[:party_played_by] == 'A' ? 'B' : 'A') :
         nil
   end
 
   def target_bill(args)
-    party = params.which.nil? || params.which == 'self' ?
-              (args[:party_played_by] == 'A' ? 'A' : 'B') :
-              params.which == 'opposite' ?
-                (args[:party_played_by] == 'A' ? 'B' : 'A') :
-                nil
-    args[:legislative_session].get_bill_on_floor(args[:index], party)
+    args[:legislative_session].get_bill_on_floor(args[:index], target_party(args))
   end
 
   def operate(operand_A, operand_B)

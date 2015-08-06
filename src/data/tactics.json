@@ -605,15 +605,15 @@
         "params": {
           "which": "opposite",
           "how_many": 1
-        },
-        "preconditions": [
-          {
-            "precondition": "bill_passes",
-            "params": {
-              "passes": "false"
+          "preconditions": [
+            {
+              "precondition": "bill_passes",
+              "params": {
+                "passes": "false"
+              }
             }
-          }
-        ]
+          ]
+        }
       }
     ]
   },

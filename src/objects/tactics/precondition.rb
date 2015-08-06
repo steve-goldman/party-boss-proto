@@ -54,10 +54,10 @@ class Precondition < BaseObject
   end
 
   def target_party(args)
-    params.which.nil? || params.which == 'self' ?
-      (args[:party_played_by] == 'A' ? 'A' : 'B') :
+    params.which.nil? || params.which == 'same' ?
+      (args[:party_played_on] == 'A' ? 'A' : 'B') :
       params.which == 'opposite' ?
-        (args[:party_played_by] == 'A' ? 'B' : 'A') :
+        (args[:party_played_on] == 'A' ? 'B' : 'A') :
         nil
   end
 

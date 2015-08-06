@@ -183,7 +183,7 @@
             {
               "precondition": "or",
               "params": {
-                "options": [
+                "preconditions": [
                   {
                     "precondition": "bill_agenda",
                     "params": {

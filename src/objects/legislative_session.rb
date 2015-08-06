@@ -167,9 +167,13 @@ class LegislativeSession < BaseObject
     played_tactics.each_index do |played_tactic_index|
       played_tactic = played_tactics[played_tactic_index]
       if !played_tactic.immediate?
-        log_if_output("Applying #{played_tactic} [2]",
-                      played_tactic.apply_actions(game_state.board, self,
-                                                  boss_A, boss_B, dice_roller, played_tactic_index))
+        # confirm that the preconditions still hold in case a tactic
+        # (i.e. tabling motion) changed things
+        if played_tactic.can_play(game_state.board, self)
+          log_if_output("Applying #{played_tactic} [2]",
+                        played_tactic.apply_actions(game_state.board, self,
+                                                    boss_A, boss_B, dice_roller, played_tactic_index))
+        end
       end
     end
   end
@@ -178,8 +182,12 @@ class LegislativeSession < BaseObject
     played_tactics.each_index do |played_tactic_index|
       played_tactic = played_tactics[played_tactic_index]
       if !played_tactic.immediate?
-        log_if_output("Applying #{played_tactic} [3]",
-                      played_tactic.apply_consequences(played_tactic_index, board, self))
+        # confirm that the preconditions still hold in case a tactic
+        # (i.e. tabling motion) changed things
+        if played_tactic.can_play(game_state.board, self)
+          log_if_output("Applying #{played_tactic} [3]",
+                        played_tactic.apply_consequences(played_tactic_index, game_state.board, self))
+        end
       end
     end
   end

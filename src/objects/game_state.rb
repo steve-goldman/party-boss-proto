@@ -152,7 +152,6 @@ class GameState < BaseObject
       send("hand_#{party}").bills.concat(
         legislative_session.send("bills_dealt_#{party}"))
       hand = send("hand_#{party}")
-      puts "#{hand.bills.count} in hand for #{party}"
     end
 
     # put the losers back in the deck

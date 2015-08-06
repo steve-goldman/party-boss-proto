@@ -277,7 +277,7 @@ class LegislativeSession < BaseObject
   end
 
   def log_if_output(header, output)
-    if !output.nil?
+    if !output.nil? && !output.empty?
       Logger.subheader(header).indent
       Logger.log(output).unindent
     end

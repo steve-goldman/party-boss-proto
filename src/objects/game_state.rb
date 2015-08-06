@@ -39,24 +39,31 @@ class GameState < BaseObject
                                state_of_the_union_deck,
                                tactic_deck)
     # deal the cards
-    dealt_politicians = deal_politicians(game_state.board)
-    ['A', 'B'].each do |party|
+    dealt_politicians = game_state.deal_politicians
+    dealt_bills       = game_state.deal_bills
+    dealt_tactics     = game_state.deal_tactics({ A: Config.get.tactics_num_initial,
+                                                  B: Config.get.tactics_num_initial })
+    [:A, :B].each do |party|
       game_state.send("hand_#{party}").politicians.concat(dealt_politicians[party])
-      game_state.send("hand_#{party}").bills.concat(game_state.deal_bills party)
-      game_state.send("hand_#{party}").tactics.concat(game_state.deal_tactics party, Config.get.tactics_num_initial)
+      game_state.send("hand_#{party}").bills.concat(dealt_bills[party])
+      game_state.send("hand_#{party}").tactics.concat(dealt_tactics[party])
     end
     game_state
   end
 
+  def num_tactics(election, party)
+    Config.get.tactics_num_per_campaign_die *
+      (board.num_fundraising_dice(party, election.send("candidates_#{party}")) -
+       election.send("allocation_#{party}").sum)
+  end
+
   def apply_election(election, is_replay)
     # deal tactics before messing with the board
-    ['A', 'B'].each do |party|
+    dealt_tactics = deal_tactics({ A: num_tactics(election, 'A'), B: num_tactics(election, 'B') }) if !is_replay
+    [:A, :B].each do |party|
       if !is_replay
         # deal the cards
-        num_unused = board.num_fundraising_dice(party, election.send("candidates_#{party}")) -
-                     election.send("allocation_#{party}").sum
-        election.send("tactics_dealt_#{party}")
-          .concat(deal_tactics(party, Config.get.tactics_num_per_campaign_die * num_unused))
+        election.send("tactics_dealt_#{party}").concat(dealt_tactics[party])
       else
         # this is a replay, so take the dealt cards out of the deck
         election.send("tactics_dealt_#{party}").each do |tactic|
@@ -69,7 +76,7 @@ class GameState < BaseObject
     end
 
     # remove candidates from hands
-    ['A', 'B'].each do |party|
+    [:A, :B].each do |party|
       election.send("candidates_#{party}").each do |candidate|
         delete_from(send("hand_#{party}").politicians, candidate)
       end
@@ -83,11 +90,11 @@ class GameState < BaseObject
     end
 
     # handle the dealt politician cards
-    dealt_politicians = deal_politicians(board) if !is_replay
-    ['A', 'B'].each do |party|
+    dealt_politicians = deal_politicians if !is_replay
+    [:A, :B].each do |party|
       if !is_replay
         # deal the cards
-        election.send("politicians_dealt_#{party}").concat(dealt_politicians[party.to_sym])
+        election.send("politicians_dealt_#{party}").concat(dealt_politicians[party])
       else
         # this is a replay, so take the dealt cards out of the deck
         election.send("politicians_dealt_#{party}").each do |politician|
@@ -113,7 +120,7 @@ class GameState < BaseObject
   end
 
   def apply_legislative_session(legislative_session, is_replay)
-    ['A', 'B'].each do |party|
+    [:A, :B].each do |party|
       # remove bills from hands
       legislative_session.get_bills_on_floor(party).each do |bill|
         delete_from(send("hand_#{party}").bills, bill)
@@ -130,10 +137,11 @@ class GameState < BaseObject
     end
 
     # handle the dealt bill cards
-    ['A', 'B'].each do |party|
+    dealt_bills = deal_bills if !is_replay
+    [:A, :B].each do |party|
       if !is_replay
         # deal the cards
-        legislative_session.send("bills_dealt_#{party}").concat(deal_bills party)
+        legislative_session.send("bills_dealt_#{party}").concat(dealt_bills[party])
       else
         # this is a replay, so take the dealt cards out of the deck
         legislative_session.send("bills_dealt_#{party}").each do |bill|
@@ -142,11 +150,13 @@ class GameState < BaseObject
       end
       # put the cards in the hand
       send("hand_#{party}").bills.concat(
-        legislative_session.send("bills_dealt_#{party}"))      
+        legislative_session.send("bills_dealt_#{party}"))
+      hand = send("hand_#{party}")
+      puts "#{hand.bills.count} in hand for #{party}"
     end
 
     # put the losers back in the deck
-    ['A', 'B'].each do |party|
+    [:A, :B].each do |party|
       Config.get.bills_num_on_floor.times do |index|
         if !legislative_session.passes?(index, party)
           bill_deck.push(legislative_session.get_bill_on_floor(index, party))
@@ -174,36 +184,35 @@ class GameState < BaseObject
     end
   end
 
-  def deal_politicians(board)
-    politician_deck.shuffle!
+  def deal_cards(deck_name, num_needed)
+    deck = send("#{deck_name}_deck").shuffle!
     dealt = { A: [], B: [] }
-    next_dealt = board.tactics_lead_party
-    while !politician_deck.empty? && politicians_needed(next_dealt, board) > dealt[next_dealt.to_sym].count
-      dealt[next_dealt.to_sym].push(politician_deck.pop)
-      next_dealt = next_dealt == 'A' ? 'B' : 'A'
+    next_dealt = board.tactics_lead_party.to_sym
+    while !deck.empty? && num_needed[next_dealt] > dealt[next_dealt].count
+      dealt[next_dealt].push(deck.pop)
+      next_dealt = next_dealt == :A ? :B : :A
     end
-    if !politician_deck.empty?
-      next_dealt = next_dealt == 'A' ? 'B' : 'A'
-      while !politician_deck.empty? && politicians_needed(next_dealt, board) > dealt[next_dealt.to_sym].count
-        dealt[next_dealt.to_sym].push(politician_deck.pop)
+    if !deck.empty?
+      next_dealt = next_dealt == :A ? :B : :A
+      while !deck.empty? && num_needed[next_dealt] > dealt[next_dealt].count
+        dealt[next_dealt].push(deck.pop)
       end
     end
     dealt
   end
 
-  def deal_bills(party)
-    bill_deck.shuffle!
-    num_to_deal = Config.get.bills_num_in_committee - send("hand_#{party}").bills.count
-    [num_to_deal, bill_deck.count].min.times.map do
-      bill_deck.pop
-    end
+  def deal_politicians
+    deal_cards(:politician, { A: politicians_needed('A', board),
+                              B: politicians_needed('B', board) })
   end
 
-  def deal_tactics(party, num_to_deal)
-    tactic_deck.shuffle!
-    [num_to_deal, tactic_deck.count].min.times.map do
-      tactic_deck.pop
-    end
+  def deal_bills
+    deal_cards(:bill, { A: Config.get.bills_num_in_committee - hand_A.bills.count,
+                        B: Config.get.bills_num_in_committee - hand_B.bills.count })
+  end
+
+  def deal_tactics(num_needed)
+    deal_cards(:tactic, num_needed)
   end
 
   def end_cycle(cycle, is_replay)

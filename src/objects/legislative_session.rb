@@ -185,13 +185,13 @@ class LegislativeSession < BaseObject
   end
 
   def get_bill_on_floor(index, party)
-    party == 'A' ?
+    party == 'A' || party == :A ?
       @current_bills_A[index] :
       @current_bills_B[index]
   end
 
   def get_bills_on_floor(party)
-    party == 'A' ?
+    party == 'A' || party == :A ?
       @current_bills_A :
       @current_bills_B
   end

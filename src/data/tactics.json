@@ -532,7 +532,7 @@
     "actions": [],
     "consequences": [
       {
-        "consequence": "bill_passes",
+        "consequence": "bill_auto_passes",
         "params": {
           "preconditions": [
             {

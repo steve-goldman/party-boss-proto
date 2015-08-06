@@ -33,7 +33,7 @@ class Consequence < BaseObject
     end
   end
 
-  def bill_passes(args)
+  def bill_auto_passes(args)
     party = target_party(args)
     bill = args[:legislative_session].get_bill_on_floor(args[:index], party)
     if args[:legislative_session].

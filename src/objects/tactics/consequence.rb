@@ -10,7 +10,10 @@ class Consequence < BaseObject
   ]
 
   def apply(args)
-    self.send("#{consequence}", args)
+    preconditions_hold =
+      params.preconditions.nil? ||
+      params.preconditions.select { |precondition| !precondition.holds(args) }.empty?
+    self.send("#{consequence}", args) if preconditions_hold
   end
 
   private

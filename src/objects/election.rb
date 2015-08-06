@@ -26,8 +26,8 @@ class Election < BaseObject
       a_wins = (winner == candidates_A[index])
       @result[index] = { winner:        winner,
                          loser:         a_wins ? candidates_B[index] : candidates_A[index],
-                         winning_party: a_wins ? 'A' : 'B',
-                         losing_party:  a_wins ? 'B' : 'A' }
+                         winning_party: a_wins ? :A : :B,
+                         losing_party:  a_wins ? :B : :A }
     end
 
     @result[index]
@@ -43,11 +43,11 @@ class Election < BaseObject
     Logger.unindent
     Logger.header(ElectionRenderer.get.render_matchups game_state.board, candidates_A, candidates_B)
     Logger.header("Boss 'A' choosing dice allocation").indent
-    allocation_A = boss_A.get_allocation(game_state.board.num_fundraising_dice('A', candidates_A),
+    allocation_A = boss_A.get_allocation(game_state.board.num_fundraising_dice(:A, candidates_A),
                                          Politician.matchup_descriptions(candidates_A, candidates_B))
     Logger.unindent
     Logger.header("Boss 'B' choosing dice allocation").indent
-    allocation_B = boss_B.get_allocation(game_state.board.num_fundraising_dice('B', candidates_B),
+    allocation_B = boss_B.get_allocation(game_state.board.num_fundraising_dice(:B, candidates_B),
                                          Politician.matchup_descriptions(candidates_B, candidates_A))
     Logger.unindent
     election = Election.new(candidates_A,
@@ -76,9 +76,9 @@ class Election < BaseObject
   private
   
   def get_winner(index, board)
-    if points(index, board, 'A') > points(index, board, 'B')
+    if points(index, board, :A) > points(index, board, :B)
       candidates_A[index]
-    elsif points(index, board, 'A') < points(index, board, 'B')
+    elsif points(index, board, :A) < points(index, board, :B)
       candidates_B[index]
     elsif candidates_A[index].strength(board.state_of_the_union.priorities[1]) >
           candidates_B[index].strength(board.state_of_the_union.priorities[1])

@@ -26,10 +26,10 @@ class GameState < BaseObject
     # set the initial office holders from the politician_deck
     office_holders = []
     Config.get.seats_num.times do
-      office_holders.push OfficeHolder.new(office_holders.count % 2 == 0 ? 'A' : 'B', politician_deck.pop)
+      office_holders.push OfficeHolder.new(office_holders.count % 2 == 0 ? "#{:A}" : "#{:B}", politician_deck.pop)
     end
     # create the board
-    board = Board.new(state_of_the_union_deck.pop, office_holders, ['A', 'B'].shuffle[0], [], [], 0, 0, 0, 0)
+    board = Board.new(state_of_the_union_deck.pop, office_holders, "#{[:A, :B].shuffle[0]}", [], [], 0, 0, 0, 0)
     # create the snapshot
     game_state = GameState.new(board,
                                Hand.new([], [], []),
@@ -59,7 +59,7 @@ class GameState < BaseObject
 
   def apply_election(election, is_replay)
     # deal tactics before messing with the board
-    dealt_tactics = deal_tactics({ A: num_tactics(election, 'A'), B: num_tactics(election, 'B') }) if !is_replay
+    dealt_tactics = deal_tactics({ A: num_tactics(election, :A), B: num_tactics(election, :B) }) if !is_replay
     [:A, :B].each do |party|
       if !is_replay
         # deal the cards
@@ -86,7 +86,7 @@ class GameState < BaseObject
     Config.get.seats_num.times do |index|
       result = election.get_result(index, board)
       board.office_holders[index] =
-        OfficeHolder.new(result[:winning_party], result[:winner])
+        OfficeHolder.new("#{result[:winning_party]}", result[:winner])
     end
 
     # handle the dealt politician cards
@@ -201,8 +201,8 @@ class GameState < BaseObject
   end
 
   def deal_politicians
-    deal_cards(:politician, { A: politicians_needed('A', board),
-                              B: politicians_needed('B', board) })
+    deal_cards(:politician, { A: politicians_needed(:A, board),
+                              B: politicians_needed(:B, board) })
   end
 
   def deal_bills
@@ -227,7 +227,7 @@ class GameState < BaseObject
     end
     board.state_of_the_union = cycle.next_state_of_the_union
     state_of_the_union_deck.push old_state_of_the_union
-    board.tactics_lead_party = board.tactics_lead_party == 'A' ? 'B' : 'A'
+    board.tactics_lead_party = board.tactics_lead_party.to_sym == :A ? "#{:B}" : "#{:A}"
   end
 
   def politicians_needed(party, board)

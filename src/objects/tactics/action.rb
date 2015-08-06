@@ -95,7 +95,7 @@ class Action < BaseObject
   end
 
   def take_dice_from_opponent(args)
-    opponent_party = args[:party_played_by] == 'A' ? 'B' : 'A'
+    opponent_party = args[:party_played_by] == :A ? :B : :A
     if args[:legislative_session].clotured?(args[:index], args[:party_played_by], args[:played_tactic_index]) ||
        args[:legislative_session].clotured?(args[:index], opponent_party, args[:played_tactic_index])
       "Moot due to cloture"
@@ -113,7 +113,7 @@ class Action < BaseObject
 
   def or(args)
     if args[:played_tactic].or_index.nil?
-      args[:played_tactic].or_index = args[(args[:party_played_by] == 'A') ? :boss_A : :boss_B]
+      args[:played_tactic].or_index = args[(args[:party_played_by] == :A) ? :boss_A : :boss_B]
                                       .get_choice(params.actions.count)
     end
     params.actions[args[:played_tactic].or_index].apply(args)
@@ -121,9 +121,9 @@ class Action < BaseObject
 
   def target_party(args)
     (params.which.nil? || params.which == 'same') ?
-      (args[:party_played_on] == 'A' ? 'A' : 'B') :
+      (args[:party_played_on] == :A ? :A : :B) :
       params.which == 'opposite' ?
-        (args[:party_played_on] == 'A' ? 'B' : 'A') :
+        (args[:party_played_on] == :A ? :B : :A) :
         nil
   end
 

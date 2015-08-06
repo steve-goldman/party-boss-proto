@@ -33,8 +33,8 @@ class BoardRenderer < Renderer
       underline
     ]
       .concat(Config.get.seats_num.times.map { |index|
-                two_sides(board.office_holders[index].party == 'A' ? board.office_holders[index].politician : "",
-                               board.office_holders[index].party == 'B' ? board.office_holders[index].politician : "")})
+                two_sides(board.office_holders[index].party.to_sym == :A ? board.office_holders[index].politician : "",
+                          board.office_holders[index].party.to_sym == :B ? board.office_holders[index].politician : "")})
       .join("\n")
   end
 

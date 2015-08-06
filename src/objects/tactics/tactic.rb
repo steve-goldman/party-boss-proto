@@ -34,7 +34,7 @@ class Tactic < BaseObject
   def must_play_on_party(party)
     preconditions.each do |precondition|
       if precondition.precondition == 'played_on_party'
-        other_party = party == 'A' ? 'B' : 'A'
+        other_party = party == :A ? :B : :A
         return precondition.params.who == 'self' ? party : other_party
       end
     end

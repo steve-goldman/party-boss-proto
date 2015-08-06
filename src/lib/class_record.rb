@@ -31,9 +31,13 @@ module ClassRecord
     # define equals methods
     self.class.send(:define_method, :elem_equals?) do |type, elem, other_elem|
       if type.superclass == BaseObject
-        return false if !elem.equals?(other_elem)
+        if !elem.equals?(other_elem)
+          return false
+        end
       else
-        return false if elem != other_elem
+        if elem != other_elem
+          return false
+        end
       end
       true
     end

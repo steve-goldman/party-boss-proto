@@ -23,7 +23,7 @@ class Precondition < BaseObject
 
   def num_in_office(args)
     count = args[:board].office_holders.reduce(0) do |count, office_holder|
-      count + (office_holder.party == target_party(args) ? 1 : 0)
+      count + (office_holder.party.to_sym == target_party(args) ? 1 : 0)
     end
     operate(count, params.how_many)
   end
@@ -61,9 +61,9 @@ class Precondition < BaseObject
 
   def target_party(args)
     params.which.nil? || params.which == 'same' ?
-      (args[:party_played_on] == 'A' ? 'A' : 'B') :
+      (args[:party_played_on] == :A ? :A : :B) :
       params.which == 'opposite' ?
-        (args[:party_played_on] == 'A' ? 'B' : 'A') :
+        (args[:party_played_on] == :A ? :B : :A) :
         nil
   end
 
@@ -86,6 +86,6 @@ class Precondition < BaseObject
   end
   
   def other_party(args)
-    args[:party_played_by] == 'A' ? 'B' : 'A'
+    args[:party_played_by] == :A ? :B : :A
   end
 end

@@ -62,9 +62,9 @@ class Consequence < BaseObject
 
   def target_party(args)
     (params.which.nil? || params.which == 'same') ?
-      (args[:party_played_on] == 'A' ? 'A' : 'B') :
+      (args[:party_played_on] == :A ? :A : :B) :
       params.which == 'opposite' ?
-        (args[:party_played_on] == 'A' ? 'B' : 'A') :
+        (args[:party_played_on] == :A ? :B : :A) :
         nil
   end
 

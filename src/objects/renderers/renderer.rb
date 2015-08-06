@@ -6,8 +6,8 @@ class Renderer
   end
 
   def party_header(board)
-    a = "Party A#{board.tactics_lead_party == 'A' ? '*' : ''}"
-    b = "Party B#{board.tactics_lead_party == 'B' ? '*' : ''}"
+    a = "Party A#{board.tactics_lead_party.to_sym == :A ? '*' : ''}"
+    b = "Party B#{board.tactics_lead_party.to_sym == :B ? '*' : ''}"
     two_sides a, b
   end
 

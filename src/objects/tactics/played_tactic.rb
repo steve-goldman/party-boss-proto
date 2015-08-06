@@ -91,7 +91,7 @@ class PlayedTactic < BaseObject
   def apply_tabling_motion(legislative_session, game_state, boss_A, boss_B)
     if replacement_bill.nil?
       Logger.header("Boss #{party_played_on} choosing a replacement bill").indent
-      self.replacement_bill = (party_played_on == 'A' ? boss_A : boss_B)
+      self.replacement_bill = (party_played_on == :A ? boss_A : boss_B)
                               .get_bill(legislative_session.get_bills_on_floor(party_played_on))
     end
     old_bill = legislative_session.get_bill_on_floor(index, party_played_on)
@@ -106,8 +106,8 @@ class PlayedTactic < BaseObject
   
   def precondition_args(board, legislative_session)
     {
-      party_played_by: party_played_by,
-      party_played_on: party_played_on,
+      party_played_by: party_played_by.to_sym,
+      party_played_on: party_played_on.to_sym,
       index: index,
       board: board,
       legislative_session: legislative_session,
@@ -116,8 +116,8 @@ class PlayedTactic < BaseObject
 
   def action_args(board, legislative_session, boss_A, boss_B, dice_roller, played_tactic_index)
     {
-      party_played_by: party_played_by,
-      party_played_on: party_played_on,
+      party_played_by: party_played_by.to_sym,
+      party_played_on: party_played_on.to_sym,
       index: index,
       board: board,
       legislative_session: legislative_session,
@@ -131,8 +131,8 @@ class PlayedTactic < BaseObject
 
   def consequence_args(played_tactic_index, board, legislative_session)
     {
-      party_played_by: party_played_by,
-      party_played_on: party_played_on,
+      party_played_by: party_played_by.to_sym,
+      party_played_on: party_played_on.to_sym,
       index: index,
       board: board,
       legislative_session: legislative_session,

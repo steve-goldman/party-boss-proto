@@ -8,5 +8,9 @@ class OfficeHolder < BaseObject
     { name: "party",      type: String     },
     { name: "politician", type: Politician },
   ]
+
+  def to_s
+    "'#{party}': #{politician}"
+  end
   
 end

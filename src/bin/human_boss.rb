@@ -18,7 +18,7 @@ class HumanBoss
       candidates = game_state.board.office_holders.map do |office_holder|
         i += 1
         Logger.subheader("Selecting candidate for race ##{i}").indent
-        if @party == office_holder.party
+        if @party == office_holder.party.to_sym
           Logger.log("Encumbent #{office_holder.politician} is in your party").unindent
           office_holder.politician
         else
@@ -143,7 +143,7 @@ class HumanBoss
   def input_floor_matchup_index(legislative_session)
     # show the list
     Config.get.bills_num_on_floor.times do |index|
-      Logger.log "#{index + 1}: #{legislative_session.get_bill_on_floor(index, 'A')} | #{legislative_session.get_bill_on_floor(index, 'B')}"
+      Logger.log "#{index + 1}: #{legislative_session.get_bill_on_floor(index, :A)} | #{legislative_session.get_bill_on_floor(index, :B)}"
     end
 
     while true
@@ -168,7 +168,7 @@ class HumanBoss
     while true
       Logger.prompt "(Enter party's bill A/B): "
       input = gets.chomp.upcase
-      if input != 'A' && input != 'B'
+      if input != :A && input != :B
         Logger.error "Input #{input} is invalid"
       else
         Logger.unindent
@@ -202,7 +202,7 @@ class HumanBoss
   def confirm_tactic(legislative_session, tactic, index, party)
     Logger.subheader("You have selected:").indent
     Logger.log "#{tactic}"
-    Logger.log "#{legislative_session.get_bill_on_floor(index, 'A')} | #{legislative_session.get_bill_on_floor(index, 'B')}"
+    Logger.log "#{legislative_session.get_bill_on_floor(index, :A)} | #{legislative_session.get_bill_on_floor(index, :B)}"
     Logger.log "Party '#{party}'s bill"
     Logger.unindent
     confirm

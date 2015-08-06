@@ -38,7 +38,7 @@ class Board < BaseObject
     [
       Config.get.leadership_dice_max,
       office_holders.reduce(0) { |sum, office_holder|
-        if office_holder.party == party
+        if office_holder.party.to_sym == party
           sum + office_holder.politician.strengths.total
         else
           sum
@@ -56,13 +56,13 @@ class Board < BaseObject
   end
 
   def increment_vps(party, vps)
-    is_A(party) ?
+    party == :A ?
       self.hard_vps_A = hard_vps_A.to_i + vps :
       self.hard_vps_B = hard_vps_B.to_i + vps
   end
 
   def add_fundraising_dice(party, delta)
-    is_A(party) ?
+    party == :A ?
       self.fundraising_dice_A += delta :
       self.fundraising_dice_B += delta
   end
@@ -73,10 +73,6 @@ class Board < BaseObject
     !office_holders.select { |office_holder|
       candidate.equals?(office_holder.politician)
     }.empty?
-  end
-
-  def is_A(party)
-    party == 'A' || party == :A
   end
 
 end

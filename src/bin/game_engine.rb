@@ -22,8 +22,8 @@ class GameEngine
       game.initial_game_state = GameState.deserialize(@game_state.serialize)
       @game = game
     end
-    @boss_A = HumanBoss.new("A", @game_state.hand_A)
-    @boss_B = HumanBoss.new("B", @game_state.hand_B)
+    @boss_A = HumanBoss.new(:A, @game_state.hand_A)
+    @boss_B = HumanBoss.new(:B, @game_state.hand_B)
     @num_catchup_cycles = @game.cycles.count
     catch_up if !game.nil?
   end
@@ -63,6 +63,8 @@ class GameEngine
       
       @game_state.end_cycle(@game.cycles[index], true)
     end
+    puts @game_state.board.tactics_lead_party
+    puts @game.final_game_state.board.tactics_lead_party
     # error checking
     raise "caught up snapshot disagrees with game state" if
       !@game.final_game_state.equals?(@game_state)
@@ -72,7 +74,7 @@ class GameEngine
     Logger.subheader "The game is beginning"
 
     # show the initial hands
-    ['A', 'B'].each do |party|
+    [:A, :B].each do |party|
       Logger.header("Party '#{party}'s hand")
       Logger.header(HandRenderer.get.render @game_state.send("hand_#{party}"))
     end

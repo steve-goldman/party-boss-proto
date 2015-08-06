@@ -6,46 +6,47 @@ require_relative '../../../src/objects/tactics/precondition'
 class PreconditionTests < Minitest::Test
 
   def test_num_in_office_tests
-    ['A', 'B'].each do |my_party|
-      ['self', 'opponent'].each do |who|
-        party = target_party(my_party, who)
+    [:A, :B].each do |my_party|
+      ['same', 'opposite'].each do |which|
+        party = target_party(my_party, which)
 
-        precondition = get_num_in_office(who, 2, "eq")
-        assert !precondition.holds(args(my_party, nil, nil, nil, get_board(party, 1)))
-        assert  precondition.holds(args(my_party, nil, nil, nil, get_board(party, 2)))
-        assert !precondition.holds(args(my_party, nil, nil, nil, get_board(party, 3)))
+        precondition = get_num_in_office(which, 2, "eq")
+        assert !precondition.holds(args(nil, party, nil, nil, get_board(which == 'same' ? party : other_party(party), 1)))
+        assert  precondition.holds(args(nil, party, nil, nil, get_board(which == 'same' ? party : other_party(party), 2)))
+        assert !precondition.holds(args(nil, party, nil, nil, get_board(which == 'same' ? party : other_party(party), 3)))
 
-        precondition = get_num_in_office(who, 2, "gt")
-        assert !precondition.holds(args(my_party, nil, nil, nil, get_board(party, 1)))
-        assert !precondition.holds(args(my_party, nil, nil, nil, get_board(party, 2)))
-        assert  precondition.holds(args(my_party, nil, nil, nil, get_board(party, 3)))
+        precondition = get_num_in_office(which, 2, "gt")
+        assert !precondition.holds(args(nil, party, nil, nil, get_board(which == 'same' ? party : other_party(party), 1)))
+        assert !precondition.holds(args(nil, party, nil, nil, get_board(which == 'same' ? party : other_party(party), 2)))
+        assert  precondition.holds(args(nil, party, nil, nil, get_board(which == 'same' ? party : other_party(party), 3)))
 
-        precondition = get_num_in_office(who, 2, "gte")
-        assert !precondition.holds(args(my_party, nil, nil, nil, get_board(party, 1)))
-        assert  precondition.holds(args(my_party, nil, nil, nil, get_board(party, 2)))
-        assert  precondition.holds(args(my_party, nil, nil, nil, get_board(party, 3)))
+        precondition = get_num_in_office(which, 2, "gte")
+        assert !precondition.holds(args(nil, party, nil, nil, get_board(which == 'same' ? party : other_party(party), 1)))
+        assert  precondition.holds(args(nil, party, nil, nil, get_board(which == 'same' ? party : other_party(party), 2)))
+        assert  precondition.holds(args(nil, party, nil, nil, get_board(which == 'same' ? party : other_party(party), 3)))
 
-        precondition = get_num_in_office(who, 2, "lt")
-        assert  precondition.holds(args(my_party, nil, nil, nil, get_board(party, 1)))
-        assert !precondition.holds(args(my_party, nil, nil, nil, get_board(party, 2)))
-        assert !precondition.holds(args(my_party, nil, nil, nil, get_board(party, 3)))
+        precondition = get_num_in_office(which, 2, "lt")
+        assert  precondition.holds(args(nil, party, nil, nil, get_board(which == 'same' ? party : other_party(party), 1)))
+        assert !precondition.holds(args(nil, party, nil, nil, get_board(which == 'same' ? party : other_party(party), 2)))
+        assert !precondition.holds(args(nil, party, nil, nil, get_board(which == 'same' ? party : other_party(party), 3)))
 
-        precondition = get_num_in_office(who, 2, "lte")
-        assert  precondition.holds(args(my_party, nil, nil, nil, get_board(party, 1)))
-        assert  precondition.holds(args(my_party, nil, nil, nil, get_board(party, 2)))
-        assert !precondition.holds(args(my_party, nil, nil, nil, get_board(party, 3)))
+        precondition = get_num_in_office(which, 2, "lte")
+        assert  precondition.holds(args(nil, party, nil, nil, get_board(which == 'same' ? party : other_party(party), 1)))
+        assert  precondition.holds(args(nil, party, nil, nil, get_board(which == 'same' ? party : other_party(party), 2)))
+        assert !precondition.holds(args(nil, party, nil, nil, get_board(which == 'same' ? party : other_party(party), 3)))
       end
     end
   end
 
   def test_bill_agenda
-    precondition = get_bill_agenda('self', 'conservative')
-    assert  precondition.holds(args('A', 'A', get_bill('conservative'), nil, nil))
-    assert !precondition.holds(args('A', 'A', get_bill('moderate'),     nil, nil))
+    skip("can't do this without a legislative session")
+    precondition = get_bill_agenda('same', 'conservative')
+    assert  precondition.holds(args(:A, :A, get_bill('conservative'), nil, nil))
+    assert !precondition.holds(args(:A, :A, get_bill('moderate'),     nil, nil))
 
-    precondition = get_bill_agenda('opponent', 'conservative')
-    assert  precondition.holds(args('A', 'B', nil, get_bill('conservative'), nil))
-    assert !precondition.holds(args('A', 'B', nil, get_bill('moderate'),     nil))
+    precondition = get_bill_agenda('opposite', 'conservative')
+    assert  precondition.holds(args(:A, :B, nil, get_bill('conservative'), nil))
+    assert !precondition.holds(args(:A, :B, nil, get_bill('moderate'),     nil))
   end
 
   def test_or
@@ -56,10 +57,10 @@ class PreconditionTests < Minitest::Test
   end
 
   def test_played_on_party
-    assert  get_played_on_party('self').holds(args('A', 'A', nil, nil, nil))
-    assert !get_played_on_party('self').holds(args('A', 'B', nil, nil, nil))
-    assert  get_played_on_party('opponent').holds(args('A', 'B', nil, nil, nil))
-    assert !get_played_on_party('opponent').holds(args('A', 'A', nil, nil, nil))
+    assert  get_played_on_party('self').holds(args(:A, :A, nil, nil, nil))
+    assert !get_played_on_party('self').holds(args(:A, :B, nil, nil, nil))
+    assert  get_played_on_party('opponent').holds(args(:A, :B, nil, nil, nil))
+    assert !get_played_on_party('opponent').holds(args(:A, :A, nil, nil, nil))
   end
 
   private
@@ -74,12 +75,13 @@ class PreconditionTests < Minitest::Test
     }
   end
 
-  def target_party(my_party, who)
-    party = (who == 'self') ? my_party : other_party(my_party)
+  def target_party(my_party, which)
+    (which == 'same') ? my_party : other_party(my_party)
   end
 
-  def get_num_in_office(who, how_many, operator)
-    Precondition.new("num_in_office", PreconditionParams.new(who,
+  def get_num_in_office(which, how_many, operator)
+    Precondition.new("num_in_office", PreconditionParams.new(nil,
+                                                             which,
                                                              nil,
                                                              how_many,
                                                              operator,
@@ -87,17 +89,18 @@ class PreconditionTests < Minitest::Test
   end
 
   def get_or(preconditions)
-    Precondition.new("or", PreconditionParams.new(nil, nil, nil, nil,
+    Precondition.new("or", PreconditionParams.new(nil, nil, nil, nil, nil,
                                                   preconditions))
   end
 
   def get_played_on_party(who)
     Precondition.new("played_on_party", PreconditionParams.new(who,
-                                                               nil, nil, nil, nil))
+                                                               nil, nil, nil, nil, nil))
   end
 
-  def get_bill_agenda(who, agenda)
-    Precondition.new("bill_agenda", PreconditionParams.new(who,
+  def get_bill_agenda(which, agenda)
+    Precondition.new("bill_agenda", PreconditionParams.new(nil,
+                                                           which,
                                                            agenda,
                                                            nil, nil, nil))
   end
@@ -111,12 +114,12 @@ class PreconditionTests < Minitest::Test
   end
 
   def dummy_precondition(name)
-    Precondition.new(name, PreconditionParams.new(nil, nil, nil, nil, nil))
+    Precondition.new(name, PreconditionParams.new(nil, nil, nil, nil, nil, nil))
   end
 
   def get_board(party, count)
-    office_holders = count.times.map { OfficeHolder.new(party, nil) }
-    Board.new(nil, office_holders, nil, nil, nil, nil, nil)
+    office_holders = count.times.map { OfficeHolder.new("#{party}", nil) }
+    Board.new(nil, office_holders, nil, nil, nil, nil, nil, 0, 0)
   end
 
   def get_bill(agenda)
@@ -124,6 +127,6 @@ class PreconditionTests < Minitest::Test
   end
 
   def other_party(party)
-    party == 'A' ? 'B' : 'A'
+    party == :A ? :B : :A
   end
 end

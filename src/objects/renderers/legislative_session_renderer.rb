@@ -39,16 +39,16 @@ class LegislativeSessionRenderer < Renderer
   def results(legislative_session, board)
     Config.get.bills_num_on_floor.times.map { |index|
       [
-        two_sides(legislative_session.get_bill_on_floor(index, 'A'),
-                  legislative_session.get_bill_on_floor(index, 'B')),
-        two_sides(worth(legislative_session, board, index, 'A'),
-                  worth(legislative_session, board, index, 'B')),
-        two_sides(cost(legislative_session, index, 'A'),
-                  cost(legislative_session, index, 'B')),
-        two_sides(outcomes(legislative_session, index, 'A'),
-                  outcomes(legislative_session, index, 'B')),
-        two_sides(passed(legislative_session, index, 'A'),
-                  passed(legislative_session, index, 'B')),
+        two_sides(legislative_session.get_bill_on_floor(index, :A),
+                  legislative_session.get_bill_on_floor(index, :B)),
+        two_sides(worth(legislative_session, board, index, :A),
+                  worth(legislative_session, board, index, :B)),
+        two_sides(cost(legislative_session, index, :A),
+                  cost(legislative_session, index, :B)),
+        two_sides(outcomes(legislative_session, index, :A),
+                  outcomes(legislative_session, index, :B)),
+        two_sides(passed(legislative_session, index, :A),
+                  passed(legislative_session, index, :B)),
         underline,
       ]
     }.join("\n")
@@ -93,20 +93,20 @@ class LegislativeSessionRenderer < Renderer
     tactics_B = []
     legislative_session.played_tactics.each do |played_tactic|
       if !played_tactic.tactic.filibuster? && played_tactic.index == index
-        (played_tactic.party_played_on == 'A' ? tactics_A : tactics_B).push(
+        (played_tactic.party_played_on == :A ? tactics_A : tactics_B).push(
           "#{played_tactic.tactic} played by '#{played_tactic.party_played_by}'")
       end
     end
     if tactics_A.empty? && tactics_B.empty?
       [
-        two_sides(legislative_session.get_bill_on_floor(index, 'A'),
-                  legislative_session.get_bill_on_floor(index, 'B')),
+        two_sides(legislative_session.get_bill_on_floor(index, :A),
+                  legislative_session.get_bill_on_floor(index, :B)),
         underline
       ].join("\n")
     else
       [
-        two_sides(legislative_session.get_bill_on_floor(index, 'A'),
-                  legislative_session.get_bill_on_floor(index, 'B')),
+        two_sides(legislative_session.get_bill_on_floor(index, :A),
+                  legislative_session.get_bill_on_floor(index, :B)),
         underline
       ]
         .concat([tactics_A.count, tactics_B.count].max.times.map { |index|

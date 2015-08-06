@@ -32,6 +32,10 @@ class Precondition < BaseObject
     target_bill(args).agenda == params.agenda
   end
 
+  def bill_passes(args)
+    args[:legislative_session].passes?(args[:index], target_party(args))
+  end
+
   def or(args)
     params.preconditions.each do |precondition|
       return true if precondition.holds(args)

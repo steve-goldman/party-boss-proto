@@ -68,9 +68,9 @@ class PlayedTactic < BaseObject
 
   def apply_filibuster(game_state)
     if drawn_tactic.nil?
-      drawn_tactics = game_state.deal_tactics(party_played_by, 1)
-      if !drawn_tactics.empty?
-        self.drawn_tactic = drawn_tactics[0]
+      drawn_tactics = game_state.deal_tactics_to_party(party_played_by, 1)
+      if !drawn_tactics[party_played_by].empty?
+        self.drawn_tactic = drawn_tactics[party_played_by][0]
       else
         self.drawn_tactic = Tactic::Pass
       end

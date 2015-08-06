@@ -214,6 +214,10 @@ class GameState < BaseObject
     deal_cards(:tactic, num_needed)
   end
 
+  def deal_tactics_to_party(party, count)
+    party == :A ? deal_tactics({ A: count, B: 0 }) : deal_tactics({ A: 0, B: count })
+  end
+
   def end_cycle(cycle, is_replay)
     old_state_of_the_union = board.state_of_the_union
     if !is_replay

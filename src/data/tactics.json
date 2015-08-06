@@ -516,12 +516,6 @@
         "params": {
           "how_many": 1
         }
-      },
-      {
-        "consequence": "add_bill_vps",
-        "params": {
-          "how_many": 1
-        }
       }
     ]
   },

@@ -44,7 +44,7 @@ class PlayedTactic < BaseObject
     if !tactic.actions.empty?
       tactic.actions.map { |action|
         action.apply(action_args(board, legislative_session, boss_A, boss_B, dice_roller, played_tactic_index))
-      }.join("\n")
+      }.select { |elem| !elem.nil? }.join("\n")
     else
       nil
     end
@@ -54,7 +54,7 @@ class PlayedTactic < BaseObject
     if !tactic.consequences.empty?
       tactic.consequences.map { |consequence|
         consequence.apply(consequence_args(played_tactic_index, board, legislative_session))
-      }.join("\n")
+      }.select { |elem| !elem.nil? }.join("\n")
     else
       nil
     end

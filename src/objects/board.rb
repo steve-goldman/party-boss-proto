@@ -56,13 +56,13 @@ class Board < BaseObject
   end
 
   def increment_vps(party, vps)
-    party == 'A' ?
+    is_A(party) ?
       self.hard_vps_A = hard_vps_A.to_i + vps :
       self.hard_vps_B = hard_vps_B.to_i + vps
   end
 
   def add_fundraising_dice(party, delta)
-    party == 'A' ?
+    is_A(party) ?
       self.fundraising_dice_A += delta :
       self.fundraising_dice_B += delta
   end
@@ -73,6 +73,10 @@ class Board < BaseObject
     !office_holders.select { |office_holder|
       candidate.equals?(office_holder.politician)
     }.empty?
+  end
+
+  def is_A(party)
+    party == 'A' || party == :A
   end
 
 end

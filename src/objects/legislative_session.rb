@@ -85,67 +85,66 @@ class LegislativeSession < BaseObject
   def bill_vps(index, party, board)
     bill = get_bill_on_floor(index, party)
     (bill.sector == board.state_of_the_union.priorities[0] ? 1 : 0) +
-      (party == 'A' ? @bill_A_vps[index] : @bill_B_vps[index])
+      (is_A(party) ? @bill_A_vps[index] : @bill_B_vps[index])
   end
 
   def incr_bill_vps(index, party, board, delta)
-    party == 'A' ?
+    is_A(party) ?
       @bill_A_vps[index] = [@bill_A_vps[index] + delta, 0].max :
       @bill_B_vps[index] = [@bill_B_vps[index] + delta, 0].max
     bill_vps(index, party, board)
   end
 
   def bill_cost(index, party)
-    party == 'A' ? @bill_A_cost[index] : @bill_B_cost[index]
+    is_A(party) ? @bill_A_cost[index] : @bill_B_cost[index]
   end
 
   def incr_bill_cost(index, party, delta)
-    party == 'A' ?
+    is_A(party) ?
       @bill_A_cost[index] = [@bill_A_cost[index] + delta, 0].max :
       @bill_B_cost[index] = [@bill_B_cost[index] + delta, 0].max
   end
 
   def auto_pass_bill(index, party)
-    party == 'A' ?
+    is_A(party) ?
       @auto_pass_A[index] = true :
       @auto_pass_B[index] = true
   end
 
   def set_all_dice_count_as(index, party, count)
-    party == 'A' ?
+    is_A(party) ?
       @bill_A_all_dice_outcomes[index] = count :
       @bill_B_all_dice_outcomes[index] = count
-    outcomes = party == 'A' ? @bill_A_all_dice_outcomes : @bill_B_all_dice_outcomes
   end
 
   def all_dice_outcomes(party)
-    party == 'A' ? @bill_A_all_dice_outcomes : @bill_B_all_dice_outcomes
+    is_A(party) ? @bill_A_all_dice_outcomes : @bill_B_all_dice_outcomes
   end
 
   def get_allocation(party)
-    party == 'A' ? @allocation_A : @allocation_B
+    is_A(party) ? @allocation_A : @allocation_B
   end
 
   def get_bill_allocation(index, party)
-    party == 'A' ?
+    is_A(party) ?
       @allocation_A.counts[index] :
       @allocation_B.counts[index]
   end
 
   def set_bill_allocation(index, party, count)
-    party == 'A' ?
+    is_A(party) ?
       @allocation_A.counts[index] = count :
       @allocation_B.counts[index] = count
   end
 
   def change_bill_allocation(index, party, delta)
-    party == 'A' ?
+    is_A(party) ?
       @allocation_A.counts[index] += [Config.get.leadership_dice_max - @allocation_A.sum, delta].min :
       @allocation_B.counts[index] += [Config.get.leadership_dice_max - @allocation_B.sum, delta].min
   end
 
   def give_dice_to_opponent(index, party, count)
-    if party == 'A'
+    if is_A(party)
       delta = [count, @allocation_A.counts[index]].min
       @allocation_B.counts[index] += delta
       @allocation_A.counts[index] -= delta
@@ -193,19 +192,19 @@ class LegislativeSession < BaseObject
   end
 
   def get_bill_on_floor(index, party)
-    party == 'A' || party == :A ?
+    is_A(party) ?
       @current_bills_A[index] :
       @current_bills_B[index]
   end
 
   def get_bills_on_floor(party)
-    party == 'A' || party == :A ?
+    is_A(party) ?
       @current_bills_A :
       @current_bills_B
   end
 
   def table_bill(index, party, replacement_bill)
-    if party == 'A'
+    if is_A(party)
       @current_bills_A[index] = replacement_bill
       @bill_A_vps[index]      = replacement_bill.vps
       @bill_A_cost[index]     = replacement_bill.vps
@@ -217,13 +216,13 @@ class LegislativeSession < BaseObject
   end
 
   def cloture_bill(index, party)
-    party == 'A' ?
+    is_A(party) ?
       @cloture_A_index[index] = played_tactics.count :
       @cloture_B_index[index] = played_tactics.count
   end
 
   def clotured?(index, party, played_tactic_index)
-    party == 'A' ?
+    is_A(party) ?
       played_tactic_index < @cloture_A_index[index] :
       played_tactic_index < @cloture_B_index[index]
   end
@@ -235,7 +234,7 @@ class LegislativeSession < BaseObject
     while !last_was_pass || !last_last_was_pass
       Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor(self, game_state.board))
       Logger.header("Boss #{party} choosing a tactic").indent
-      arr = (party == 'A' ? boss_A : boss_B).get_tactic(self)
+      arr = (is_A(party) ? boss_A : boss_B).get_tactic(self)
       tactic = arr[0]
       if tactic == Tactic::Pass
         last_last_was_pass = true if last_was_pass
@@ -247,7 +246,7 @@ class LegislativeSession < BaseObject
         if !played_tactic.can_play(game_state.board, self)
           Logger.error "This tactic cannot be played like this"
           # make them choose again
-          party = (party == 'A' ? 'B' : 'A')
+          party = (is_A(party) ? 'B' : 'A')
         else
           last_was_pass = false
           # remove from the hand
@@ -261,7 +260,7 @@ class LegislativeSession < BaseObject
           played_tactics.push(played_tactic)
         end
       end
-      party = (party == 'A' ? 'B' : 'A')
+      party = (is_A(party) ? 'B' : 'A')
       Logger.unindent
     end
   end
@@ -273,7 +272,7 @@ class LegislativeSession < BaseObject
   end
 
   def auto_passes?(index, party)
-    party == 'A' ? @auto_pass_A[index] : @auto_pass_B[index]
+    is_A(party) ? @auto_pass_A[index] : @auto_pass_B[index]
   end
 
   def log_if_output(header, output)
@@ -281,6 +280,10 @@ class LegislativeSession < BaseObject
       Logger.subheader(header).indent
       Logger.log(output).unindent
     end
+  end
+
+  def is_A(party)
+    party == 'A' || party == :A
   end
 
 end

@@ -510,9 +510,22 @@
     ],
     "actions": [
       {
-        "action": "add_bill_vps",
+        "action": "or",
         "params": {
-          "how_many": 1
+          "actions": [
+            {
+              "action": "add_bill_vps",
+              "params": {
+                "how_many": 1
+              }
+            },
+            {
+              "action": "take_cloakroom_dice",
+              "params": {
+                "how_many": 1
+              }
+            }
+          ]
         }
       }
     ],

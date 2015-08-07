@@ -593,45 +593,27 @@
         }
       },
       {
+        "action": "add_bill_vps",
+        "params": {
+          "how_many": 1
+        }
+      },
+      {
         "action": "add_bill_cost",
+        "params": {
+          "which": "opposite",
+          "how_many": 1
+        }
+      },
+      {
+        "action": "add_bill_vps",
         "params": {
           "which": "opposite",
           "how_many": 1
         }
       }
     ],
-    "consequences": [
-      {
-        "consequence": "add_bill_vps",
-        "params": {
-          "how_many": 1,
-          "preconditions": [
-            {
-              "precondition": "bill_passes",
-              "params": {
-                "which": "opposite",
-                "passes": "false"
-              }
-            }
-          ]
-        }
-      },
-      {
-        "consequence": "add_bill_vps",
-        "params": {
-          "which": "opposite",
-          "how_many": 1,
-          "preconditions": [
-            {
-              "precondition": "bill_passes",
-              "params": {
-                "passes": "false"
-              }
-            }
-          ]
-        }
-      }
-    ]
+    "consequences": []
   },
   {
     "name": "Cloture",

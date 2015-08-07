@@ -31,16 +31,6 @@ class GameEngine
     catch_up if !game.nil?
   end
 
-  def make_boss(party, type)
-    if type == "HUMAN"
-      HumanBoss.new(party, @game_state.send("hand_#{party}"))
-    elsif type == "AI"
-      RandomBoss.new(party, @game_state.send("hand_#{party}"))
-    else
-      raise "Unexpected boss type: #{type}"
-    end
-  end
-
   def catch_up
     @game.cycles.each_index do |index|
       Logger.subheader "Catch-up cycle #{index + 1} / #{@num_catchup_cycles}"
@@ -130,6 +120,16 @@ class GameEngine
   end
 
   private
+
+  def make_boss(party, type)
+    if type == "HUMAN"
+      HumanBoss.new(party, @game_state.send("hand_#{party}"))
+    elsif type == "AI"
+      RandomBoss.new(party, @game_state.send("hand_#{party}"))
+    else
+      raise "Unexpected boss type: #{type}"
+    end
+  end
 
 end
 

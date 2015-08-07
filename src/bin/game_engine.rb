@@ -8,24 +8,36 @@ require_relative '../objects/renderers/election_renderer'
 require_relative '../objects/renderers/legislative_session_renderer'
 require_relative '../objects/renderers/hand_renderer'
 require_relative 'human_boss'
+require_relative 'random_boss'
 require_relative 'dice_roller'
 require_relative 'logger'
 
 class GameEngine
 
-  def initialize(game = nil)
-    if game.nil?
+  def initialize(options)
+    if options[:input_file].nil?
       @game_state = GameState.new_game
       @game = Game.new(GameState.deserialize(@game_state.serialize), [], nil)
     else
+      game = Game.from_file(options[:input_file])
       @game_state = game.initial_game_state
       game.initial_game_state = GameState.deserialize(@game_state.serialize)
       @game = game
     end
-    @boss_A = HumanBoss.new(:A, @game_state.hand_A)
-    @boss_B = HumanBoss.new(:B, @game_state.hand_B)
+    @boss_A = make_boss(:A, options[:boss_A])
+    @boss_B = make_boss(:B, options[:boss_B])
     @num_catchup_cycles = @game.cycles.count
     catch_up if !game.nil?
+  end
+
+  def make_boss(party, type)
+    if type == "HUMAN"
+      HumanBoss.new(party, @game_state.send("hand_#{party}"))
+    elsif type == "AI"
+      RandomBoss.new(party, @game_state.send("hand_#{party}"))
+    else
+      raise "Unexpected boss type: #{type}"
+    end
   end
 
   def catch_up
@@ -124,6 +136,8 @@ options = {
   input_file: nil,
   output_file: nil,
   num_cycles: 1,
+  boss_A: "HUMAN",
+  boss_B: "HUMAN",
 }
 
 opt_parser = OptionParser.new do |opts|
@@ -142,14 +156,22 @@ opt_parser = OptionParser.new do |opts|
           "How many new cycles to play, default #{options[:num_cycles]}") do |num_cycles|
     options[:num_cycles] = num_cycles
   end
+
+  opts.on("-A", "--boss-A HUMAN|AI",
+          "Human or AI control for boss A, default is #{options[:boss_A]}") do |boss_A|
+    options[:boss_A] = boss_A
+  end
+  
+  opts.on("-B", "--boss-B HUMAN|AI",
+          "Human or AI control for boss B, default is #{options[:boss_B]}") do |boss_B|
+    options[:boss_B] = boss_B
+  end
   
 end
 
 opt_parser.parse!
 
-engine = options[:input_file].nil? ?
-           engine = GameEngine.new(nil) :          
-           GameEngine.new(Game.from_file(options[:input_file]))
+engine = GameEngine.new(options)
 
 game = engine.run(options[:num_cycles].to_i)
 

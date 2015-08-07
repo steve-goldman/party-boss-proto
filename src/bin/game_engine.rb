@@ -28,7 +28,6 @@ class GameEngine
     @boss_A = make_boss(:A, options[:boss_A])
     @boss_B = make_boss(:B, options[:boss_B])
     @num_catchup_cycles = @game.cycles.count
-    catch_up if !game.nil?
   end
 
   def catch_up
@@ -74,6 +73,8 @@ class GameEngine
   end
   
   def run(num_cycles)
+    catch_up
+    
     Logger.subheader "The game is beginning"
 
     # show the initial hands

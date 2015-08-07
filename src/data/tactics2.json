@@ -1,0 +1,73 @@
+[
+  {
+    "name": "Vice President",
+    "preconditions": [
+      {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "self"
+        }
+      }
+    ],
+    "actions": [
+      {
+        "action": "or",
+        "params": {
+          "actions": [
+            {
+              "action": "add_bill_cost",
+              "params": {
+                "description": "Add one to the cost of this bill",
+                "how_many": -1
+              }
+            },
+            {
+              "action": "add_bill_cost",
+              "params": {
+                "description": "Add one to the cost of the opposite bill",
+                "which": "opposite",
+                "how_many": 1
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "consequences": []
+  },
+  {
+    "name": "Chairmanship",
+    "preconditions": [
+      {
+        "precondition": "played_on_party",
+        "params": {
+          "who": "self"
+        }
+      }
+    ],
+    "actions": [
+      {
+        "action": "or",
+        "params": {
+          "actions": [
+            {
+              "action": "add_bill_vps",
+              "params": {
+                "description": "Add one VP to your bill",
+                "how_many": 1
+              }
+            },
+            {
+              "action": "take_cloakroom_dice",
+              "params": {
+                "description": "Take one die from your cloakroom",
+                "how_many": 1
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "consequences": []
+  }
+]

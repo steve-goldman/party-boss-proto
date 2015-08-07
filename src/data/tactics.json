@@ -572,7 +572,23 @@
         }
       }
     ],
-    "actions": [],
+    "actions": [
+      {
+        "action": "yes_or_no",
+        "params": {
+          "which": "opposite",
+          "yes_description": "Forfeit one die to opponent",
+          "no_description": "Your opponent's bill automatically passes",
+          "action": {
+            "action": "send_dice_to_cloakroom",
+            "params": {
+              "which": "opposite",
+              "how_many": 1
+            }
+          }
+        }
+      }
+    ],
     "consequences": []
   },
   {

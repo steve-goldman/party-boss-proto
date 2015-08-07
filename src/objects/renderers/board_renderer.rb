@@ -21,11 +21,28 @@ class BoardRenderer < Renderer
       office_holders(board),   underline,
       vps(board),              underline,
       passed_bills(board),     underline,
-      fundraising_dice(board), underline,
+      fundraising_dice(board),
+    ].join("\n")
+  end
+
+  def render_sunsetting_bills(board, next_cycle)
+    [
+      "Sunsetting bills",  underline,
+      party_header(board), underline,
+      sunsetting_bills(board, next_cycle),
     ].join("\n")
   end
 
   private
+
+  def sunsetting_bills(board, next_cycle)
+    num_a = board.sunsetting_bills_count(:A, next_cycle)
+    num_b = board.sunsetting_bills_count(:B, next_cycle)
+    [num_a, num_b].max.times.map { |index|
+      two_sides(index < num_a ? board.passed_bills_A[index] : "",
+                index < num_b ? board.passed_bills_B[index] : "")
+    }.join("\n")
+  end
   
   def office_holders(board)
     [

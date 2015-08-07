@@ -12,6 +12,7 @@ class Config < BaseObject
     { name: "leadership_dice_max",          type: Integer },
     { name: "tactics_num_initial",          type: Integer },
     { name: "tactics_num_per_campaign_die", type: Integer },
+    { name: "bill_sunset_num_cycles",       type: Integer },
   ]
 
   @@instance = nil

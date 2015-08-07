@@ -61,6 +61,8 @@ class GameEngine
       Logger.header(LegislativeSessionRenderer.get.render legislative_session,
                                                           @game_state.board)
       
+      Logger.header(BoardRenderer.get.render_sunsetting_bills(@game_state.board,
+                                                              @game_state.cur_cycle + 1))
       @game_state.end_cycle(@game.cycles[index], true)
     end
     # error checking
@@ -101,6 +103,8 @@ class GameEngine
                                                           @game_state.board)
 
       cycle = Cycle.new(election, legislative_session, nil)  # gs fills in SOTU
+      Logger.header(BoardRenderer.get.render_sunsetting_bills(@game_state.board,
+                                                              @game_state.cur_cycle + 1))
       @game_state.end_cycle(cycle, false)
       @game.cycles.push cycle
     end

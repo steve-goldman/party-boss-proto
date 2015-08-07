@@ -18,6 +18,11 @@ class Board < BaseObject
     { name: "fundraising_dice_B", type: Integer                      },
   ]
 
+  def after_init
+    @passed_bills_cycle_A = []
+    @passed_bills_cycle_B = []
+  end
+
   def num_encumbents(party)
     office_holders.reduce(0) do |sum, office_holder|
       sum + (office_holder.party == party ? 1 : 0)
@@ -68,6 +73,41 @@ class Board < BaseObject
     party == :A ?
       self.fundraising_dice_A += delta :
       self.fundraising_dice_B += delta
+  end
+
+  def push_passed_bill(party, bill, cur_cycle)
+    if party == :A
+      passed_bills_A.push(bill)
+      @passed_bills_cycle_A.push(cur_cycle)
+    else
+      passed_bills_B.push(bill)
+      @passed_bills_cycle_B.push(cur_cycle)
+    end
+  end
+
+  def sunsetting_bills_count(party, next_cycle)
+    if party == :A
+      @passed_bills_cycle_A.reduce(0) do |sum, elem|
+        sum + (next_cycle - elem > Config.get.bill_sunset_num_cycles ? 1 : 0)
+      end
+    else
+      @passed_bills_cycle_B.reduce(0) do |sum, elem|
+        sum + (next_cycle - elem > Config.get.bill_sunset_num_cycles ? 1 : 0)
+      end
+    end
+  end
+  
+  def end_cycle(next_cycle, bill_deck)
+    sunsetting_bills_count(:A, next_cycle).times do
+      bill_deck.push(passed_bills_A[0])
+      passed_bills_A.delete_at(0)
+      @passed_bills_cycle_A.delete_at(0)
+    end
+    sunsetting_bills_count(:B, next_cycle).times do
+      bill_deck.push(passed_bills_B[0])
+      passed_bills_B.delete_at(0)
+      @passed_bills_cycle_B.delete_at(0)
+    end
   end
   
   private

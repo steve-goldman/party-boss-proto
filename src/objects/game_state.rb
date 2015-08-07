@@ -16,6 +16,10 @@ class GameState < BaseObject
     { name: "tactic_deck",             type: Tactic,          is_array: true, unordered: true },
   ]
 
+  def after_init
+    @cur_cycle = 1
+  end
+
   # utility method for creating a new game
   def GameState.new_game
     # create the decks of politicians
@@ -130,7 +134,7 @@ class GameState < BaseObject
       Config.get.bills_num_on_floor.times do |index|
         bill = legislative_session.passes?(index, party)
         if bill
-          board.send("passed_bills_#{party}").push(bill)
+          board.push_passed_bill(party, bill, @cur_cycle)
           board.increment_vps(party, legislative_session.vps(index, party, board))
         end
       end
@@ -228,7 +232,15 @@ class GameState < BaseObject
     board.state_of_the_union = cycle.next_state_of_the_union
     state_of_the_union_deck.push old_state_of_the_union
     board.tactics_lead_party = board.tactics_lead_party.to_sym == :A ? "#{:B}" : "#{:A}"
+    @cur_cycle += 1
+    board.end_cycle(@cur_cycle, bill_deck)
   end
+
+  def cur_cycle
+    @cur_cycle
+  end
+
+  private
 
   def politicians_needed(party, board)
     Config.get.politicians_num_in_party -

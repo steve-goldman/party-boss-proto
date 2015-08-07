@@ -20,12 +20,12 @@ class Consequence < BaseObject
 
   def add_bill_vps(args)
     party = target_party(args)
-    bill = args[:legislative_session].get_bill_on_floor(args[:index], party)
     if args[:legislative_session].
         clotured?(args[:index], party, args[:played_tactic_index])
       "Moot due to cloture"
     else
       direction = params.how_many > 0 ? "Increasing" : "Decreasing"
+      bill = args[:legislative_session].get_bill_on_floor(args[:index], party)
       old_vps = args[:legislative_session].bill_vps(args[:index], party, args[:board])
       new_vps = args[:legislative_session].incr_bill_vps(args[:index], party, args[:board],
                                                          params.how_many)
@@ -38,11 +38,11 @@ class Consequence < BaseObject
 
   def bill_auto_passes(args)
     party = target_party(args)
-    bill = args[:legislative_session].get_bill_on_floor(args[:index], party)
     if args[:legislative_session].
         clotured?(args[:index], party, args[:played_tactic_index])
       "Moot due to cloture"
     else
+      bill = args[:legislative_session].get_bill_on_floor(args[:index], party)
       args[:legislative_session].auto_pass_bill(args[:index], party)
       "Auto-passing #{bill}"
     end
@@ -50,7 +50,6 @@ class Consequence < BaseObject
 
   def add_fundraising_dice(args)
     party = target_party(args)
-    bill = args[:legislative_session].get_bill_on_floor(args[:index], party)
     if args[:legislative_session].
         clotured?(args[:index], party, args[:played_tactic_index])
       "Moot due to cloture"

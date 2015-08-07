@@ -94,15 +94,15 @@
         }
       }
     ],
-    "actions": [],
-    "consequences": [
+    "actions": [
       {
-        "consequence": "add_bill_vps",
+        "action": "add_bill_vps",
         "params": {
           "how_many": 2
         }
       }
-    ]
+    ],
+    "consequences": []
   },
   {
     "name": "Environmentalist Lobby",
@@ -120,15 +120,15 @@
         }
       }
     ],
-    "actions": [],
-    "consequences": [
+    "actions": [
       {
-        "consequence": "add_bill_vps",
+        "action": "add_bill_vps",
         "params": {
           "how_many": 2
         }
       }
-    ]
+    ],
+    "consequences": []
   },
   {
     "name": "Norquist Tax Pledge",
@@ -222,15 +222,15 @@
         }
       }
     ],
-    "actions": [],
-    "consequences": [
+    "actions": [
       {
-        "consequence": "add_bill_vps",
+        "action": "add_bill_vps",
         "params": {
           "how_many": 2
         }
       }
-    ]
+    ],
+    "consequences": []
   },
   {
     "name": "Weakening Amendment",
@@ -241,16 +241,15 @@
         "params": {
           "how_many": -1
         }
-      }
-    ],
-    "consequences": [
+      },
       {
-        "consequence": "add_bill_vps",
+        "action": "add_bill_vps",
         "params": {
           "how_many": -1
         }
       }
-    ]
+    ],
+    "consequences": []
   },
   {
     "name": "Blackmail",
@@ -509,15 +508,15 @@
         }
       }
     ],
-    "actions": [],
-    "consequences": [
+    "actions": [
       {
-        "consequence": "add_bill_vps",
+        "action": "add_bill_vps",
         "params": {
           "how_many": 1
         }
       }
-    ]
+    ],
+    "consequences": []
   },
   {
     "name": "Bill Rider",
@@ -696,15 +695,15 @@
         }
       }
     ],
-    "actions": [],
-    "consequences": [
+    "actions": [
       {
-        "consequence": "add_bill_vps",
+        "action": "add_bill_vps",
         "params": {
           "how_many": 2
         }
       }
-    ]
+    ],
+    "consequences": []
   },
   {
     "name": "AARP Lobby",
@@ -722,14 +721,14 @@
         }
       }
     ],
-    "actions": [],
-    "consequences": [
+    "actions": [
       {
-        "consequence": "add_bill_vps",
+        "action": "add_bill_vps",
         "params": {
           "how_many": 2
         }
       }
-    ]
+    ],
+    "consequences": []
   }
 ]

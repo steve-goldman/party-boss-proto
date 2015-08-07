@@ -92,7 +92,7 @@ class GameDumper < GameEngine
   #
 
   def sotu(game_state, cycle)
-    cycle.next_state_of_the_union.to_short_s
+    game_state.board.state_of_the_union.to_short_s
   end
 
 end

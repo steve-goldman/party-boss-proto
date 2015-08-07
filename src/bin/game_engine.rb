@@ -63,8 +63,6 @@ class GameEngine
       
       @game_state.end_cycle(@game.cycles[index], true)
     end
-    puts @game_state.board.tactics_lead_party
-    puts @game.final_game_state.board.tactics_lead_party
     # error checking
     raise "caught up snapshot disagrees with game state" if
       !@game.final_game_state.equals?(@game_state)

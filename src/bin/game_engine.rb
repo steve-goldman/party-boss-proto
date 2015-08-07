@@ -167,6 +167,11 @@ opt_parser = OptionParser.new do |opts|
           "Human or AI control for boss B, default is #{options[:boss_B]}") do |boss_B|
     options[:boss_B] = boss_B
   end
+
+  opts.on("-s", "--silent",
+          "Suppress screen output") do |silent|
+    Logger.set_silent
+  end
   
 end
 

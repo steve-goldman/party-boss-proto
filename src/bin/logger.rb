@@ -50,13 +50,17 @@ class Logger
     Logger.instance.unindent
   end
 
+  def Logger.set_silent
+    Logger.instance.set_silent
+  end
+
   def log(message)
-    puts (" " * @indent) + message
+    puts (" " * @indent) + message if !@silent
     self
   end
 
   def prompt(message)
-    print (" " * @indent) + message
+    print (" " * @indent) + message if !@silent
     self
   end
 
@@ -68,6 +72,10 @@ class Logger
   def unindent
     @indent -= 2
     self
+  end
+
+  def set_silent
+    @silent = true
   end
 
   private

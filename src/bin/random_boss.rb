@@ -53,8 +53,6 @@ class RandomBoss
     end
     allocation.push(total_dice - last_fencepost)
 
-    puts "fenceposts: #{fenceposts}, allocation: #{allocation}"
-
     DiceAllocation.new(allocation)
   end
 

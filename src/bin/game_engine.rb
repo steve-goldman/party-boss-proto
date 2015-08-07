@@ -42,6 +42,8 @@ class GameEngine
                                                          election.candidates_A,
                                                          election.candidates_B))
 
+      before_apply_election(@game_state, election)
+      
       @game_state.apply_election(election, true)
       Logger.header(ElectionRenderer.get.render election, @game_state.board)
       
@@ -59,12 +61,17 @@ class GameEngine
 
       legislative_session.apply_tactics_consequences(@game_state)
 
+      before_apply_legislative_session(@game_state, legislative_session)
+
       @game_state.apply_legislative_session(legislative_session, true)
       Logger.header(LegislativeSessionRenderer.get.render legislative_session,
                                                           @game_state.board)
       
       Logger.header(BoardRenderer.get.render_sunsetting_bills(@game_state.board,
                                                               @game_state.cur_cycle + 1))
+
+      before_end_cycle(@game_state, @game.cycles[index])
+      
       @game_state.end_cycle(@game.cycles[index], true)
     end
     # error checking
@@ -118,6 +125,19 @@ class GameEngine
     
     @game.final_game_state = @game_state
     @game
+  end
+
+  # for subclasses to override
+  def before_apply_election(game_state, election)
+
+  end
+
+  def before_apply_legislative_session(game_state, legislative_session)
+
+  end
+
+  def before_end_cycle(game_state, cycle)
+    
   end
 
   private

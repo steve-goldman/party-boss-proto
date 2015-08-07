@@ -21,6 +21,7 @@ class LegislativeSessionRenderer < Renderer
       "Legislation results",               underline,
       party_header(board),                 underline,
       results(legislative_session, board),
+      agenda_bonuses(board),               underline,
       bills_dealt(legislative_session),    underline
     ].join("\n")
   end
@@ -72,6 +73,14 @@ class LegislativeSessionRenderer < Renderer
   def worth(legislative_session, board, index, party)
     vps = legislative_session.bill_vps(index, party, board)
     "Worth    #{vps} vps"
+  end
+
+  def agenda_bonuses(board)
+    [
+      "Agenda bonuses",                  underline,
+      two_sides(board.agenda_bonus(:A),
+                board.agenda_bonus(:B)),
+    ].join("\n")
   end
 
   def bills_dealt(legislative_session)

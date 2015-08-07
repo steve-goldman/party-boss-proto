@@ -21,6 +21,10 @@ class Board < BaseObject
   def after_init
     @passed_bills_cycle_A = []
     @passed_bills_cycle_B = []
+    @agenda_level_A = init_agenda_level
+    @agenda_level_B = init_agenda_level
+    @agenda_bonus_A = 0
+    @agenda_bonus_B = 0
   end
 
   def num_encumbents(party)
@@ -76,10 +80,19 @@ class Board < BaseObject
   end
 
   def push_passed_bill(party, bill, cur_cycle)
+    agenda = bill.agenda.to_sym
     if party == :A
+      if has_agenda(passed_bills_A, agenda)
+        @agenda_bonus_A += AgendaBonus[@agenda_level_A[agenda]]
+        @agenda_level_A[agenda] += 1
+      end
       passed_bills_A.push(bill)
       @passed_bills_cycle_A.push(cur_cycle)
     else
+      if has_agenda(passed_bills_B, agenda)
+        @agenda_bonus_B += AgendaBonus[@agenda_level_B[agenda]]
+        @agenda_level_B[agenda] += 1
+      end
       passed_bills_B.push(bill)
       @passed_bills_cycle_B.push(cur_cycle)
     end
@@ -96,26 +109,53 @@ class Board < BaseObject
       end
     end
   end
-  
+
   def end_cycle(next_cycle, bill_deck)
+    increment_vps(:A, @agenda_bonus_A)
+    @agenda_bonus_A = 0
+    increment_vps(:B, @agenda_bonus_B)
+    @agenda_bonus_B = 0
+    
     sunsetting_bills_count(:A, next_cycle).times do
+      @agenda_level_A[passed_bills_A[0].agenda.to_sym] = 0
       bill_deck.push(passed_bills_A[0])
       passed_bills_A.delete_at(0)
       @passed_bills_cycle_A.delete_at(0)
     end
+
     sunsetting_bills_count(:B, next_cycle).times do
+      @agenda_level_B[passed_bills_B[0].agenda.to_sym] = 0
       bill_deck.push(passed_bills_B[0])
       passed_bills_B.delete_at(0)
       @passed_bills_cycle_B.delete_at(0)
     end
   end
+
+  def agenda_bonus(party)
+    party == :A ? @agenda_bonus_A : @agenda_bonus_B
+  end
   
   private
 
+  AgendaBonus = [1, 3, 6, 10, 15, 21, 28]
+  
   def office_holder?(candidate)
     !office_holders.select { |office_holder|
       candidate.equals?(office_holder.politician)
     }.empty?
   end
 
+  def init_agenda_level
+    {
+      conservative: 0,
+      libertarian: 0,
+      progressive: 0,
+      moderate: 0,
+      leftist: 0,
+    }
+  end
+
+  def has_agenda(bills, agenda)
+    !bills.select { |bill| bill.agenda.to_sym == agenda }.empty?
+  end
 end

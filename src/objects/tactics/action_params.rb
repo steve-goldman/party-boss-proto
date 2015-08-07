@@ -12,6 +12,10 @@ class ActionParams < BaseObject
     { name: "how_many_dice",    type: Integer,      can_be_nil: true },
     { name: "all_but_how_many", type: Integer,      can_be_nil: true },
     { name: "description",      type: String,       can_be_nil: true },
+    { name: "yes_description",  type: String,       can_be_nil: true },
+    { name: "no_description",   type: String,       can_be_nil: true },
+    { name: "action",           type: Action,       can_be_nil: true },
+    { name: "yes_precondition", type: Precondition, can_be_nil: true },
     { name: "actions",          type: Action,       can_be_nil: true, is_array: true },
   ]
 

@@ -577,8 +577,15 @@
         "action": "yes_or_no",
         "params": {
           "which": "opposite",
-          "yes_description": "Forfeit one die to opponent",
+          "yes_description": "Send one die to your cloakroom",
           "no_description": "Your opponent's bill automatically passes",
+          "yes_precondition": {
+            "precondition": "has_cloakroom_dice",
+            "params": {
+              "which": "opposite",
+              "how_many": 1
+            }
+          },
           "action": {
             "action": "send_dice_to_cloakroom",
             "params": {
@@ -589,7 +596,21 @@
         }
       }
     ],
-    "consequences": []
+    "consequences": [
+      {
+        "consequence": "bill_auto_passes",
+        "params": {
+          "preconditions": [
+            {
+              "precondition": "yes_or_no",
+              "params": {
+                "yes_or_no": "no"
+              }
+            }
+          ]
+        }
+      }
+    ]
   },
   {
     "name": "Gridlock",

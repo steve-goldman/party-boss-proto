@@ -242,7 +242,7 @@ class LegislativeSession < BaseObject
       else
         index = arr[1]; party_played_on = arr[2]
         played_tactic = PlayedTactic.new(party, party_played_on, index, tactic,
-                                         nil, nil, nil, nil)
+                                         nil, nil, nil, nil, nil)
         if !played_tactic.can_play(game_state.board, self)
           Logger.error "This tactic cannot be played like this"
           # make them choose again

@@ -88,10 +88,12 @@ class Action < BaseObject
     else
       bill = args[:legislative_session].get_bill_on_floor(args[:index], party)
       old_allocation = args[:legislative_session].get_bill_allocation(args[:index], party)
-      new_allocation = args[:legislative_session].set_bill_allocation(args[:index], party,
-                                                                      [old_allocation, params.all_but_how_many].min)
+      how_many = params.how_many.nil? ?
+                   [old_allocation, params.all_but_how_many].min :
+                   [0, old_allocation - params.how_many].max
+      new_allocation = args[:legislative_session].set_bill_allocation(args[:index], party, how_many)
       [
-        "Sending all dice but #{params.all_but_how_many} dice to cloakroom for #{bill}",
+        "Sending dice to cloakroom for #{bill}",
         "Was #{old_allocation}, is now #{new_allocation}",
       ].join("\n")
     end
@@ -137,6 +139,25 @@ class Action < BaseObject
       Logger.unindent
     end
     params.actions[args[:played_tactic].or_index].apply(args)
+  end
+
+  def yes_or_no(args)
+    if args[:played_tactic].yes_or_no.nil?
+      party = target_party(args)
+      if params.yes_precondition.holds(args)
+        Logger.header("Boss '#{party}' making a decision for #{args[:played_tactic].tactic}").indent    
+        answer_index = args[party == :A ? :boss_A : :boss_B]
+                       .get_choice([params.yes_description, params.no_description])
+        args[:played_tactic].yes_or_no = answer_index == 0 ? 'yes' : 'no'
+      else
+        Logger.header("Boss '#{party}'s decision for #{args[:played_tactic].tactic} is forced").indent
+        args[:played_tactic].yes_or_no = 'no'
+      end
+      Logger.unindent
+    end
+    if args[:played_tactic].yes_or_no == 'yes'
+      params.action.apply(args)
+    end
   end
 
   def target_party(args)

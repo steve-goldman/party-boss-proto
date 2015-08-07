@@ -43,11 +43,20 @@ class Precondition < BaseObject
             params.how_many)
   end
 
+  def has_cloakroom_dice(args)
+    args[:legislative_session].get_bill_allocation(args[:index], target_party(args)) >=
+      params.how_many
+  end
+
   def or(args)
     params.preconditions.each do |precondition|
       return true if precondition.holds(args)
     end
     false
+  end
+
+  def yes_or_no(args)
+    params.yes_or_no == args[:played_tactic].yes_or_no
   end
 
   # used in unit tests

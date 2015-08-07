@@ -80,7 +80,7 @@ class GameEngine
   end
   
   def run(num_cycles)
-    catch_up
+    catch_up if @num_catchup_cycles > 0
     
     Logger.subheader "The game is beginning"
 

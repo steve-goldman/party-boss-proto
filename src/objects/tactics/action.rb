@@ -131,8 +131,10 @@ class Action < BaseObject
 
   def or(args)
     if args[:played_tactic].or_index.nil?
+      Logger.header("Boss '#{args[:party_played_by]}' making a decision for #{args[:played_tactic].tactic}").indent
       args[:played_tactic].or_index = args[(args[:party_played_by] == :A) ? :boss_A : :boss_B]
-                                      .get_choice(params.actions.count)
+                                      .get_choice(params.actions.map { |action| action.params.description })
+      Logger.unindent
     end
     params.actions[args[:played_tactic].or_index].apply(args)
   end

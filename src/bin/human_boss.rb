@@ -91,11 +91,16 @@ class HumanBoss
     end
   end
 
-  def get_choice(count)
+  def get_choice(options)
     while true
-      Logger.prompt("(Enter # between 1 and #{count}): ")
+      Logger.subheader("Select from the following:").indent
+      options.each_index do |index|
+        Logger.log("#{index + 1}: #{options[index]}")
+      end
+      Logger.prompt("(Enter #): ")
       input = gets.chomp
-      if !int_in_range? input, 1, count
+      Logger.unindent
+      if !int_in_range? input, 1, options.count
         Logger.error("Input #{input} is out of range")
       else
         return (input.to_i - 1) if confirm

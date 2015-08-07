@@ -172,7 +172,7 @@ class HumanBoss
     end
     while true
       Logger.prompt "(Enter party's bill A/B): "
-      input = gets.chomp.upcase
+      input = gets.chomp.upcase.to_sym
       if input != :A && input != :B
         Logger.error "Input #{input} is invalid"
       else

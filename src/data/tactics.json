@@ -654,16 +654,16 @@
       {
         "consequence": "add_fundraising_dice",
         "params": {
-          "how_many": 2
-        },
-        "preconditions": [
-          {
-            "precondition": "bill_passes",
-            "params": {
-              "passes": "false"
+          "how_many": 2,
+          "preconditions": [
+            {
+              "precondition": "bill_passes",
+              "params": {
+                "passes": "false"
+              }
             }
-          }
-        ]
+          ]
+        }
       }
     ]
   },

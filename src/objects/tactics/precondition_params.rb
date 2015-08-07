@@ -12,6 +12,7 @@ class PreconditionParams < BaseObject
     { name: "agenda",        type: String,       can_be_nil: true },
     { name: "how_many",      type: Integer,      can_be_nil: true },
     { name: "operator",      type: String,       can_be_nil: true },
+    { name: "passes",        type: String,       can_be_nil: true },
     { name: "preconditions", type: Precondition, can_be_nil: true, is_array: true },
   ]
 

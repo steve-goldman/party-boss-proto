@@ -29,7 +29,7 @@ class Board < BaseObject
 
   def num_encumbents(party)
     office_holders.reduce(0) do |sum, office_holder|
-      sum + (office_holder.party == party ? 1 : 0)
+      sum + (office_holder.party.to_sym == party ? 1 : 0)
     end
   end
 

@@ -7,5 +7,5 @@
     "leadership_dice_max": 10,
     "tactics_num_initial": 3,
     "tactics_num_per_campaign_die": 2,
-    "bill_sunset_num_cycles": 4
+    "bill_sunset_num_cycles": 3
 }

@@ -12,4 +12,8 @@ class StateOfTheUnion < BaseObject
     "#{issue} (#{priorities[0]} => #{priorities[1]} => #{priorities[2]})"
   end
 
+  def to_short_s
+    "#{priorities[0][0]}#{priorities[1][0]}#{priorities[2][0]}"
+  end
+
 end

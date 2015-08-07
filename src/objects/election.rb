@@ -33,6 +33,12 @@ class Election < BaseObject
     @result[index]
   end
 
+  def num_winners(party, board)
+    Config.get.seats_num.times.select { |index|
+      get_result(index, board)[:winning_party] == party
+    }.count
+  end
+
   def Election.run_election(game_state, boss_A, boss_B, dice_roller)
     # create the election
     Logger.header("Boss 'A' choosing candidates").indent

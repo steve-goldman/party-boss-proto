@@ -71,6 +71,12 @@ class LegislativeSession < BaseObject
     game_state.apply_legislative_session(legislative_session, false)
   end
 
+  def num_bills_passed(party)
+    Config.get.bills_num_on_floor.times.select { |index|
+      passes?(index, party)
+    }.count
+  end
+
   def passes?(index, party)
     auto_passes?(index, party) ||
       send("outcomes_#{party}")[index].sum >= bill_cost(index, party) ?

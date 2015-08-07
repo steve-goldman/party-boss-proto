@@ -17,9 +17,10 @@ class GameEngine
   def initialize(options)
     if options[:input_file].nil?
       @game_state = GameState.new_game
-      @game = Game.new(GameState.deserialize(@game_state.serialize), [], nil)
+      @game = Game.new(Config.get, GameState.deserialize(@game_state.serialize), [], nil)
     else
       game = Game.from_file(options[:input_file])
+      Config.get(game.config)
       @game_state = game.initial_game_state
       game.initial_game_state = GameState.deserialize(@game_state.serialize)
       @game = game

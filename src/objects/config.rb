@@ -16,18 +16,20 @@ class Config < BaseObject
   ]
 
   @@instance = nil
-  @@filename = nil
   
-  def Config.get(filename = 'src/data/config.json')
-    throw "asking for #{filename} but already loaded #{@@filename}" if
-      @@filename && @@filename != filename
+  def Config.get(config = nil)
+    throw "asking for config but already loaded" if
+      !@@instance.nil? && !config.nil?
 
     if @@instance.nil?
-      @@instance = Config.from_file filename
-      @@filename = filename
+      @@instance = config.nil? ? Config.from_file(DefaultFilename) : config
     end
 
     @@instance
   end
+
+  private
+
+  DefaultFilename = 'src/data/config.json'
 
 end

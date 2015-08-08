@@ -585,7 +585,7 @@
                 "how_many": 1,
                 "description": "Send one die to your cloakroom",
                 "precondition": {
-                  "precondition": "has_cloakroom_dice",
+                  "precondition": "has_allocated_dice",
                   "params": {
                     "which": "opposite",
                     "how_many": 1

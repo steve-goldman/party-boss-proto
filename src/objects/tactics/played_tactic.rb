@@ -13,7 +13,6 @@ class PlayedTactic < BaseObject
     { name: "replacement_bill", type: Bill,         can_be_nil: true },
     { name: "outcomes",         type: DiceOutcome,  can_be_nil: true },
     { name: "or_index",         type: Integer,      can_be_nil: true },
-    { name: "yes_or_no",        type: String,       can_be_nil: true },
   ]
 
   def to_s

@@ -21,18 +21,6 @@ class Consequence < BaseObject
 
   include TacticsCommon
 
-  def bill_auto_passes(args)
-    party = target_party(args)
-    if args[:legislative_session].
-        clotured?(args[:index], party, args[:played_tactic_index])
-      "Moot due to cloture"
-    else
-      bill = args[:legislative_session].get_bill_on_floor(args[:index], party)
-      args[:legislative_session].auto_pass_bill(args[:index], party)
-      "Auto-passing #{bill}"
-    end
-  end
-
   def add_fundraising_dice(args)
     party = target_party(args)
     if args[:legislative_session].

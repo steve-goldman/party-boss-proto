@@ -118,31 +118,21 @@ class Action < BaseObject
 
   def or(args)
     if args[:played_tactic].or_index.nil?
-      Logger.header("Boss '#{args[:party_played_by]}' making a decision for #{args[:played_tactic].tactic}").indent
-      args[:played_tactic].or_index = args[(args[:party_played_by] == :A) ? :boss_A : :boss_B]
-                                      .get_choice(params.actions.map { |action| action.params.description })
-      Logger.unindent
+      boss_party = (params.which.nil? || params.which == 'same') ? args[:party_played_on] :
+                     params.which == 'opposite' ? other_party(args[:party_played_on]) : nil
+      or_index = nil
+      while or_index.nil? ||
+            (!params.actions[or_index].params.precondition.nil? &&
+             !params.actions[or_index].params.precondition.holds(args))
+        Logger.error("That option cannot be played at this time") if !or_index.nil?
+        Logger.header("Boss '#{boss_party}' making a decision for #{args[:played_tactic].tactic}").indent
+        or_index = args[boss_party == :A ? :boss_A : :boss_B]
+                   .get_choice(params.actions.map { |action| action.params.description })
+        Logger.unindent
+      end
+      args[:played_tactic].or_index = or_index
     end
     params.actions[args[:played_tactic].or_index].apply(args)
-  end
-
-  def yes_or_no(args)
-    if args[:played_tactic].yes_or_no.nil?
-      party = target_party(args)
-      if params.yes_precondition.holds(args)
-        Logger.header("Boss '#{party}' making a decision for #{args[:played_tactic].tactic}").indent    
-        answer_index = args[party == :A ? :boss_A : :boss_B]
-                       .get_choice([params.yes_description, params.no_description])
-        args[:played_tactic].yes_or_no = answer_index == 0 ? 'yes' : 'no'
-      else
-        Logger.header("Boss '#{party}'s decision for #{args[:played_tactic].tactic} is forced").indent
-        args[:played_tactic].yes_or_no = 'no'
-      end
-      Logger.unindent
-    end
-    if args[:played_tactic].yes_or_no == 'yes'
-      params.action.apply(args)
-    end
   end
 
 end

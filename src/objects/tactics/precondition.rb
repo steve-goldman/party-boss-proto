@@ -1,5 +1,6 @@
 require_relative '../base_object'
 require_relative 'precondition_params'
+require_relative 'tactics_common'
 
 class Precondition < BaseObject
 
@@ -14,6 +15,8 @@ class Precondition < BaseObject
   end
 
   private
+  
+  include TacticsCommon
   
   def played_on_party(args)
     params.who == 'self' ?
@@ -67,14 +70,6 @@ class Precondition < BaseObject
   # used in unit tests
   def always_false(args)
     false
-  end
-
-  def target_party(args)
-    params.which.nil? || params.which == 'same' ?
-      (args[:party_played_on] == :A ? :A : :B) :
-      params.which == 'opposite' ?
-        (args[:party_played_on] == :A ? :B : :A) :
-        nil
   end
 
   def target_bill(args)

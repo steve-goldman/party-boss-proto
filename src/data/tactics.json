@@ -574,43 +574,36 @@
     ],
     "actions": [
       {
-        "action": "yes_or_no",
+        "action": "or",
         "params": {
           "which": "opposite",
-          "yes_description": "Send one die to your cloakroom",
-          "no_description": "Your opponent's bill automatically passes",
-          "yes_precondition": {
-            "precondition": "has_cloakroom_dice",
-            "params": {
-              "which": "opposite",
-              "how_many": 1
-            }
-          },
-          "action": {
-            "action": "send_dice_to_cloakroom",
-            "params": {
-              "which": "opposite",
-              "how_many": 1
-            }
-          }
-        }
-      }
-    ],
-    "consequences": [
-      {
-        "consequence": "bill_auto_passes",
-        "params": {
-          "preconditions": [
+          "actions": [
             {
-              "precondition": "yes_or_no",
+              "action": "send_dice_to_cloakroom",
               "params": {
-                "yes_or_no": "no"
+                "which": "opposite",
+                "how_many": 1,
+                "description": "Send one die to your cloakroom",
+                "precondition": {
+                  "precondition": "has_cloakroom_dice",
+                  "params": {
+                    "which": "opposite",
+                    "how_many": 1
+                  }
+                }
+              }
+            },
+            {
+              "action": "bill_auto_passes",
+              "params": {
+                "description": "Your opponent's bill automatically passes"
               }
             }
           ]
         }
       }
-    ]
+    ],
+    "consequences": []
   },
   {
     "name": "Gridlock",

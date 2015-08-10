@@ -26,6 +26,10 @@ class Precondition < BaseObject
       args[:party_played_by] != args[:party_played_on]
   end
 
+  def opposite_not_clotured(args)
+    !args[:legislative_session].clotured?(args[:index], other_party(args[:party_played_on]))
+  end
+
   def num_in_office(args)
     count = args[:board].office_holders.reduce(0) do |count, office_holder|
       count + (office_holder.party.to_sym == target_party(args) ? 1 : 0)

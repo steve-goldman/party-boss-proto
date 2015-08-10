@@ -11,6 +11,8 @@ class Precondition < BaseObject
   ]
 
   def holds(args)
+    return false if
+      args[:legislative_session].clotured?(args[:index], args[:party_played_on])
     self.send("#{precondition}", args)
   end
 

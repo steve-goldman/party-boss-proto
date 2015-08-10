@@ -23,7 +23,7 @@ class RandomBoss
 
   def get_bills
     temp_bills = @hand.bills.clone
-    Config.get.bills_num_on_floor.times.map do |index|
+    Config.get.bills_num_sessions.times.map do |index|
       draw_random(temp_bills)
     end
   end

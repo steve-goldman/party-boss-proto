@@ -131,7 +131,7 @@ class GameState < BaseObject
       end
 
       # sign winners into law
-      Config.get.bills_num_on_floor.times do |index|
+      Config.get.bills_num_sessions.times do |index|
         bill = legislative_session.passes?(index, party)
         if bill
           board.push_passed_bill(party, bill, @cur_cycle)
@@ -160,7 +160,7 @@ class GameState < BaseObject
 
     # put the losers back in the deck
     [:A, :B].each do |party|
-      Config.get.bills_num_on_floor.times do |index|
+      Config.get.bills_num_sessions.times do |index|
         if !legislative_session.passes?(index, party)
           bill_deck.push(legislative_session.get_bill_on_floor(index, party))
         end

@@ -31,14 +31,14 @@ class LegislativeSessionRenderer < Renderer
       "Bills on the floor", underline,
       party_header(board),  underline,
     ].concat(
-      Config.get.bills_num_on_floor.times.map { |index| bill_matchup(legislative_session, index) }
+      Config.get.bills_num_sessions.times.map { |index| bill_matchup(legislative_session, index) }
     ).join("\n")
   end
 
   private
 
   def results(legislative_session, board)
-    Config.get.bills_num_on_floor.times.map { |index|
+    Config.get.bills_num_sessions.times.map { |index|
       [
         two_sides(legislative_session.get_bill_on_floor(index, :A),
                   legislative_session.get_bill_on_floor(index, :B)),

@@ -38,8 +38,8 @@ class HumanBoss
       # don't spoil the data until the user confirms
       temp_bills = @hand.bills.clone
       # get the bills from the user
-      bills = Config.get.bills_num_on_floor.times.map do |index|
-        Logger.subheader("Selecting bill for floor matchup ##{index + 1}").indent
+      bills = Config.get.bills_num_sessions.times.map do |index|
+        Logger.subheader("Selecting bill for session ##{index + 1}").indent
         input_from_array(temp_bills, true)
       end
       # ask user to confirm
@@ -65,7 +65,7 @@ class HumanBoss
           return [tactic, nil, nil]
         end
       else
-        Logger.subheader("Select floor matchup").indent
+        Logger.subheader("Select session").indent
         index = input_floor_matchup_index(legislative_session)
         Logger.indent
         party = input_party(tactic)
@@ -147,14 +147,14 @@ class HumanBoss
 
   def input_floor_matchup_index(legislative_session)
     # show the list
-    Config.get.bills_num_on_floor.times do |index|
+    Config.get.bills_num_sessions.times do |index|
       Logger.log "#{index + 1}: #{legislative_session.get_bill_on_floor(index, :A)} | #{legislative_session.get_bill_on_floor(index, :B)}"
     end
 
     while true
       Logger.prompt "(Enter #): "
       input = gets.chomp
-      if !int_in_range? input, 1, Config.get.bills_num_on_floor
+      if !int_in_range? input, 1, Config.get.bills_num_sessions
         Logger.error "Input #{input} is out of range"
       else
         Logger.unindent
@@ -197,7 +197,7 @@ class HumanBoss
 
   def confirm_bills(bills)
     Logger.subheader("You have selected:").indent
-    Config.get.bills_num_on_floor.times do |index|
+    Config.get.bills_num_sessions.times do |index|
       Logger.log "#{bills[index]}"
     end
     Logger.unindent

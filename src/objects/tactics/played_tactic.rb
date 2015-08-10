@@ -18,7 +18,7 @@ class PlayedTactic < BaseObject
   def to_s
     by_section = "#{tactic} played by '#{party_played_by}'"
     on_section = !party_played_on.nil? ? " on '#{party_played_on}'" : ""
-    index_section = !index.nil? ? " on matchup #{index + 1}" : ""
+    index_section = !index.nil? ? " on session #{index + 1}" : ""
     "#{by_section}#{on_section}#{index_section}"
   end
 

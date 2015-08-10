@@ -74,7 +74,7 @@ class LegislativeSession < BaseObject
   end
 
   def num_bills_passed(party)
-    Config.get.bills_num_on_floor.times.select { |index|
+    Config.get.bills_num_sessions.times.select { |index|
       passes?(index, party)
     }.count
   end

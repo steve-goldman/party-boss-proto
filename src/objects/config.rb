@@ -7,7 +7,7 @@ class Config < BaseObject
     { name: "seats_num",                    type: Integer },
     { name: "politicians_num_in_party",     type: Integer },
     { name: "bills_num_in_committee",       type: Integer },
-    { name: "bills_num_on_floor",           type: Integer },
+    { name: "bills_num_sessions",           type: Integer },
     { name: "fundraising_dice_max",         type: Integer },
     { name: "leadership_dice_max",          type: Integer },
     { name: "tactics_num_initial",          type: Integer },

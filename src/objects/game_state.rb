@@ -57,7 +57,8 @@ class GameState < BaseObject
 
   def num_tactics(election, party)
     Config.get.tactics_num_per_campaign_die *
-      (board.num_fundraising_dice(party, election.send("candidates_#{party}")) -
+      (board.num_fundraising_dice(party, election.send("candidates_#{party}")) +
+       board.num_encumbents(party) -
        election.send("allocation_#{party}").sum)
   end
 

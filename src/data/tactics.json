@@ -287,6 +287,12 @@
         "params": {
           "who": "self"
         }
+      },
+      {
+        "precondition": "opposite_not_clotured",
+        "params": {
+          
+        }
       }
     ],
     "actions": [
@@ -362,6 +368,12 @@
         "precondition": "played_on_party",
         "params": {
           "who": "self"
+        }
+      },
+      {
+        "precondition": "opposite_not_clotured",
+        "params": {
+          
         }
       }
     ],
@@ -473,6 +485,12 @@
         "precondition": "played_on_party",
         "params": {
           "who": "self"
+        }
+      },
+      {
+        "precondition": "opposite_not_clotured",
+        "params": {
+          
         }
       }
     ],
@@ -604,6 +622,12 @@
         "precondition": "played_on_party",
         "params": {
           "who": "self"
+        }
+      },
+      {
+        "precondition": "opposite_not_clotured",
+        "params": {
+          
         }
       }
     ],

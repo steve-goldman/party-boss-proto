@@ -50,8 +50,8 @@ class ElectionRenderer < Renderer
   def results(election, board)
     Config.get.seats_num.times.map { |index|
       [
-        two_sides(election.candidates_A[index],
-                  election.candidates_B[index]),
+        two_sides(with_encumbency(board, index, :A, election.candidates_A[index]),
+                  with_encumbency(board, index, :B, election.candidates_B[index])),
         two_sides(win_lose(election, index, board, :A),
                   win_lose(election, index, board, :B)),
         two_sides(points_breakdown(election, index, board, :A),

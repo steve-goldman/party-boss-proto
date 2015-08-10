@@ -28,10 +28,6 @@ class PlayedTactic < BaseObject
     end.empty?
   end
 
-  def apply_preactions(legislative_session, game_state, boss_A, boss_B)
-    nil
-  end
-
   def apply_actions(legislative_session, game_state, boss_A, boss_B, dice_roller)
     if !tactic.actions.empty?
       tactic.actions.map { |action|
@@ -50,10 +46,6 @@ class PlayedTactic < BaseObject
     else
       nil
     end
-  end
-
-  def immediate?
-    false
   end
 
   private

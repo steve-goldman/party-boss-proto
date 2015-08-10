@@ -55,8 +55,6 @@ class GameEngine
       Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor(legislative_session,
                                                                          @game_state.board))
 
-      legislative_session.apply_tactics_preactions(@game_state)
-
       legislative_session.apply_tactics_actions(@game_state, nil, nil, nil)
 
       legislative_session.apply_tactics_consequences(@game_state)

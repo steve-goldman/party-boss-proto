@@ -56,12 +56,10 @@ class LegislativeSession < BaseObject
                                                  allocation_A, allocation_B,
                                                  [], [], [], [], [])
 
-    legislative_session.get_tactics(game_state, boss_A, boss_B)
+    legislative_session.get_tactics(game_state, boss_A, boss_B, dice_roller)
     
     Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor(legislative_session,
                                                                        game_state.board))
-
-    legislative_session.apply_tactics_actions(game_state, boss_A, boss_B, dice_roller)
 
     legislative_session.outcomes_A.concat(dice_roller.get_outcomes(legislative_session.get_allocation(:A),
                                                                    legislative_session.all_dice_outcomes(:A)))
@@ -163,36 +161,24 @@ class LegislativeSession < BaseObject
     end
   end
 
-  def apply_tactics_preactions(game_state)
+  def apply_tactics_actions(game_state)
     played_tactics.each do |played_tactic|
-      log_if_output("Applying #{played_tactic} [1]",
-                    played_tactic.apply_preactions(self, game_state, nil, nil))
-    end
-  end
-
-  def apply_tactics_actions(game_state, boss_A, boss_B, dice_roller)
-    played_tactics.each do |played_tactic|
-      if !played_tactic.immediate?
-        # confirm that the preconditions still hold in case a tactic
-        # (i.e. tabling motion) changed things
-        if played_tactic.can_play(game_state.board, self)
-          log_if_output("Applying #{played_tactic} [2]",
-                        played_tactic.apply_actions(self, game_state,
-                                                    boss_A, boss_B, dice_roller))
-        end
+      # confirm that the preconditions still hold in case a tactic
+      # (i.e. tabling motion) changed things
+      if played_tactic.can_play(game_state.board, self)
+        log_if_output("Applying #{played_tactic} [before]",
+                      played_tactic.apply_actions(self, game_state, nil, nil, nil))
       end
     end
   end
 
   def apply_tactics_consequences(game_state)
     played_tactics.each do |played_tactic|
-      if !played_tactic.immediate?
-        # confirm that the preconditions still hold in case a tactic
-        # (i.e. tabling motion) changed things
-        if played_tactic.can_play(game_state.board, self)
-          log_if_output("Applying #{played_tactic} [3]",
-                        played_tactic.apply_consequences(game_state.board, self))
-        end
+      # confirm that the preconditions still hold in case a tactic
+      # (i.e. tabling motion) changed things
+      if played_tactic.can_play(game_state.board, self)
+        log_if_output("Applying #{played_tactic} [after]",
+                      played_tactic.apply_consequences(game_state.board, self))
       end
     end
   end
@@ -229,7 +215,7 @@ class LegislativeSession < BaseObject
     party == :A ? @clotured_A[index] : @clotured_B[index]
   end
 
-  def get_tactics(game_state, boss_A, boss_B)
+  def get_tactics(game_state, boss_A, boss_B, dice_roller)
     last_last_was_pass = false
     last_was_pass = false
     party = game_state.board.tactics_lead_party.to_sym
@@ -255,9 +241,12 @@ class LegislativeSession < BaseObject
           game_state.send("hand_#{party}").tactics.delete_if do |hand_tactic|
             hand_tactic.equals?(tactic)
           end
-          # handle filibusters, tabling motions, and clotures
-          log_if_output("Applying #{played_tactic} [1]",
-                        played_tactic.apply_preactions(self, game_state, boss_A, boss_B))
+
+          log_if_output("Applying #{played_tactic}",
+                        played_tactic.apply_actions(self, game_state,
+                                                    boss_A, boss_B,
+                                                    dice_roller))
+
           # make it official
           played_tactics.push(played_tactic)
         end

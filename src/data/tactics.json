@@ -2,25 +2,53 @@
   {
     "name": "Filibuster1",
     "preconditions": [],
-    "actions": [],
+    "actions": [
+      {
+        "action": "filibuster",
+        "params": {
+
+        }
+      }
+    ],
     "consequences": []
   },
   {
     "name": "Filibuster2",
     "preconditions": [],
-    "actions": [],
+    "actions": [
+      {
+        "action": "filibuster",
+        "params": {
+
+        }
+      }
+    ],
     "consequences": []
   },
   {
     "name": "Filibuster3",
     "preconditions": [],
-    "actions": [],
+    "actions": [
+      {
+        "action": "filibuster",
+        "params": {
+
+        }
+      }
+    ],
     "consequences": []
   },
   {
     "name": "Filibuster4",
     "preconditions": [],
-    "actions": [],
+    "actions": [
+      {
+        "action": "filibuster",
+        "params": {
+
+        }
+      }
+    ],
     "consequences": []
   },
   {

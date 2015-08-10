@@ -41,20 +41,20 @@ class Election < BaseObject
 
   def Election.run_election(game_state, boss_A, boss_B, dice_roller)
     # create the election
-    Logger.header("Boss 'A' choosing candidates").indent
+    Logger.header("Boss 'A' choosing candidates").indent.page
     candidates_A = boss_A.get_candidates(game_state)
     Logger.unindent
-    Logger.header("Boss 'B' choosing candidates").indent
+    Logger.header("Boss 'B' choosing candidates").indent.page
     candidates_B = boss_B.get_candidates(game_state)
     Logger.unindent
-    Logger.header(ElectionRenderer.get.render_matchups game_state.board, candidates_A, candidates_B)
-    Logger.header("Boss 'A' choosing dice allocation").indent
+    Logger.header(ElectionRenderer.get.render_matchups game_state.board, candidates_A, candidates_B).page
+    Logger.header("Boss 'A' choosing dice allocation").indent.page
     allocation_A = add_encumbent_dice(
       game_state.board, :A,
       boss_A.get_allocation(game_state.board.num_fundraising_dice(:A, candidates_A),
                             Politician.matchup_descriptions(candidates_A, candidates_B)))
     Logger.unindent
-    Logger.header("Boss 'B' choosing dice allocation").indent
+    Logger.header("Boss 'B' choosing dice allocation").indent.page
     allocation_B = add_encumbent_dice(
       game_state.board, :B,
       boss_B.get_allocation(game_state.board.num_fundraising_dice(:B, candidates_B),

@@ -40,6 +40,11 @@ opt_parser = OptionParser.new do |opts|
     Logger.set_silent
   end
   
+  opts.on("-p", "--page",
+          "Suppress 'page' input") do |silent|
+    Logger.no_page
+  end
+  
 end
 
 opt_parser.parse!

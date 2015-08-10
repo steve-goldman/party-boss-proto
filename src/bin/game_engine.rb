@@ -31,6 +31,7 @@ class GameEngine
   end
 
   def catch_up
+    Logger.mute_page
     @game.cycles.each_index do |index|
       Logger.subheader "Catch-up cycle #{index + 1} / #{@num_catchup_cycles}"
 
@@ -72,6 +73,7 @@ class GameEngine
       
       @game_state.end_cycle(@game.cycles[index], true)
     end
+    Logger.unmute_page
     # error checking
     raise "caught up snapshot disagrees with game state" if
       !@game.final_game_state.equals?(@game_state)
@@ -80,40 +82,42 @@ class GameEngine
   def run(num_cycles)
     catch_up if @num_catchup_cycles > 0
     
-    Logger.subheader "The game is beginning"
+    Logger.subheader("The game is beginning").page
 
     # show the initial hands
     [:A, :B].each do |party|
-      Logger.header("Party '#{party}'s hand")
-      Logger.header(HandRenderer.get.render @game_state.send("hand_#{party}"))
+      Logger.header("Party '#{party}'s hand").page
+      Logger.header(HandRenderer.get.render @game_state.send("hand_#{party}")).page
     end
     
     dice_roller = DiceRoller.new
     num_cycles.times do |index|
-      Logger.subheader "Cycle #{@num_catchup_cycles + index + 1} / #{@num_catchup_cycles + num_cycles}"
+      Logger.subheader("Cycle #{@num_catchup_cycles + index + 1} / #{@num_catchup_cycles + num_cycles}").page
 
-      Logger.header "Election phase"
-      Logger.header(BoardRenderer.get.render @game_state.board)
+      Logger.header("Election phase").page
+      Logger.header(BoardRenderer.get.render @game_state.board).page
 
       election = Election.run_election(@game_state,
                                        @boss_A, @boss_B,
                                        dice_roller)
+      Logger.page
 
-      Logger.header(ElectionRenderer.get.render election, @game_state.board)      
+      Logger.header(ElectionRenderer.get.render election, @game_state.board).page
 
-      Logger.header "Legislative phase"
-      Logger.header(BoardRenderer.get.render @game_state.board)
+      Logger.header("Legislative phase").page
+      Logger.header(BoardRenderer.get.render @game_state.board).page
 
       legislative_session = LegislativeSession.run_session(@game_state,
                                                            @boss_A, @boss_B,
                                                            dice_roller)
 
       Logger.header(LegislativeSessionRenderer.get.render legislative_session,
-                                                          @game_state.board)
+                                                          @game_state.board).page
 
       cycle = Cycle.new(election, legislative_session, nil)  # gs fills in SOTU
       Logger.header(BoardRenderer.get.render_sunsetting_bills(@game_state.board,
-                                                              @game_state.cur_cycle + 1))
+                                                              @game_state.cur_cycle + 1)).page
+
       @game_state.end_cycle(cycle, false)
       @game.cycles.push cycle
     end

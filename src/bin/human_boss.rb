@@ -19,7 +19,7 @@ class HumanBoss
         i += 1
         Logger.subheader("Selecting candidate for race ##{i}").indent
         if @party == office_holder.party.to_sym
-          Logger.log("Encumbent #{office_holder.politician} is in your party").unindent
+          Logger.log("Encumbent #{office_holder.politician} is in your party").unindent.page
           office_holder.politician
         else
           Logger.log "Candidate to run against #{office_holder.politician}"
@@ -51,7 +51,7 @@ class HumanBoss
 
   def get_tactic(legislative_session)
     if @hand.tactics.empty?
-      Logger.subheader("No tactics to choose from")
+      Logger.subheader("No tactics to choose from").page
       return [Tactic::Pass, nil, nil]
     end
     while true

@@ -11,6 +11,18 @@ class Logger
     Logger.instance.prompt message
   end
 
+  def Logger.page
+    Logger.instance.page
+  end
+
+  def Logger.mute_page
+    Logger.instance.mute_page
+  end
+
+  def Logger.unmute_page
+    Logger.instance.unmute_page
+  end
+
   def Logger.header(header)
     lines = header.split(/\n/)
     length = lines.reduce(0) { |max, line| [max, line.length].max }
@@ -54,6 +66,10 @@ class Logger
     Logger.instance.set_silent
   end
 
+  def Logger.no_page
+    Logger.instance.no_page
+  end
+
   def log(message)
     puts (" " * @indent) + message if !@silent
     self
@@ -62,6 +78,23 @@ class Logger
   def prompt(message)
     print (" " * @indent) + message if !@silent
     self
+  end
+
+  def page
+    if @page
+      print "<enter to continue>"
+      gets
+    end
+    self
+  end
+
+  def mute_page
+    @muted_page = @page
+    @page = false
+  end
+
+  def unmute_page
+    @page = @muted_page
   end
 
   def indent
@@ -78,10 +111,15 @@ class Logger
     @silent = true
   end
 
+  def no_page
+    @page = false
+  end
+
   private
 
   def initialize
     @indent = 0
+    @page = true
   end
 
   @@instance = nil

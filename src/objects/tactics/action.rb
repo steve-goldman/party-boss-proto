@@ -174,8 +174,10 @@ class Action < BaseObject
       while or_index.nil? ||
             (!params.actions[or_index].params.precondition.nil? &&
              !params.actions[or_index].params.precondition.holds(args))
-        Logger.error("That option cannot be played at this time") if !or_index.nil?
-        Logger.header("Boss '#{boss_party}' making a decision for #{args[:played_tactic].tactic}").indent
+        if !or_index.nil?
+          Logger.error("That option cannot be played at this time").page
+        end
+        Logger.header("Boss '#{boss_party}' making a decision for #{args[:played_tactic].tactic}").indent.page
         or_index = args[boss_party == :A ? :boss_A : :boss_B]
                    .get_choice(params.actions.map { |action| action.params.description })
         Logger.unindent

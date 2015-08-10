@@ -37,18 +37,18 @@ class LegislativeSession < BaseObject
   end
   
   def LegislativeSession.run_session(game_state, boss_A, boss_B, dice_roller)
-    Logger.header("Boss 'A' has #{game_state.board.num_leadership_dice(:A)} leadership dice")
-    Logger.header("Boss 'A' choosing bills").indent
+    Logger.header("Boss 'A' has #{game_state.board.num_leadership_dice(:A)} leadership dice").page
+    Logger.header("Boss 'A' choosing bills").indent.page
     bills_A = boss_A.get_bills
     Logger.unindent
-    Logger.header("Boss 'A' choosing dice allocation").indent
+    Logger.header("Boss 'A' choosing dice allocation").indent.page
     allocation_A = boss_A.get_allocation(game_state.board.num_leadership_dice(:A), bills_A)
     Logger.unindent
-    Logger.header("Boss 'B' has #{game_state.board.num_leadership_dice(:B)} leadership dice")
-    Logger.header("Boss 'B' choosing bills").indent
+    Logger.header("Boss 'B' has #{game_state.board.num_leadership_dice(:B)} leadership dice").page
+    Logger.header("Boss 'B' choosing bills").indent.page
     bills_B = boss_B.get_bills
     Logger.unindent
-    Logger.header("Boss 'B' choosing dice allocation").indent
+    Logger.header("Boss 'B' choosing dice allocation").indent.page
     allocation_B = boss_B.get_allocation(game_state.board.num_leadership_dice(:B), bills_B)
     Logger.unindent
 
@@ -57,9 +57,11 @@ class LegislativeSession < BaseObject
                                                  [], [], [], [], [])
 
     legislative_session.get_tactics(game_state, boss_A, boss_B, dice_roller)
+
+    Logger.header("End of tactics").page
     
     Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor(legislative_session,
-                                                                       game_state.board))
+                                                                       game_state.board)).page
 
     legislative_session.outcomes_A.concat(dice_roller.get_outcomes(legislative_session.get_allocation(:A),
                                                                    legislative_session.all_dice_outcomes(:A)))
@@ -220,8 +222,10 @@ class LegislativeSession < BaseObject
     last_was_pass = false
     party = game_state.board.tactics_lead_party.to_sym
     while !last_was_pass || !last_last_was_pass
-      Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor(self, game_state.board))
-      Logger.header("Boss #{party} choosing a tactic").indent
+      if !last_was_pass
+        Logger.header(LegislativeSessionRenderer.get.render_bills_on_floor(self, game_state.board)).page
+      end
+      Logger.header("Boss #{party} choosing a tactic").indent.page
       arr = (party == :A ? boss_A : boss_B).get_tactic(self)
       tactic = arr[0]
       if tactic == Tactic::Pass
@@ -232,7 +236,7 @@ class LegislativeSession < BaseObject
         played_tactic = PlayedTactic.new(party, party_played_on, index, tactic,
                                          nil, nil, nil, nil)
         if !played_tactic.can_play(game_state.board, self)
-          Logger.error "This tactic cannot be played like this"
+          Logger.error("This tactic cannot be played like this").page
           # make them choose again
           party = (party == :A ? :B : :A)
         else
@@ -269,7 +273,7 @@ class LegislativeSession < BaseObject
   def log_if_output(header, output)
     if !output.nil? && !output.empty?
       Logger.subheader(header).indent
-      Logger.log(output).unindent
+      Logger.log(output).unindent.page
     end
   end
 

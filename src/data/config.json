@@ -1,7 +1,7 @@
 {
     "seats_num": 4,
     "politicians_num_in_party": 7,
-    "bills_num_in_committee": 8,
+    "bills_num_in_committee": 5,
     "bills_num_on_floor": 3,
     "fundraising_dice_max": 10,
     "leadership_dice_max": 10,

@@ -49,12 +49,16 @@ class Election < BaseObject
     Logger.unindent
     Logger.header(ElectionRenderer.get.render_matchups game_state.board, candidates_A, candidates_B)
     Logger.header("Boss 'A' choosing dice allocation").indent
-    allocation_A = boss_A.get_allocation(game_state.board.num_fundraising_dice(:A, candidates_A),
-                                         Politician.matchup_descriptions(candidates_A, candidates_B))
+    allocation_A = add_encumbent_dice(
+      game_state.board, :A,
+      boss_A.get_allocation(game_state.board.num_fundraising_dice(:A, candidates_A),
+                            Politician.matchup_descriptions(candidates_A, candidates_B)))
     Logger.unindent
     Logger.header("Boss 'B' choosing dice allocation").indent
-    allocation_B = boss_B.get_allocation(game_state.board.num_fundraising_dice(:B, candidates_B),
-                                         Politician.matchup_descriptions(candidates_B, candidates_A))
+    allocation_B = add_encumbent_dice(
+      game_state.board, :B,
+      boss_B.get_allocation(game_state.board.num_fundraising_dice(:B, candidates_B),
+                            Politician.matchup_descriptions(candidates_B, candidates_A)))
     Logger.unindent
     election = Election.new(candidates_A,
                             candidates_B,
@@ -80,6 +84,15 @@ class Election < BaseObject
   end
 
   private
+
+  def Election.add_encumbent_dice(board, party, allocation)
+    Config.get.seats_num.times do |index|
+      if board.office_holders[index].party.to_sym == party
+        allocation.counts[index] += 1
+      end
+    end
+    allocation
+  end
   
   def get_winner(index, board)
     if points(index, board, :A) > points(index, board, :B)

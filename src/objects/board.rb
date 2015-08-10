@@ -39,7 +39,7 @@ class Board < BaseObject
         Config.get.fundraising_dice_max,
         send("fundraising_dice_#{party}") +
         candidates.reduce(0) { |sum, candidate|
-          sum + candidate.fundraising + (office_holder?(candidate) ? 1 : 0)
+          sum + candidate.fundraising
         }
       ].min,
       0

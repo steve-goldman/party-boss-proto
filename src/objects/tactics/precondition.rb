@@ -37,7 +37,7 @@ class Precondition < BaseObject
 
   def bill_passes(args)
     passes = !args[:legislative_session].passes?(args[:index], target_party(args)).nil?
-    passes.to_s == params.passes
+    passes ? (params.passes.nil? || params.passes == "true") : params.passes == "false"
   end
 
   def bill_rolls_minus_cost(args)

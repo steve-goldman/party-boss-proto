@@ -33,7 +33,7 @@ class Action < BaseObject
       end
     else
       # drawn tactic comes out of the deck
-      args[:game_state].delete_from(args[:game_state].tactic_deck, drawn_tactic)
+      args[:game_state].delete_from(args[:game_state].tactic_deck, args[:played_tactic].drawn_tactic)
     end
 
     # drawn tactic goes into the hand

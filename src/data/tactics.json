@@ -122,15 +122,15 @@
         }
       }
     ],
-    "actions": [
+    "actions": [],
+    "consequences": [
       {
-        "action": "add_bill_vps",
+        "consequence": "add_bill_vps",
         "params": {
           "how_many": 2
         }
       }
-    ],
-    "consequences": []
+    ]
   },
   {
     "name": "Environmentalist Lobby",
@@ -148,15 +148,15 @@
         }
       }
     ],
-    "actions": [
+    "actions": [],
+    "consequences": [
       {
-        "action": "add_bill_vps",
+        "consequence": "add_bill_vps",
         "params": {
           "how_many": 2
         }
       }
-    ],
-    "consequences": []
+    ]
   },
   {
     "name": "Norquist Tax Pledge",
@@ -250,15 +250,15 @@
         }
       }
     ],
-    "actions": [
+    "actions": [],
+    "consequences": [
       {
-        "action": "add_bill_vps",
+        "consequence": "add_bill_vps",
         "params": {
           "how_many": 2
         }
       }
-    ],
-    "consequences": []
+    ]
   },
   {
     "name": "Weakening Amendment",
@@ -766,15 +766,15 @@
         }
       }
     ],
-    "actions": [
+    "actions": [],
+    "consequences": [
       {
-        "action": "add_bill_vps",
+        "consequence": "add_bill_vps",
         "params": {
           "how_many": 2
         }
       }
-    ],
-    "consequences": []
+    ]
   },
   {
     "name": "AARP Lobby",
@@ -792,14 +792,14 @@
         }
       }
     ],
-    "actions": [
+    "actions": [],
+    "consequences": [
       {
-        "action": "add_bill_vps",
+        "consequence": "add_bill_vps",
         "params": {
           "how_many": 2
         }
       }
-    ],
-    "consequences": []
+    ]
   }
 ]

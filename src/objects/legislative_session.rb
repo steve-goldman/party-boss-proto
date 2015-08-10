@@ -177,7 +177,7 @@ class LegislativeSession < BaseObject
         # (i.e. tabling motion) changed things
         if played_tactic.can_play(game_state.board, self)
           log_if_output("Applying #{played_tactic} [2]",
-                        played_tactic.apply_actions(game_state.board, self,
+                        played_tactic.apply_actions(self, game_state,
                                                     boss_A, boss_B, dice_roller))
         end
       end

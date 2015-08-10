@@ -23,6 +23,29 @@ class Action < BaseObject
     "The bill has been clotured"
   end
 
+  def filibuster(args)
+    if args[:played_tactic].drawn_tactic.nil?
+      drawn_tactics = args[:game_state].deal_tactics_to_party(args[:party_played_by], 1)
+      if !drawn_tactics[args[:party_played_by]].empty?
+        args[:played_tactic].drawn_tactic = drawn_tactics[args[:party_played_by]][0]
+      else
+        args[:played_tactic].drawn_tactic = Tactic::Pass
+      end
+    else
+      #drawn tactic comes out of the deck
+      args[:game_state].delete_from(args[:game_state].tactic_deck, drawn_tactic)
+    end
+
+    # drawn tactic goes into the hand
+    if args[:played_tactic].drawn_tactic != Tactic::Pass
+      args[:game_state].send("hand_#{args[:party_played_by]}").tactics.push(
+        args[:played_tactic].drawn_tactic)
+      "Drew #{args[:played_tactic].drawn_tactic}"
+    else
+      "Tactics deck empty"
+    end
+  end
+
   def add_bill_cost(args)
     party = target_party(args)
     if args[:legislative_session].clotured?(args[:index], party)

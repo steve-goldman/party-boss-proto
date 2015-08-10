@@ -29,19 +29,17 @@ class PlayedTactic < BaseObject
   end
 
   def apply_preactions(legislative_session, game_state, boss_A, boss_B)
-    if tactic.filibuster?
-      apply_filibuster(game_state)
-    elsif tactic.tabling_motion?
+    if tactic.tabling_motion?
       apply_tabling_motion(legislative_session, game_state, boss_A, boss_B)
     else
       nil
     end
   end
 
-  def apply_actions(board, legislative_session, boss_A, boss_B, dice_roller)
+  def apply_actions(legislative_session, game_state, boss_A, boss_B, dice_roller)
     if !tactic.actions.empty?
       tactic.actions.map { |action|
-        action.apply(action_args(board, legislative_session, boss_A, boss_B, dice_roller))
+        action.apply(action_args(legislative_session, game_state, boss_A, boss_B, dice_roller))
       }.select { |elem| !elem.nil? }.join("\n")
     else
       nil
@@ -59,32 +57,10 @@ class PlayedTactic < BaseObject
   end
 
   def immediate?
-    tactic.filibuster? || tactic.tabling_motion?
+    tactic.tabling_motion?
   end
 
   private
-
-  def apply_filibuster(game_state)
-    if drawn_tactic.nil?
-      drawn_tactics = game_state.deal_tactics_to_party(party_played_by, 1)
-      if !drawn_tactics[party_played_by].empty?
-        self.drawn_tactic = drawn_tactics[party_played_by][0]
-      else
-        self.drawn_tactic = Tactic::Pass
-      end
-    else
-      # drawn tactic comes out of the deck
-      game_state.delete_from(game_state.tactic_deck, drawn_tactic)
-    end
-
-    # drawn tactic goes into the hand
-    if drawn_tactic != Tactic::Pass
-      game_state.send("hand_#{party_played_by}").tactics.push(drawn_tactic)
-      "Drew #{drawn_tactic}"
-    else
-      "Tactics deck empty"
-    end
-  end
 
   def apply_tabling_motion(legislative_session, game_state, boss_A, boss_B)
     if replacement_bill.nil?
@@ -108,12 +84,13 @@ class PlayedTactic < BaseObject
     }
   end
 
-  def action_args(board, legislative_session, boss_A, boss_B, dice_roller)
+  def action_args(legislative_session, game_state, boss_A, boss_B, dice_roller)
     {
       party_played_by: party_played_by.to_sym,
-      party_played_on: party_played_on.to_sym,
+      party_played_on: party_played_on ? party_played_on.to_sym : nil,
       index: index,
-      board: board,
+      board: game_state.board,
+      game_state: game_state,
       legislative_session: legislative_session,
       boss_A: boss_A,
       boss_B: boss_B,

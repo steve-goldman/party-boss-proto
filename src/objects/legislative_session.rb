@@ -37,12 +37,14 @@ class LegislativeSession < BaseObject
   end
   
   def LegislativeSession.run_session(game_state, boss_A, boss_B, dice_roller)
+    Logger.header("Boss 'A' has #{game_state.board.num_leadership_dice(:A)} leadership dice")
     Logger.header("Boss 'A' choosing bills").indent
     bills_A = boss_A.get_bills
     Logger.unindent
     Logger.header("Boss 'A' choosing dice allocation").indent
     allocation_A = boss_A.get_allocation(game_state.board.num_leadership_dice(:A), bills_A)
     Logger.unindent
+    Logger.header("Boss 'B' has #{game_state.board.num_leadership_dice(:B)} leadership dice")
     Logger.header("Boss 'B' choosing bills").indent
     bills_B = boss_B.get_bills
     Logger.unindent

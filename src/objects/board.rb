@@ -137,7 +137,7 @@ class Board < BaseObject
   
   private
 
-  AgendaBonus = [1, 3, 6, 10, 15, 21, 28]
+  AgendaBonus = [1, 2, 3, 4, 5, 6, 7]
   
   def office_holder?(candidate)
     !office_holders.select { |office_holder|

@@ -6,7 +6,7 @@ class ElectionRenderer < Renderer
   DoesNotPass = "DOES NOT PASS"
   
   def initialize
-    super(Politician::MaxLength)
+    super(Politician::MaxLength + 1)
   end
   
   @@instance = nil
@@ -32,7 +32,8 @@ class ElectionRenderer < Renderer
       party_header(board), underline,
     ].concat(
       Config.get.seats_num.times.map { |index|
-        two_sides(candidates_A[index], candidates_B[index])
+        two_sides(with_encumbency(board, index, :A, candidates_A[index]),
+                  with_encumbency(board, index, :B, candidates_B[index]))
       }
     ).join("\n")
   end
@@ -41,6 +42,10 @@ class ElectionRenderer < Renderer
 
   Wins  = "WINS "
   Loses = "LOSES"
+
+  def with_encumbency(board, index, party, candidate)
+    sprintf("#{candidate}%s", party == board.office_holders[index].party.to_sym ? "*" : "")
+  end
   
   def results(election, board)
     Config.get.seats_num.times.map { |index|

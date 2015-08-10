@@ -29,11 +29,7 @@ class PlayedTactic < BaseObject
   end
 
   def apply_preactions(legislative_session, game_state, boss_A, boss_B)
-    if tactic.tabling_motion?
-      apply_tabling_motion(legislative_session, game_state, boss_A, boss_B)
-    else
-      nil
-    end
+    nil
   end
 
   def apply_actions(legislative_session, game_state, boss_A, boss_B, dice_roller)
@@ -57,21 +53,10 @@ class PlayedTactic < BaseObject
   end
 
   def immediate?
-    tactic.tabling_motion?
+    false
   end
 
   private
-
-  def apply_tabling_motion(legislative_session, game_state, boss_A, boss_B)
-    if replacement_bill.nil?
-      Logger.header("Boss #{party_played_on} choosing a replacement bill").indent
-      self.replacement_bill = (party_played_on == :A ? boss_A : boss_B)
-                              .get_bill(legislative_session.get_bills_on_floor(party_played_on))
-    end
-    old_bill = legislative_session.get_bill_on_floor(index, party_played_on)
-    legislative_session.table_bill(index, party_played_on, replacement_bill)
-    "Tabled #{old_bill} for #{replacement_bill}"
-  end
 
   def precondition_args(board, legislative_session)
     {

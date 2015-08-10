@@ -32,7 +32,7 @@ class Action < BaseObject
         args[:played_tactic].drawn_tactic = Tactic::Pass
       end
     else
-      #drawn tactic comes out of the deck
+      # drawn tactic comes out of the deck
       args[:game_state].delete_from(args[:game_state].tactic_deck, drawn_tactic)
     end
 
@@ -44,6 +44,28 @@ class Action < BaseObject
     else
       "Tactics deck empty"
     end
+  end
+
+  def tabling_motion(args)
+    if args[:played_tactic].replacement_bill.nil?
+      Logger.header("Boss '#{args[:party_played_on]}' choosing a replacement bill").indent
+      args[:played_tactic].replacement_bill =
+        (args[:party_played_on] == :A ? args[:boss_A] : args[:boss_B]).get_bill(
+        args[:legislative_session].get_bills_on_floor(args[:party_played_on]))
+    end
+
+    old_bill = args[:legislative_session].get_bill_on_floor(
+      args[:index], args[:party_played_on])
+
+    # old bill comes out of the hand and into the deck
+    args[:game_state].delete_from(
+      args[:game_state].send("hand_#{args[:party_played_on]}").bills, old_bill)
+    args[:game_state].bill_deck.push(old_bill)
+    
+    args[:legislative_session].table_bill(args[:index],
+                                          args[:party_played_on],
+                                          args[:played_tactic].replacement_bill)
+    "Tabled #{old_bill} for #{args[:played_tactic].replacement_bill}"
   end
 
   def add_bill_cost(args)

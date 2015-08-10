@@ -211,13 +211,13 @@ class LegislativeSession < BaseObject
 
   def table_bill(index, party, replacement_bill)
     if party == :A
-      @current_bills_A[index] = replacement_bill
-      @bill_A_vps[index]      = replacement_bill.vps
-      @bill_A_cost[index]     = replacement_bill.vps
+      @bill_A_vps[index]      += (replacement_bill.vps - @current_bills_A[index].vps)
+      @bill_A_cost[index]     += (replacement_bill.vps - @current_bills_A[index].vps)
+      @current_bills_A[index]  = replacement_bill
     else
-      @current_bills_B[index] = replacement_bill
-      @bill_B_vps[index]      = replacement_bill.vps
-      @bill_B_cost[index]     = replacement_bill.vps
+      @bill_B_vps[index]      += (replacement_bill.vps - @current_bills_B[index].vps)
+      @bill_B_cost[index]     += (replacement_bill.vps - @current_bills_B[index].vps)
+      @current_bills_B[index]  = replacement_bill
     end
   end
 

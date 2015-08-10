@@ -456,7 +456,14 @@
         }
       }
     ],
-    "actions": [],
+    "actions": [
+      {
+        "action": "tabling_motion",
+        "params": {
+
+        }
+      }
+    ],
     "consequences": []
   },
   {

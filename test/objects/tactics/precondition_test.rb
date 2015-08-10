@@ -85,24 +85,24 @@ class PreconditionTests < Minitest::Test
                                                              nil,
                                                              how_many,
                                                              operator,
-                                                             nil))
+                                                             nil, nil))
   end
 
   def get_or(preconditions)
-    Precondition.new("or", PreconditionParams.new(nil, nil, nil, nil, nil,
+    Precondition.new("or", PreconditionParams.new(nil, nil, nil, nil, nil, nil,
                                                   preconditions))
   end
 
   def get_played_on_party(who)
     Precondition.new("played_on_party", PreconditionParams.new(who,
-                                                               nil, nil, nil, nil, nil))
+                                                               nil, nil, nil, nil, nil, nil))
   end
 
   def get_bill_agenda(which, agenda)
     Precondition.new("bill_agenda", PreconditionParams.new(nil,
                                                            which,
                                                            agenda,
-                                                           nil, nil, nil))
+                                                           nil, nil, nil, nil))
   end
 
   def get_always_true
@@ -114,7 +114,7 @@ class PreconditionTests < Minitest::Test
   end
 
   def dummy_precondition(name)
-    Precondition.new(name, PreconditionParams.new(nil, nil, nil, nil, nil, nil))
+    Precondition.new(name, PreconditionParams.new(nil, nil, nil, nil, nil, nil, nil))
   end
 
   def get_board(party, count)

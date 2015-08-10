@@ -28,32 +28,30 @@ class PlayedTactic < BaseObject
     end.empty?
   end
 
-  def apply_preactions(played_tactic_index, legislative_session, game_state, boss_A, boss_B)
+  def apply_preactions(legislative_session, game_state, boss_A, boss_B)
     if tactic.filibuster?
       apply_filibuster(game_state)
     elsif tactic.tabling_motion?
       apply_tabling_motion(legislative_session, game_state, boss_A, boss_B)
-    elsif tactic.cloture?
-      apply_cloture(played_tactic_index, legislative_session)
     else
       nil
     end
   end
 
-  def apply_actions(board, legislative_session, boss_A, boss_B, dice_roller, played_tactic_index)
+  def apply_actions(board, legislative_session, boss_A, boss_B, dice_roller)
     if !tactic.actions.empty?
       tactic.actions.map { |action|
-        action.apply(action_args(board, legislative_session, boss_A, boss_B, dice_roller, played_tactic_index))
+        action.apply(action_args(board, legislative_session, boss_A, boss_B, dice_roller))
       }.select { |elem| !elem.nil? }.join("\n")
     else
       nil
     end
   end
 
-  def apply_consequences(played_tactic_index, board, legislative_session)
+  def apply_consequences(board, legislative_session)
     if !tactic.consequences.empty?
       tactic.consequences.map { |consequence|
-        consequence.apply(consequence_args(played_tactic_index, board, legislative_session))
+        consequence.apply(consequence_args(board, legislative_session))
       }.select { |elem| !elem.nil? }.join("\n")
     else
       nil
@@ -61,7 +59,7 @@ class PlayedTactic < BaseObject
   end
 
   def immediate?
-    tactic.filibuster? || tactic.tabling_motion? || tactic.cloture?
+    tactic.filibuster? || tactic.tabling_motion?
   end
 
   private
@@ -99,11 +97,6 @@ class PlayedTactic < BaseObject
     "Tabled #{old_bill} for #{replacement_bill}"
   end
 
-  def apply_cloture(played_tactic_index, legislative_session)
-    legislative_session.cloture_bill(index, party_played_on)
-    "Clotured #{legislative_session.get_bill_on_floor(index, party_played_on)}"
-  end
-  
   def precondition_args(board, legislative_session)
     {
       party_played_by: party_played_by.to_sym,
@@ -115,7 +108,7 @@ class PlayedTactic < BaseObject
     }
   end
 
-  def action_args(board, legislative_session, boss_A, boss_B, dice_roller, played_tactic_index)
+  def action_args(board, legislative_session, boss_A, boss_B, dice_roller)
     {
       party_played_by: party_played_by.to_sym,
       party_played_on: party_played_on.to_sym,
@@ -126,11 +119,10 @@ class PlayedTactic < BaseObject
       boss_B: boss_B,
       played_tactic: self,
       dice_roller: dice_roller,
-      played_tactic_index: played_tactic_index,
     }
   end
 
-  def consequence_args(played_tactic_index, board, legislative_session)
+  def consequence_args(board, legislative_session)
     {
       party_played_by: party_played_by.to_sym,
       party_played_on: party_played_on.to_sym,
@@ -138,7 +130,6 @@ class PlayedTactic < BaseObject
       board: board,
       legislative_session: legislative_session,
       played_tactic: self,
-      played_tactic_index: played_tactic_index,
     }      
   end
 

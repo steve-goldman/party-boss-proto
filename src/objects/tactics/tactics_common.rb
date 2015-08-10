@@ -10,8 +10,7 @@ module TacticsCommon
 
   def add_bill_vps(args)
     party = target_party(args)
-    if args[:legislative_session].
-        clotured?(args[:index], party, args[:played_tactic_index])
+    if args[:legislative_session].clotured?(args[:index], party)
       "Moot due to cloture"
     else
       direction = params.how_many > 0 ? "Increasing" : "Decreasing"
@@ -32,8 +31,7 @@ module TacticsCommon
 
   def bill_auto_passes(args)
     party = target_party(args)
-    if args[:legislative_session].
-        clotured?(args[:index], party, args[:played_tactic_index])
+    if args[:legislative_session].clotured?(args[:index], party)
       "Moot due to cloture"
     else
       bill = args[:legislative_session].get_bill_on_floor(args[:index], party)

@@ -648,7 +648,14 @@
   {
     "name": "Cloture",
     "preconditions": [],
-    "actions": [],
+    "actions": [
+      {
+        "action": "cloture",
+        "params": {
+
+        }
+      }
+    ],
     "consequences": []
   },
   {

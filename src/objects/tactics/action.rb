@@ -18,9 +18,14 @@ class Action < BaseObject
 
   include TacticsCommon
   
+  def cloture(args)
+    args[:legislative_session].cloture_bill(args[:index], args[:party_played_on])
+    "The bill has been clotured"
+  end
+
   def add_bill_cost(args)
     party = target_party(args)
-    if args[:legislative_session].clotured?(args[:index], party, args[:played_tactic_index])
+    if args[:legislative_session].clotured?(args[:index], party)
       "Moot due to cloture"
     else
       direction = params.how_many > 0 ? "Increasing" : "Decreasing"
@@ -37,7 +42,7 @@ class Action < BaseObject
 
   def add_bill_cost_by_dice(args)
     party = target_party(args)
-    if args[:legislative_session].clotured?(args[:index], party, args[:played_tactic_index])
+    if args[:legislative_session].clotured?(args[:index], party)
       "Moot due to cloture"
     else
       bill = args[:legislative_session].get_bill_on_floor(args[:index], party)
@@ -57,7 +62,7 @@ class Action < BaseObject
   end
 
   def all_dice_count_as(args)
-    if args[:legislative_session].clotured?(args[:index], args[:party_played_by], args[:played_tactic_index])
+    if args[:legislative_session].clotured?(args[:index], args[:party_played_by])
       "Moot due to cloture"
     else
       bill = args[:legislative_session].get_bill_on_floor(args[:index], args[:party_played_on])
@@ -68,7 +73,7 @@ class Action < BaseObject
 
   def send_dice_to_cloakroom(args)
     party = target_party(args)
-    if args[:legislative_session].clotured?(args[:index], party, args[:played_tactic_index])
+    if args[:legislative_session].clotured?(args[:index], party)
       "Moot due to cloture"
     else
       bill = args[:legislative_session].get_bill_on_floor(args[:index], party)
@@ -86,7 +91,7 @@ class Action < BaseObject
 
   def take_cloakroom_dice(args)
     party = target_party(args)
-    if args[:legislative_session].clotured?(args[:index], party, args[:played_tactic_index])
+    if args[:legislative_session].clotured?(args[:index], party)
       "Moot due to cloture"
     else
       bill = args[:legislative_session].get_bill_on_floor(args[:index], party)
@@ -101,8 +106,8 @@ class Action < BaseObject
 
   def take_dice_from_opponent(args)
     opponent_party = args[:party_played_by] == :A ? :B : :A
-    if args[:legislative_session].clotured?(args[:index], args[:party_played_by], args[:played_tactic_index]) ||
-       args[:legislative_session].clotured?(args[:index], opponent_party, args[:played_tactic_index])
+    if args[:legislative_session].clotured?(args[:index], args[:party_played_by]) ||
+       args[:legislative_session].clotured?(args[:index], opponent_party)
       "Moot due to cloture"
     else
       bill = args[:legislative_session].get_bill_on_floor(args[:index], opponent_party)

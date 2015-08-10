@@ -23,8 +23,7 @@ class Consequence < BaseObject
 
   def add_fundraising_dice(args)
     party = target_party(args)
-    if args[:legislative_session].
-        clotured?(args[:index], party, args[:played_tactic_index])
+    if args[:legislative_session].clotured?(args[:index], party)
       "Moot due to cloture"
     else
       args[:board].add_fundraising_dice(party, params.how_many)

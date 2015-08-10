@@ -30,8 +30,8 @@ class LegislativeSession < BaseObject
     @allocation_B = allocation_B.clone
     @current_bills_A = bills_A.clone
     @current_bills_B = bills_B.clone
-    @cloture_A_index = bills_A.map { -1 }
-    @cloture_B_index = bills_B.map { -1 }
+    @clotured_A = bills_A.map { false }
+    @clotured_B = bills_B.map { false }
     @auto_pass_A = bills_A.map { false }
     @auto_pass_B = bills_B.map { false }
   end
@@ -164,36 +164,34 @@ class LegislativeSession < BaseObject
   end
 
   def apply_tactics_preactions(game_state)
-    played_tactics.each_index do |index|
-      log_if_output("Applying #{played_tactics[index]} [1]",
-                    played_tactics[index].apply_preactions(index, self, game_state, nil, nil))
+    played_tactics.each do |played_tactic|
+      log_if_output("Applying #{played_tactic} [1]",
+                    played_tactic.apply_preactions(self, game_state, nil, nil))
     end
   end
 
   def apply_tactics_actions(game_state, boss_A, boss_B, dice_roller)
-    played_tactics.each_index do |played_tactic_index|
-      played_tactic = played_tactics[played_tactic_index]
+    played_tactics.each do |played_tactic|
       if !played_tactic.immediate?
         # confirm that the preconditions still hold in case a tactic
         # (i.e. tabling motion) changed things
         if played_tactic.can_play(game_state.board, self)
           log_if_output("Applying #{played_tactic} [2]",
                         played_tactic.apply_actions(game_state.board, self,
-                                                    boss_A, boss_B, dice_roller, played_tactic_index))
+                                                    boss_A, boss_B, dice_roller))
         end
       end
     end
   end
 
   def apply_tactics_consequences(game_state)
-    played_tactics.each_index do |played_tactic_index|
-      played_tactic = played_tactics[played_tactic_index]
+    played_tactics.each do |played_tactic|
       if !played_tactic.immediate?
         # confirm that the preconditions still hold in case a tactic
         # (i.e. tabling motion) changed things
         if played_tactic.can_play(game_state.board, self)
           log_if_output("Applying #{played_tactic} [3]",
-                        played_tactic.apply_consequences(played_tactic_index, game_state.board, self))
+                        played_tactic.apply_consequences(game_state.board, self))
         end
       end
     end
@@ -224,15 +222,11 @@ class LegislativeSession < BaseObject
   end
 
   def cloture_bill(index, party)
-    party == :A ?
-      @cloture_A_index[index] = played_tactics.count :
-      @cloture_B_index[index] = played_tactics.count
+    party == :A ? @clotured_A[index] = true : @clotured_B[index] = true
   end
 
-  def clotured?(index, party, played_tactic_index)
-    party == :A ?
-      played_tactic_index < @cloture_A_index[index] :
-      played_tactic_index < @cloture_B_index[index]
+  def clotured?(index, party)
+    party == :A ? @clotured_A[index] : @clotured_B[index]
   end
 
   def get_tactics(game_state, boss_A, boss_B)
@@ -263,7 +257,7 @@ class LegislativeSession < BaseObject
           end
           # handle filibusters, tabling motions, and clotures
           log_if_output("Applying #{played_tactic} [1]",
-                        played_tactic.apply_preactions(played_tactics.count, self, game_state, boss_A, boss_B))
+                        played_tactic.apply_preactions(self, game_state, boss_A, boss_B))
           # make it official
           played_tactics.push(played_tactic)
         end
